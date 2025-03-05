@@ -49,7 +49,7 @@ export class CreateOrganizationDesignationService {
     return {
       data: designation,
       status: HttpStatus.CREATED,
-      message: 'Organization created successfully'
+      message: 'Designation created successfully'
     };
   }
 }

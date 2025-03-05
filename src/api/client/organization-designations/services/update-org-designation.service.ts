@@ -70,7 +70,7 @@ export class UpdateOrganizationService {
     return {
       data: {},
       status: HttpStatus.OK,
-      message: 'Organization designation updated successfully'
+      message: 'Designation designation updated successfully'
     };
   }
 }

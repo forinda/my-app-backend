@@ -20,7 +20,7 @@ export class FetchOrganizationDesignationService {
 
     return {
       data: designations,
-      message: 'Organizations fetched successfully',
+      message: 'Designations fetched successfully',
       status: HttpStatus.OK
     };
   }
