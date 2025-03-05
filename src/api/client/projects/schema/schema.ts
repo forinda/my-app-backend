@@ -1,4 +1,7 @@
 import z from 'zod';
+
+const projectTypeSchema = z.enum(['paid', 'free', 'test', 'trial']);
+
 export const newProjectSchema = z.object({
   name: z
     .string({
@@ -10,6 +13,7 @@ export const newProjectSchema = z.object({
     .max(255, {
       message: 'Name must be at most 255 characters long'
     }),
+  project_type: projectTypeSchema,
   category_id: z.number({
     message: 'Please select a category'
   }),
