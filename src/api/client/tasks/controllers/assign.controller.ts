@@ -11,7 +11,7 @@ import type { AssignTaskPayload } from '../schema/schema';
 import { newTaskSchema } from '../schema/schema';
 import { userAudit } from '@/common/utils/user-request-audit';
 import { createHttpResponse } from '@/common/utils/responder';
-import { AssignTaskService } from '../services/asign.service';
+import { AssignTaskService } from '../services/assign.service';
 
 @injectable()
 @Dependency()
