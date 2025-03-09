@@ -5,7 +5,7 @@ import { injectable } from 'inversify';
 import type { Namespace } from 'socket.io';
 import { Server } from 'socket.io';
 import chalk from 'chalk';
-type ServerType =
+export type ServerType =
   | ReturnType<typeof createHttpServer>
   | ReturnType<typeof createHttpsServer>;
 
@@ -13,7 +13,7 @@ type ServerType =
 @Dependency()
 export class SocketHandler {
   // UUID v4 regex which must start with a forward slash
-  private readonly chatNameSpace = new RegExp(
+  public readonly socketChatNamespace = new RegExp(
     /^\/[a-zA-Z0-9]{8}-[a-zA-Z0-9]{4}-[4][a-zA-Z0-9]{3}-[89AB][a-zA-Z0-9]{3}-[a-zA-Z0-9]{12}$/i
   );
   private setupServer(httpServer: ServerType) {
@@ -27,7 +27,7 @@ export class SocketHandler {
   public setup(httpServer: ServerType) {
     const io = this.setupServer(httpServer);
     // Example - /^\/[a-zA-Z0-9]{8}$/ but for UUID v4
-    const namespace = io.of(this.chatNameSpace);
+    const namespace = io.of(this.socketChatNamespace);
 
     console.log(chalk.yellow(`[Sockets] - Setting up namespaces`));
 
