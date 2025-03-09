@@ -3,6 +3,7 @@ import {
   integer,
   pgEnum,
   pgTable,
+  unique,
   uuid,
   varchar
 } from 'drizzle-orm/pg-core';
@@ -24,29 +25,33 @@ export const projectTypes = pgEnum('organization_project_types_enum', [
   'trial'
 ]);
 
-export const OrgProject = pgTable('organization_projects', {
-  id: integer().primaryKey().generatedAlwaysAsIdentity(),
-  uuid: uuid().defaultRandom().unique().notNull(),
-  organization_id: integer()
-    .notNull()
-    .references(() => Organization.id, foreignKeyConstraints),
-  name: varchar().notNull(),
-  description: varchar().notNull(),
-  is_active: boolean().default(true).notNull(),
-  is_paid: boolean().default(false).notNull(),
-  project_type: projectTypes().notNull(),
-  category_id: integer()
-    .notNull()
-    .references(() => OrgProjectCategory.id, foreignKeyConstraints),
-  created_by: integer()
-    .notNull()
-    .references(() => User.id, foreignKeyConstraints),
-  updated_by: integer()
-    .notNull()
-    .references(() => User.id, foreignKeyConstraints),
-  deleted_by: integer().references(() => User.id, foreignKeyConstraints),
-  ...getTableTimestamps()
-});
+export const OrgProject = pgTable(
+  'organization_projects',
+  {
+    id: integer().primaryKey().generatedAlwaysAsIdentity(),
+    uuid: uuid().defaultRandom().unique().notNull(),
+    organization_id: integer()
+      .notNull()
+      .references(() => Organization.id, foreignKeyConstraints),
+    name: varchar().notNull(),
+    description: varchar().notNull(),
+    is_active: boolean().default(true).notNull(),
+    is_paid: boolean().default(false).notNull(),
+    project_type: projectTypes().notNull(),
+    category_id: integer()
+      .notNull()
+      .references(() => OrgProjectCategory.id, foreignKeyConstraints),
+    created_by: integer()
+      .notNull()
+      .references(() => User.id, foreignKeyConstraints),
+    updated_by: integer()
+      .notNull()
+      .references(() => User.id, foreignKeyConstraints),
+    deleted_by: integer().references(() => User.id, foreignKeyConstraints),
+    ...getTableTimestamps()
+  },
+  (t) => [unique().on(t.organization_id, t.name)]
+);
 
 export const orgProjectRelations = relations(OrgProject, ({ one, many }) => ({
   creator: one(User, {

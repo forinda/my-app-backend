@@ -1,4 +1,11 @@
-import { boolean, integer, pgTable, uuid, varchar } from 'drizzle-orm/pg-core';
+import {
+  boolean,
+  integer,
+  pgTable,
+  unique,
+  uuid,
+  varchar
+} from 'drizzle-orm/pg-core';
 import { Organization } from './organization';
 import {
   foreignKeyConstraints,
@@ -9,24 +16,28 @@ import type { InferInsertModel, InferSelectModel } from 'drizzle-orm';
 import { relations } from 'drizzle-orm';
 import { OrgWorkspaceMember } from './org-workspace-member';
 
-export const OrgWorkspace = pgTable('organization_workspaces', {
-  id: integer().primaryKey().generatedAlwaysAsIdentity(),
-  uuid: uuid().defaultRandom().unique().notNull(),
-  organization_id: integer()
-    .notNull()
-    .references(() => Organization.id, foreignKeyConstraints),
-  name: varchar().notNull(),
-  description: varchar().notNull(),
-  is_active: boolean().default(true).notNull(),
-  created_by: integer()
-    .notNull()
-    .references(() => User.id, foreignKeyConstraints),
-  updated_by: integer()
-    .notNull()
-    .references(() => User.id, foreignKeyConstraints),
-  deleted_by: integer().references(() => User.id, foreignKeyConstraints),
-  ...getTableTimestamps()
-});
+export const OrgWorkspace = pgTable(
+  'organization_workspaces',
+  {
+    id: integer().primaryKey().generatedAlwaysAsIdentity(),
+    uuid: uuid().defaultRandom().unique().notNull(),
+    organization_id: integer()
+      .notNull()
+      .references(() => Organization.id, foreignKeyConstraints),
+    name: varchar().notNull(),
+    description: varchar().notNull(),
+    is_active: boolean().default(true).notNull(),
+    created_by: integer()
+      .notNull()
+      .references(() => User.id, foreignKeyConstraints),
+    updated_by: integer()
+      .notNull()
+      .references(() => User.id, foreignKeyConstraints),
+    deleted_by: integer().references(() => User.id, foreignKeyConstraints),
+    ...getTableTimestamps()
+  },
+  (t) => [unique().on(t.organization_id, t.name)]
+);
 
 export const orgWorkspaceRelations = relations(
   OrgWorkspace,

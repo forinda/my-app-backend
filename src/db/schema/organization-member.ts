@@ -1,9 +1,12 @@
 import {
   boolean,
+  decimal,
   integer,
+  pgEnum,
   pgTable,
   timestamp,
-  unique
+  unique,
+  varchar
 } from 'drizzle-orm/pg-core';
 import { Organization } from './organization';
 import { User } from './user';
@@ -18,6 +21,18 @@ import {
   type InferInsertModel,
   type InferSelectModel
 } from 'drizzle-orm';
+export const userSalaryType = pgEnum('user_salary_type_enum', [
+  'monthly',
+  'hourly'
+]);
+
+export const userEmploymentType = pgEnum('user_employment_type_enum', [
+  'full_time',
+  'part_time',
+  'contract',
+  'internship'
+]);
+
 export const OrganizationMember = pgTable(
   'organization_members',
   {
@@ -38,6 +53,18 @@ export const OrganizationMember = pgTable(
       foreignKeyConstraints
     ),
     date_joined: timestamp({ mode: 'string' }).notNull(),
+    tax_id: varchar(),
+    country: varchar(),
+    state: varchar(),
+    city: varchar(),
+    address: varchar(),
+    zip_code: varchar(),
+    starting_salary: decimal({ precision: 16, scale: 2 }),
+    current_salary: decimal({ precision: 16, scale: 2 }),
+    currency: varchar().default('KSH'),
+    salary_type: userSalaryType().default('monthly'),
+    national_id: varchar(),
+    employment_type: userEmploymentType().default('full_time'),
     created_by: integer()
       .notNull()
       .references(() => User.id, foreignKeyConstraints),
@@ -47,7 +74,11 @@ export const OrganizationMember = pgTable(
     deleted_by: integer().references(() => User.id, foreignKeyConstraints),
     ...getTableTimestamps()
   },
-  (table) => [unique().on(table.organization_id, table.user_id)]
+  (t) => [
+    unique().on(t.organization_id, t.user_id),
+    unique().on(t.organization_id, t.tax_id),
+    unique().on(t.organization_id, t.national_id)
+  ]
 );
 
 export const organizationMemberRelations = relations(
