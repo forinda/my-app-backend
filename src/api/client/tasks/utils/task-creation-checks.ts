@@ -2,6 +2,7 @@ import type { DrizzleTransaction } from '@/db';
 import type {
   AssignTaskPayload,
   NewTaskPayload,
+  UnAssignTaskPayload,
   UpdateTaskPayload
 } from '../schema/schema';
 import { ApiError } from '@/common/errors/base';
@@ -149,6 +150,21 @@ export class TaskCreationAndUpdateCheckUtil {
           throw new ApiError('Assignee not found', HttpStatus.NOT_FOUND, {});
         }
       }
+      const task = await transaction!.query.OrgTask.findFirst({
+        where: and(
+          eq(OrgTask.id, data.task_id),
+          eq(OrgTask.organization_id, data.organization_id)
+        )
+      });
+
+      if (!task) {
+        throw new ApiError('Task not found', HttpStatus.NOT_FOUND, {});
+      }
+    };
+  }
+
+  public runUnAssignChecks(transaction: DrizzleTransaction) {
+    return async (data: UnAssignTaskPayload) => {
       const task = await transaction!.query.OrgTask.findFirst({
         where: and(
           eq(OrgTask.id, data.task_id),

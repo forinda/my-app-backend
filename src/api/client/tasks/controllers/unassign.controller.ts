@@ -7,29 +7,29 @@ import { Dependency } from '@/common/di';
 import type { ApiRequestContext } from '@/common/interfaces/controller';
 import { inject, injectable } from 'inversify';
 
-import type { AssignTaskPayload } from '../schema/schema';
-import { assignTaskSchema } from '../schema/schema';
+import type { UnAssignTaskPayload } from '../schema/schema';
+import { unAssignTaskSchema } from '../schema/schema';
 import { userAudit } from '@/common/utils/user-request-audit';
 import { createHttpResponse } from '@/common/utils/responder';
-import { AssignTaskService } from '../services/assign.service';
+import { UnAssignTaskService } from '../services/unassign.service';
 
 @injectable()
 @Dependency()
 @Controller()
-export class AssignTaskController extends BasePostController {
-  @inject(AssignTaskService)
-  private service: AssignTaskService;
+export class UnAssignTaskController extends BasePostController {
+  @inject(UnAssignTaskService)
+  private service: UnAssignTaskService;
   @ApiControllerMethod({
-    bodySchema: assignTaskSchema,
+    bodySchema: unAssignTaskSchema,
     pathParamTransform: {
       id: 'task_id'
     },
     auth: true,
-    audit: userAudit('create'),
+    audit: userAudit('update'),
     bodyBindOrgId: true
   })
-  async post({ res, body }: ApiRequestContext<AssignTaskPayload>) {
-    const feedback = await this.service.assign({ data: body! });
+  async post({ res, body }: ApiRequestContext<UnAssignTaskPayload>) {
+    const feedback = await this.service.unassign({ data: body! });
 
     return createHttpResponse(res, {
       ...feedback,

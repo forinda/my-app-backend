@@ -122,8 +122,24 @@ export const assignTaskSchema = z.object({
     .positive()
 });
 
+export const unAssignTaskSchema = z.object({
+  task_id: z.coerce
+    .number({
+      message: 'Task ID is required'
+    })
+    .positive(),
+  updated_by: z.coerce.number({}).positive().optional(),
+  organization_id: z
+    .number({
+      message: 'Organization ID is required'
+    })
+    .positive()
+});
+
 export type NewTaskPayload = z.infer<typeof newTaskSchema>;
 
 export type UpdateTaskPayload = z.infer<typeof updateTaskSchema>;
 
 export type AssignTaskPayload = z.infer<typeof assignTaskSchema>;
+
+export type UnAssignTaskPayload = z.infer<typeof unAssignTaskSchema>;
