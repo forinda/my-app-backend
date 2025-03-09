@@ -2,21 +2,31 @@ import { validatePhone } from '@/common/utils/phone-number-format';
 import { z } from 'zod';
 
 export const registerUserSchema = z.object({
-  first_name: z.string({ message: 'First name is required' }),
-  last_name: z.string({ message: 'Last name is required' }),
+  first_name: z.string({ message: 'First name is required' }).trim(),
+  last_name: z.string({ message: 'Last name is required' }).trim(),
   email: z
     .string({
       message: 'Email is required'
     })
     .email({ message: 'Invalid email address' })
-    .toLowerCase(),
-  username: z.string({
-    message: 'Username is required'
-  }),
-  gender: z.enum(['Male', 'Female', 'Other']),
+    .toLowerCase()
+    .trim(),
+  username: z
+    .string({
+      message: 'Username is required'
+    })
+    .nonempty({
+      message: 'Username is required'
+    })
+    .toLowerCase()
+    .trim(),
+  gender: z.enum(['Male', 'Female', 'Other']).default('Other'),
   phone_number: z
     .string({
       message: 'Phone number is required'
+    })
+    .nonempty({
+      message: 'Phone/Email/Username is required'
     })
     .min(10, 'Phone number must be at least 10 characters')
     .refine(validatePhone.validate, validatePhone.message),
@@ -39,7 +49,11 @@ export const registerUserSchema = z.object({
 });
 
 export const loginUserSchema = z.object({
-  emailOrUsername: z.string({ message: 'Email or username is required' }),
+  emailOrUsername: z
+    .string({ message: 'Email or username is required' })
+    .nonempty({
+      message: 'Email or username is required'
+    }),
   password: z
     .string({ message: 'Password is required' })
     .min(8, 'Password must be at least 8 characters')

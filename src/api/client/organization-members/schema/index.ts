@@ -1,21 +1,25 @@
 import { z } from 'zod';
 export const addMemberToOrRemoveFromOrgSchema = z.object({
-  organization_id: z.number({ message: 'Organization ID is required' }),
+  organization_id: z.coerce
+    .number({ message: 'Organization ID is required' })
+    .positive(),
   emails: z
-    .array(z.string().email().toLowerCase())
+    .array(z.string().email().toLowerCase().trim().nonempty(), {
+      message: 'Emails is required'
+    })
     .min(1, 'At least one user is required'),
-  designation_id: z.number(),
-  created_by: z.number(),
-  updated_by: z.number()
+  designation_id: z.coerce.number().positive(),
+  created_by: z.coerce.number().positive(),
+  updated_by: z.coerce.number().positive()
 });
 
 export const respondToOrgInviteSchema = z.object({
-  invite_id: z.number(),
+  invite_id: z.coerce.number().positive(),
   action: z.enum(['accepted', 'rejected'])
 });
 
 export const fetchUserorganizationInvitesSchema = z.object({
-  user_id: z.coerce.number()
+  user_id: z.coerce.number().positive()
 });
 
 export type AddMemberToOrRemoveFromOrganizationType = z.infer<

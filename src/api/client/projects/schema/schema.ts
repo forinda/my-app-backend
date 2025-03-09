@@ -7,6 +7,9 @@ export const newProjectSchema = z.object({
     .string({
       message: 'Name is required'
     })
+    .nonempty({
+      message: 'Name cannot be empty'
+    })
     .min(2, {
       message: 'Name must be at least 3 characters long'
     })

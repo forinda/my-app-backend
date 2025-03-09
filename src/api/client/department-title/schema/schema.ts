@@ -5,12 +5,16 @@ export const newDepartmentTitleSchema = z.object({
     .string({
       message: 'Name is required'
     })
+    .nonempty({
+      message: 'Name cannot be empty'
+    })
     .min(3, {
       message: 'Name must be at least 3 characters long'
     })
     .max(255, {
       message: 'Name must be at most 255 characters long'
-    }),
+    })
+    .trim(),
   description: z
     .string({
       message: 'Description is required'
@@ -22,9 +26,9 @@ export const newDepartmentTitleSchema = z.object({
       message: 'Description must be at most 255 characters long'
     }),
   is_active: z.boolean({}).default(true),
-  created_by: z.number({}).optional(),
-  updated_by: z.number({}).optional(),
-  organization_id: z.number({}).optional()
+  created_by: z.number({}).positive().optional(),
+  updated_by: z.number({}).positive().optional(),
+  organization_id: z.number({}).positive().optional()
 });
 
 export const updateDepartmentTitleSchema = z.object({
@@ -41,6 +45,7 @@ export const updateDepartmentTitleSchema = z.object({
     .max(255, {
       message: 'Name must be at most 255 characters long'
     })
+    .trim()
     .optional(),
   is_active: z.boolean({}).optional(),
   description: z
@@ -54,8 +59,8 @@ export const updateDepartmentTitleSchema = z.object({
       message: 'Description must be at most 255 characters long'
     })
     .optional(),
-  updated_by: z.number({}).optional(),
-  organization_id: z.number({}).optional()
+  updated_by: z.number({}).positive().optional(),
+  organization_id: z.number({}).positive().optional()
 });
 
 // export const getOrganizationMember``
