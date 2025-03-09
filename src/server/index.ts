@@ -7,6 +7,7 @@ import express from 'express';
 import { createServer } from 'http';
 import { inject, injectable } from 'inversify';
 import chalk from 'chalk';
+import { SocketHandler } from './socket-server';
 // import { baseLogger } from '@/common/logger';
 @injectable()
 @Dependency()
@@ -19,6 +20,7 @@ export class ApiServer {
   private readonly apiErrorRouteHandler: ApiErrorRouteHandler;
 
   @inject(Config) private readonly config: Config;
+  @inject(SocketHandler) private readonly socketHandler: SocketHandler;
 
   constructor() {
     this.app = express();
@@ -56,6 +58,7 @@ export class ApiServer {
   public run() {
     const server = createServer(this.bootstrap());
 
+    this.socketHandler.setup(server);
     server.listen(this.config.conf.PORT, this.onListening);
   }
 }
