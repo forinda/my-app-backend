@@ -1,4 +1,4 @@
-import type { NextFunction } from 'express';
+import type { NextFunction, Router } from 'express';
 import type { ApiReq, ApiRes } from '../http';
 import type { ApiPaginationParams } from '../utils/pagination';
 import type { SessionUser } from '../utils/get-sesion-user';
@@ -33,3 +33,5 @@ export type BaseControllerType = {
   patch?: ControllerMethod;
   put?: ControllerMethod;
 };
+
+export type RouteSetupFunction = (props: { app: Router }) => void;
