@@ -6,16 +6,16 @@ import { createServer as createHttpServer } from 'http';
 
 // Mock the socket.io module
 vi.mock('socket.io', () => {
-  const mSocket = {
-    on: vi.fn(),
-    join: vi.fn(),
-    to: vi.fn().mockReturnThis(),
-    emit: vi.fn(),
-    leave: vi.fn(),
-    id: 'socket-id',
-    nsp: { name: '/namespace' },
-    rooms: new Set(['room1', 'room2'])
-  };
+  // const mSocket = {
+  //   on: vi.fn(),
+  //   join: vi.fn(),
+  //   to: vi.fn().mockReturnThis(),
+  //   emit: vi.fn(),
+  //   leave: vi.fn(),
+  //   id: 'socket-id',
+  //   nsp: { name: '/namespace' },
+  //   rooms: new Set(['room1', 'room2'])
+  // };
   const mNamespace = {
     on: vi.fn()
   };
