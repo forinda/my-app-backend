@@ -42,8 +42,8 @@ export * from './org-task';
 
 export * from './org-task-comments';
 
-export * from './organization-task-log-category';
+export * from './organization-time-log-category';
 
-export * from './organization-task-project-category';
+export * from './organization-project-time-log-category';
 
 export * from './org-user-time-log';

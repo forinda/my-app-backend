@@ -9,8 +9,8 @@ import {
 } from '@/common/utils/drizzle';
 import { OrgProject } from './org-project';
 
-export const OrgTaskLogCategory = pgTable(
-  'organization_task_log_categories',
+export const OrgTimeLogCategory = pgTable(
+  'organization_time_log_categories',
   {
     id: integer().primaryKey().generatedAlwaysAsIdentity(),
     organization_id: integer()
@@ -31,30 +31,30 @@ export const OrgTaskLogCategory = pgTable(
 );
 
 export const organizationTaskLogCategoryRelations = relations(
-  OrgTaskLogCategory,
+  OrgTimeLogCategory,
   ({ one, many }) => ({
     creator: one(User, {
-      fields: [OrgTaskLogCategory.created_by],
+      fields: [OrgTimeLogCategory.created_by],
       references: [User.id]
     }),
     updater: one(User, {
-      fields: [OrgTaskLogCategory.updated_by],
+      fields: [OrgTimeLogCategory.updated_by],
       references: [User.id]
     }),
     deleter: one(User, {
-      fields: [OrgTaskLogCategory.deleted_by],
+      fields: [OrgTimeLogCategory.deleted_by],
       references: [User.id]
     }),
     organization: one(Organization, {
-      fields: [OrgTaskLogCategory.organization_id],
+      fields: [OrgTimeLogCategory.organization_id],
       references: [Organization.id]
     }),
     projects: many(OrgProject)
   })
 );
 
-export interface SelectOrganizationTaskLogCategoryInterface
-  extends InferSelectModel<typeof OrgTaskLogCategory> {}
+export interface SelectOrganizationTimeLogCategoryInterface
+  extends InferSelectModel<typeof OrgTimeLogCategory> {}
 
-export interface InsertOrganizationTaskLogCategoryInterface
-  extends InferInsertModel<typeof OrgTaskLogCategory> {}
+export interface InsertOrganizationTimeLogCategoryInterface
+  extends InferInsertModel<typeof OrgTimeLogCategory> {}

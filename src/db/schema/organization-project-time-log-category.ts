@@ -5,16 +5,16 @@ import {
 import { pgTable, integer, unique } from 'drizzle-orm/pg-core';
 import { Organization } from './organization';
 import { User } from './user';
-import { OrgTaskLogCategory } from './organization-task-log-category';
 import { OrgProject } from './org-project';
 import {
   relations,
   type InferInsertModel,
   type InferSelectModel
 } from 'drizzle-orm';
+import { OrgTimeLogCategory } from './organization-time-log-category';
 
 export const OrgTaskProjectCategory = pgTable(
-  'organization_task_project_categories',
+  'organization_project_time_log_categories',
   {
     id: integer().primaryKey().generatedAlwaysAsIdentity(),
     organization_id: integer()
@@ -25,7 +25,7 @@ export const OrgTaskProjectCategory = pgTable(
       .references(() => OrgProject.id, foreignKeyConstraints),
     task_log_category_id: integer()
       .notNull()
-      .references(() => OrgTaskLogCategory.id, foreignKeyConstraints),
+      .references(() => OrgTimeLogCategory.id, foreignKeyConstraints),
     created_by: integer()
       .notNull()
       .references(() => User.id, foreignKeyConstraints),
@@ -67,15 +67,15 @@ export const organizationTaskProjectCategoryRelations = relations(
       fields: [OrgTaskProjectCategory.project_id],
       references: [OrgProject.id]
     }),
-    taskLogCategory: one(OrgTaskLogCategory, {
+    taskLogCategory: one(OrgTimeLogCategory, {
       fields: [OrgTaskProjectCategory.task_log_category_id],
-      references: [OrgTaskLogCategory.id]
+      references: [OrgTimeLogCategory.id]
     })
   })
 );
 
-export interface SelectOrgTaskProjectCategoryInterface
+export interface SelectOrgProjectTimeLogCategoryInterface
   extends InferSelectModel<typeof OrgTaskProjectCategory> {}
 
-export interface InsertOrgTaskProjectCategoryInterface
+export interface InsertOrgProjectTimeLogCategoryInterface
   extends InferInsertModel<typeof OrgTaskProjectCategory> {}

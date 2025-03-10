@@ -10,6 +10,7 @@ import { setupWorkspaceRoutes } from './workspaces';
 import { setupProjectRoutes } from './projects';
 import { setupProjectCategoriesRoutes } from './project-categories';
 import { setupTaskRoutes } from './tasks';
+import { setupTimeLogCategoriesRoutes } from './time-log-categories';
 export const apiFunctions: RouteSetupFunction[] = [
   setupAuthRoutes,
   setupOrganizationRoutes,
@@ -21,5 +22,6 @@ export const apiFunctions: RouteSetupFunction[] = [
   setupWorkspaceRoutes,
   setupProjectRoutes,
   setupProjectCategoriesRoutes,
-  setupTaskRoutes
+  setupTaskRoutes,
+  setupTimeLogCategoriesRoutes
 ];

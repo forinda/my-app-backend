@@ -8,7 +8,7 @@ import { User } from './user';
 import { OrgProject } from './org-project';
 import { OrgTask } from './org-task';
 import { relations } from 'drizzle-orm';
-import { OrgTaskLogCategory } from './organization-task-log-category';
+import { OrgTimeLogCategory } from './organization-time-log-category';
 
 export const orgUserTimeLogApprovalStatus = pgEnum(
   'org_user_time_log_approval_status',
@@ -36,7 +36,7 @@ export const OrgUserTimeLog = pgTable('org_user_time_logs', {
     .references(() => OrgTask.id, foreignKeyConstraints),
   task_log_category_id: integer()
     .notNull()
-    .references(() => OrgTaskLogCategory.id, foreignKeyConstraints),
+    .references(() => OrgTimeLogCategory.id, foreignKeyConstraints),
   description: text().notNull(),
   hours: integer().notNull(),
   minutes: integer().notNull(),
@@ -95,8 +95,8 @@ export const orgUserTimeLogRelations = relations(OrgUserTimeLog, ({ one }) => ({
     fields: [OrgUserTimeLog.task_id],
     references: [OrgTask.id]
   }),
-  category: one(OrgTaskLogCategory, {
+  category: one(OrgTimeLogCategory, {
     fields: [OrgUserTimeLog.task_log_category_id],
-    references: [OrgTaskLogCategory.id]
+    references: [OrgTimeLogCategory.id]
   })
 }));
