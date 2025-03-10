@@ -2,6 +2,7 @@ import type { InferInsertModel, InferSelectModel } from 'drizzle-orm';
 import { relations } from 'drizzle-orm';
 import {
   boolean,
+  date,
   integer,
   pgTable,
   timestamp,
@@ -27,6 +28,7 @@ export const User = pgTable('users', {
   last_login_at: timestamp({ mode: 'string' }),
   is_admin: boolean().notNull().default(false),
   avatar: varchar().notNull().default(''),
+  date_of_birth: date({ mode: 'string' }),
   ...getTableTimestamps()
 });
 

@@ -253,6 +253,13 @@
       "when": 1741547188341,
       "tag": "1741547188_cultured_changeling",
       "breakpoints": true
+    },
+    {
+      "idx": 36,
+      "version": "7",
+      "when": 1741580588495,
+      "tag": "1741580588_pink_omega_sentinel",
+      "breakpoints": true
     }
   ]
 }
