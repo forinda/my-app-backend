@@ -7,7 +7,7 @@ import { Dependency } from '@/common/di';
 import type { ApiRequestContext } from '@/common/interfaces/controller';
 import { inject, injectable } from 'inversify';
 
-import { CreateOrganizationDesignationService } from '../services/create-org-designation.service';
+import { CreateOrganizationDesignationService } from '../services/create.service';
 import type { CreateOrganizationDesignationInputType } from '../schema/schema';
 import { createOrgDesignationSchema } from '../schema/schema';
 import { userAudit } from '@/common/utils/user-request-audit';

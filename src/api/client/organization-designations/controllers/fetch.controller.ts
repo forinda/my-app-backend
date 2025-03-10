@@ -6,7 +6,7 @@ import {
 import { Dependency } from '@/common/di';
 import type { ApiRequestContext } from '@/common/interfaces/controller';
 import { inject, injectable } from 'inversify';
-import { FetchOrganizationDesignationService } from '../services/fetch-org-designation.service';
+import { FetchOrganizationDesignationService } from '../services/fetch.service';
 import { createHttpResponse } from '@/common/utils/responder';
 
 @injectable()

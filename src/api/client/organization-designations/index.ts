@@ -1,8 +1,8 @@
 import { di } from '@/common/di';
 import { Router } from 'express';
-import { CreateOrganizationDesignationController } from './controllers/create-organization-designation.controller';
-import { FetchOrganizationDesignationController } from './controllers/fetch-organization-designation.controller';
-import { UpdateOrganizationDesignationController } from './controllers/update-organization-designation.controller';
+import { CreateOrganizationDesignationController } from './controllers/create.controller';
+import { FetchOrganizationDesignationController } from './controllers/fetch.controller';
+import { UpdateOrganizationDesignationController } from './controllers/update.controller';
 
 type Props = {
   app: Router;
