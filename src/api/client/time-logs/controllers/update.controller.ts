@@ -28,8 +28,10 @@ export class UpdateTimeLogController extends BasePutController {
     },
     audit: userAudit('update')
   })
-  async put({ res, body }: ApiRequestContext<UpdateTimeLogType>) {
-    const feedback = await this.service.update({ data: body! });
+  async put({ res, body, user }: ApiRequestContext<UpdateTimeLogType>) {
+    const feedback = await this.service.update({
+      data: { ...body!, current_user_id: user!.id! }
+    });
 
     return createHttpResponse(res, {
       ...feedback,

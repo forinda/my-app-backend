@@ -1,4 +1,4 @@
-import { injectable } from 'inversify';
+import { inject, injectable } from 'inversify';
 import type { UpdateTimeLogType } from '../schema/schema';
 import { HttpStatus } from '@/common/http';
 import { Dependency } from '@/common/di';
@@ -6,21 +6,27 @@ import {
   TransactionalService,
   type TransactionContext
 } from '@/common/decorators/service-transaction';
-import { ApiError } from '@/common/errors/base';
 import { OrgUserTimeLog } from '@/db/schema';
 import { eq } from 'drizzle-orm';
+import { TimeLogPrerequisiteProcessor } from '../utils/prerequisite-checks';
 
 @injectable()
 @Dependency()
 export class UpdateTimeLogService {
+  @inject(TimeLogPrerequisiteProcessor)
+  private readonly _prerequisiteProcessor: TimeLogPrerequisiteProcessor;
   @TransactionalService()
   async update({
-    data: { time_log_id: title_id, ...data },
+    data,
     transaction
-  }: TransactionContext<UpdateTimeLogType>) {
-    const exisiting = await transaction!.query.OrgUserTimeLog.findFirst({
-      where: eq(OrgUserTimeLog.id, title_id)
-    });
+  }: TransactionContext<UpdateTimeLogType & { current_user_id: number }>) {
+    await this._prerequisiteProcessor.processPreUpdate(data, transaction!);
+
+    await transaction!
+      .update(OrgUserTimeLog)
+      .set(data)
+      .where(eq(OrgUserTimeLog.id, data.time_log_id))
+      .execute();
 
     return {
       data: {},

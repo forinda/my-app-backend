@@ -2,7 +2,7 @@ import {
   foreignKeyConstraints,
   getTableTimestamps
 } from '@/common/utils/drizzle';
-import { pgTable, integer, unique } from 'drizzle-orm/pg-core';
+import { pgTable, integer, unique, boolean } from 'drizzle-orm/pg-core';
 import { Organization } from './organization';
 import { User } from './user';
 import { OrgProject } from './org-project';
@@ -13,7 +13,7 @@ import {
 } from 'drizzle-orm';
 import { OrgTimeLogCategory } from './organization-time-log-category';
 
-export const OrgTaskProjectCategory = pgTable(
+export const OrgProjectTimeLogCategory = pgTable(
   'organization_project_time_log_categories',
   {
     id: integer().primaryKey().generatedAlwaysAsIdentity(),
@@ -26,6 +26,7 @@ export const OrgTaskProjectCategory = pgTable(
     task_log_category_id: integer()
       .notNull()
       .references(() => OrgTimeLogCategory.id, foreignKeyConstraints),
+    is_active: boolean().default(true).notNull(),
     created_by: integer()
       .notNull()
       .references(() => User.id, foreignKeyConstraints),
@@ -45,37 +46,37 @@ export const OrgTaskProjectCategory = pgTable(
 );
 
 export const organizationTaskProjectCategoryRelations = relations(
-  OrgTaskProjectCategory,
+  OrgProjectTimeLogCategory,
   ({ one }) => ({
     creator: one(User, {
-      fields: [OrgTaskProjectCategory.created_by],
+      fields: [OrgProjectTimeLogCategory.created_by],
       references: [User.id]
     }),
     updater: one(User, {
-      fields: [OrgTaskProjectCategory.updated_by],
+      fields: [OrgProjectTimeLogCategory.updated_by],
       references: [User.id]
     }),
     deleter: one(User, {
-      fields: [OrgTaskProjectCategory.deleted_by],
+      fields: [OrgProjectTimeLogCategory.deleted_by],
       references: [User.id]
     }),
     organization: one(Organization, {
-      fields: [OrgTaskProjectCategory.organization_id],
+      fields: [OrgProjectTimeLogCategory.organization_id],
       references: [Organization.id]
     }),
     project: one(OrgProject, {
-      fields: [OrgTaskProjectCategory.project_id],
+      fields: [OrgProjectTimeLogCategory.project_id],
       references: [OrgProject.id]
     }),
     taskLogCategory: one(OrgTimeLogCategory, {
-      fields: [OrgTaskProjectCategory.task_log_category_id],
+      fields: [OrgProjectTimeLogCategory.task_log_category_id],
       references: [OrgTimeLogCategory.id]
     })
   })
 );
 
 export interface SelectOrgProjectTimeLogCategoryInterface
-  extends InferSelectModel<typeof OrgTaskProjectCategory> {}
+  extends InferSelectModel<typeof OrgProjectTimeLogCategory> {}
 
 export interface InsertOrgProjectTimeLogCategoryInterface
-  extends InferInsertModel<typeof OrgTaskProjectCategory> {}
+  extends InferInsertModel<typeof OrgProjectTimeLogCategory> {}

@@ -11,7 +11,7 @@ import { asc, eq } from 'drizzle-orm';
 export class FetchTimeLogService {
   async get(organization_id: number, _?: ApiPaginationParams) {
     const db = useDrizzle();
-    const titles = await db.query.DepartmentTitle.findMany({
+    const titles = await db.query.OrgUserTimeLog.findMany({
       where: eq(DepartmentTitle.organization_id, organization_id),
       limit: _?.limit,
       offset: _?.offset,

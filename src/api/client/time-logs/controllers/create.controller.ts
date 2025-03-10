@@ -25,8 +25,10 @@ export class CreateTimeLogController extends BasePostController {
     bodyBindOrgId: true,
     audit: userAudit('create')
   })
-  async post({ res, body }: ApiRequestContext<CreateTimeLogType>) {
-    const feedback = await this.service.create({ data: body! });
+  async post({ res, body, user }: ApiRequestContext<CreateTimeLogType>) {
+    const feedback = await this.service.create({
+      data: { ...body!, current_user_id: user!.id! }
+    });
 
     return createHttpResponse(res, {
       ...feedback,
