@@ -17,7 +17,8 @@ export class FetchTasksService {
       with: {
         parent: true,
         subtasks: true,
-        assignee: true
+        assignee: true,
+        comments: true
       },
       limit: _?.limit,
       offset: _?.offset,

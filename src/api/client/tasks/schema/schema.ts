@@ -136,6 +136,61 @@ export const unAssignTaskSchema = z.object({
     .positive()
 });
 
+export const addTaskCommentSchema = z.object({
+  task_id: z.coerce
+    .number({
+      message: 'Task ID is required'
+    })
+    .positive(),
+  text: z
+    .string({
+      message: 'Comment is required'
+    })
+    .nonempty({
+      message: 'Comment is required'
+    }),
+  created_by: z.coerce
+    .number({
+      message: 'Created by is required'
+    })
+    .positive(),
+  updated_by: z.coerce.number({
+    message: 'Updated by is required'
+  }),
+  organization_id: z
+    .number({
+      message: 'Organization ID is required'
+    })
+    .positive()
+});
+
+export const updateTaskCommentSchema = z.object({
+  comment_id: z.coerce
+    .number({
+      message: 'Comment ID is required'
+    })
+    .positive(),
+  text: z
+    .string({
+      message: 'Comment is required'
+    })
+    .nonempty({
+      message: 'Comment is required'
+    }),
+  updated_by: z.coerce.number({
+    message: 'Updated by is required'
+  }),
+  organization_id: z
+    .number({
+      message: 'Organization ID is required'
+    })
+    .positive()
+});
+
+export type AddTaskCommentPayload = z.infer<typeof addTaskCommentSchema>;
+
+export type UpdateTaskCommentPayload = z.infer<typeof updateTaskCommentSchema>;
+
 export type NewTaskPayload = z.infer<typeof newTaskSchema>;
 
 export type UpdateTaskPayload = z.infer<typeof updateTaskSchema>;
