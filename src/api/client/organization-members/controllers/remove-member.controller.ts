@@ -7,7 +7,7 @@ import { Dependency } from '@/common/di';
 import type { ApiRequestContext } from '@/common/interfaces/controller';
 import { inject, injectable } from 'inversify';
 import { createHttpResponse } from '@/common/utils/responder';
-import { RemoveOrganizationMemberService } from '../services/remove-organization-member.service';
+import { RemoveOrganizationMemberService } from '../services/remove-member.service';
 import type { AddMemberToOrRemoveFromOrganizationType } from '../schema';
 import { addMemberToOrRemoveFromOrgSchema } from '../schema';
 

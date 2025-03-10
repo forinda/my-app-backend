@@ -68,7 +68,7 @@ export class RemoveUserFromProjectService {
 
     return {
       data: {},
-      status: HttpStatus.CREATED,
+      status: HttpStatus.OK,
       message: 'Users removed successfully'
     };
   }

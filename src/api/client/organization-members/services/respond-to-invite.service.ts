@@ -75,7 +75,7 @@ export class RespondToOrgInviteService {
 
     return {
       data: {},
-      status: HttpStatus.CREATED,
+      status: HttpStatus.OK,
       message: `Successfully sent invites to users`
     };
   }

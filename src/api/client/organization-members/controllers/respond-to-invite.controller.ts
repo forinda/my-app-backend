@@ -10,7 +10,7 @@ import { inject, injectable } from 'inversify';
 import { userAudit } from '@/common/utils/user-request-audit';
 import type { RespondToOrgInviteType } from '../schema';
 import { respondToOrgInviteSchema } from '../schema';
-import { RespondToOrgInviteService } from '../services/respond-to-org-invite.service';
+import { RespondToOrgInviteService } from '../services/respond-to-invite.service';
 import { createHttpResponse } from '@/common/utils/responder';
 
 @injectable()

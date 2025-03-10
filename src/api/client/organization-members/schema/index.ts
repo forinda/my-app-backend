@@ -1,4 +1,14 @@
 import { z } from 'zod';
+
+export const employmentTypeSchema = z.enum([
+  'full_time',
+  'part_time',
+  'contract',
+  'internship'
+]);
+
+export const salaryTypeSchema = z.enum(['monthly', 'hourly']);
+
 export const addMemberToOrRemoveFromOrgSchema = z.object({
   organization_id: z.coerce
     .number({ message: 'Organization ID is required' })
@@ -18,9 +28,46 @@ export const respondToOrgInviteSchema = z.object({
   action: z.enum(['accepted', 'rejected'])
 });
 
+export const initializeUserOrgProfileSchema = z.object({
+  organization_id: z.coerce.number().positive(),
+  designation_id: z.coerce.number().positive(),
+  employee_user_id: z.coerce
+    .string()
+    .nonempty({ message: 'User ID is required' }),
+  tax_id: z.string(),
+  country: z.string(),
+  state: z.string(),
+  city: z.string(),
+  address: z.string(),
+  zip_code: z.string(),
+  national_id: z.string(),
+  currency: z.string().default('KSH'),
+  current_salary: z.number(),
+  starting_salary: z.number(),
+  salary_type: salaryTypeSchema.default('hourly'),
+  employment_type: employmentTypeSchema.default('full_time'),
+  updated_by: z.coerce.number().positive()
+});
+
+export const memberUpdatePersonalOrgProfileSchema = z.object({
+  tax_id: z.string(),
+  country: z.string(),
+  state: z.string(),
+  city: z.string(),
+  address: z.string(),
+  zip_code: z.string(),
+  national_id: z.string(),
+  currency: z.string().default('KSH'),
+  organization_id: z.coerce.number().positive()
+});
+
 export const fetchUserorganizationInvitesSchema = z.object({
   user_id: z.coerce.number().positive()
 });
+
+export type UpdatePersonalOrgProfileType = z.infer<
+  typeof memberUpdatePersonalOrgProfileSchema
+>;
 
 export type AddMemberToOrRemoveFromOrganizationType = z.infer<
   typeof addMemberToOrRemoveFromOrgSchema
@@ -38,4 +85,12 @@ export type FilterOrganizationmembersType = z.infer<
 
 export type FetchUserOrganizationInvitesType = z.infer<
   typeof fetchUserorganizationInvitesSchema
+>;
+
+export type SalaryType = z.infer<typeof salaryTypeSchema>;
+
+export type EmploymentType = z.infer<typeof employmentTypeSchema>;
+
+export type InitializeUserOrganizationProfileType = z.infer<
+  typeof initializeUserOrgProfileSchema
 >;

@@ -65,7 +65,7 @@ export class UpdateOrganizationService {
 
     return {
       data: {},
-      status: HttpStatus.CREATED,
+      status: HttpStatus.OK,
       message: 'Organization updated successfully'
     };
   }

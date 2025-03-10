@@ -5,6 +5,7 @@ import { GetUserSessionController } from './controllers/session.controller';
 import { RegisterUserController } from './controllers/register.controller';
 import { UserLogoutController } from './controllers/logout.controller';
 import { SetCurrentOrganizationSessionIdController } from './controllers/set-current-organization.controller';
+import { UpdateUserProfileController } from './controllers/update-profile.controller';
 
 type Props = {
   app: Router;
@@ -21,7 +22,8 @@ export function setupAuthRoutes({ app }: Props) {
     .post(
       '/set-org',
       di.resolve(SetCurrentOrganizationSessionIdController).post
-    );
+    )
+    .put('/profile-update/:id', di.resolve(UpdateUserProfileController).put);
 
   app.use('/auth', router);
 }

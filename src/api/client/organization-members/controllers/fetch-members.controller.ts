@@ -7,7 +7,7 @@ import { Dependency } from '@/common/di';
 import type { ApiRequestContext } from '@/common/interfaces/controller';
 import { inject, injectable } from 'inversify';
 import { createHttpResponse } from '@/common/utils/responder';
-import { FetchOrganizationMembersService } from '../services/fetch-organization-members.service';
+import { FetchOrganizationMembersService } from '../services/fetch-members.service';
 
 @injectable()
 @Dependency()

@@ -1,10 +1,12 @@
 import { di } from '@/common/di';
 import { Router } from 'express';
-import { FetchOrganizationMembersController } from './controllers/fetch-organization-members.controller';
-import { RemoveOrganizationMembersController } from './controllers/remove-organization-member.controller';
-import { AddOrganizationMemberController } from './controllers/add-organization-member.controller';
-import { FetchOrganizationMemberInvitesController } from './controllers/fetch-org-members-invites.controller';
-import { RespondToOrgInviteController } from './controllers/respond-to-org-invite.controller';
+import { FetchOrganizationMembersController } from './controllers/fetch-members.controller';
+import { RemoveOrganizationMembersController } from './controllers/remove-member.controller';
+import { AddOrganizationMemberController } from './controllers/add-member.controller';
+import { FetchOrganizationMemberInvitesController } from './controllers/fetch-invites.controller';
+import { RespondToOrgInviteController } from './controllers/respond-to-invite.controller';
+import { InitOrgMemberProfileController } from './controllers/init-member-profile.controller';
+import { UpdateOrgPersonalProfileController } from './controllers/update-personal-org-profile.controller';
 
 type Props = {
   app: Router;
@@ -18,7 +20,9 @@ export function setupOrganizationMemberRoutes({ app }: Props) {
     .post('/add', di.resolve(AddOrganizationMemberController).post)
     .post('/remove', di.resolve(RemoveOrganizationMembersController).post)
     .get('/invites', di.resolve(FetchOrganizationMemberInvitesController).get)
-    .post('/respond/:id', di.resolve(RespondToOrgInviteController).post);
+    .post('/respond/:id', di.resolve(RespondToOrgInviteController).post)
+    .post('/init-profile/:id', di.resolve(InitOrgMemberProfileController).post)
+    .put('/update-profile', di.resolve(UpdateOrgPersonalProfileController).put);
 
   app.use('/organization-members', router);
 }

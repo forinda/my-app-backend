@@ -28,7 +28,7 @@ export class AssignTaskService {
 
     return {
       data: {},
-      status: HttpStatus.CREATED,
+      status: HttpStatus.OK,
       message: 'Task assigned successfully'
     };
   }

@@ -31,7 +31,7 @@ export class UnAssignTaskService {
 
     return {
       data: {},
-      status: HttpStatus.CREATED,
+      status: HttpStatus.OK,
       message: 'Task unassigned successfully'
     };
   }
