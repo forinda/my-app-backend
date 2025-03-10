@@ -2,56 +2,84 @@ import { Dependency } from '@/common/di';
 import type { createServer as createHttpServer } from 'http';
 import type { createServer as createHttpsServer } from 'https';
 import { injectable } from 'inversify';
-import type { Namespace } from 'socket.io';
+import type { Namespace, Socket } from 'socket.io';
 import { Server } from 'socket.io';
 import chalk from 'chalk';
+
 export type ServerType =
   | ReturnType<typeof createHttpServer>
   | ReturnType<typeof createHttpsServer>;
 
+const onlineMembers = new Map<string, Set<string>>();
+
 @injectable()
 @Dependency()
 export class SocketHandler {
-  // UUID v4 regex which must start with a forward slash
   public readonly socketChatNamespace = new RegExp(
-    /^\/[a-zA-Z0-9]{8}-[a-zA-Z0-9]{4}-[4][a-zA-Z0-9]{3}-[89AB][a-zA-Z0-9]{3}-[a-zA-Z0-9]{12}$/i
+    /^\/[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i
   );
+
   private setupServer(httpServer: ServerType) {
     return new Server(httpServer, {
       cors: {
-        origin: '*'
+        origin: process.env.ALLOWED_ORIGINS?.split(',') || '*'
       }
     });
+  }
+  private emitOnlineMembers(roomId: string, socket: Socket) {
+    const members = onlineMembers.get(roomId);
+
+    if (members) {
+      socket.to(roomId).emit('online-members', Array.from(members));
+      socket.emit('online-members', Array.from(members));
+    }
   }
 
   public setup(httpServer: ServerType) {
     const io = this.setupServer(httpServer);
-    // Example - /^\/[a-zA-Z0-9]{8}$/ but for UUID v4
     const namespace = io.of(this.socketChatNamespace);
 
-    console.log(chalk.yellow(`[Sockets] - Setting up namespaces`));
-
+    console.info(chalk.yellow(`[Sockets] - Setting up namespaces`));
     this.setupCallback(namespace);
-    console.log(chalk.green(`[Sockets] - Namespaces setup complete`));
+    console.info(chalk.green(`[Sockets] - Namespaces setup complete`));
+  }
+
+  private socketHandler(socket: Socket) {
+    console.info(`SID:${socket.id} - A user connected to ${socket.nsp.name}`);
+
+    socket.on('join-room', (roomId: string, userId: string) => {
+      if (!roomId || !userId) {
+        console.error('Invalid roomId or userId');
+
+        return;
+      }
+      socket.join(roomId);
+      if (!onlineMembers.has(roomId)) {
+        onlineMembers.set(roomId, new Set());
+      }
+      onlineMembers.get(roomId)!.add(userId);
+      socket.to(roomId).emit('user-joined', userId);
+      this.emitOnlineMembers(roomId, socket);
+    });
+    socket.on('disconnect', () => {
+      console.info(`SID:${socket.id} - A user disconnected`);
+      socket.rooms.forEach((room) => {
+        const members = onlineMembers.get(room);
+
+        if (members) {
+          members.delete(socket.id);
+          if (members.size === 0) {
+            onlineMembers.delete(room);
+          }
+          socket.to(room).emit('user-left', socket.id);
+          this.emitOnlineMembers(room, socket);
+        }
+        socket.leave(room);
+      });
+    });
   }
 
   private setupCallback(ns: Namespace) {
-    ns.on('connection', (socket) => {
-      console.log(`SID:${socket.id} - A user connected to ${socket.nsp.name}`);
-      console.log('A user connected');
-      socket.on('join-room', (roomId, userId) => {
-        console.log(`SID:${socket.id} - A user joined room ${roomId}`);
-        socket.join(roomId);
-        socket.to(roomId).emit('user-joined', userId);
-      });
-      socket.on('disconnect', () => {
-        // console.log('A user disconnected');
-        console.log(`SID:${socket.id} - A user disconnected`);
-        socket.rooms.forEach((room) => {
-          socket.to(room).emit('user-left', socket.id);
-          socket.leave(room);
-        });
-      });
-    });
+    ns.on('connection', this.socketHandler);
   }
 }
