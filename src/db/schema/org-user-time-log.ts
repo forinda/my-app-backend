@@ -1,4 +1,11 @@
-import { integer, pgEnum, pgTable, text, timestamp } from 'drizzle-orm/pg-core';
+import {
+  date,
+  integer,
+  pgEnum,
+  pgTable,
+  text,
+  timestamp
+} from 'drizzle-orm/pg-core';
 import { Organization } from './organization';
 import {
   foreignKeyConstraints,
@@ -40,6 +47,7 @@ export const OrgUserTimeLog = pgTable('org_user_time_logs', {
   description: text().notNull(),
   hours: integer().notNull(),
   minutes: integer().notNull(),
+  work_date: date({ mode: 'string' }).notNull(),
   approval_status: orgUserTimeLogApprovalStatus().default('pending'),
   approved_by: integer().references(() => User.id, foreignKeyConstraints),
   approved_at: timestamp({ mode: 'string' }),
