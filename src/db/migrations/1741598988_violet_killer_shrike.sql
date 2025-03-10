@@ -1,0 +1,1 @@
+ALTER TABLE "org_user_time_logs" ADD COLUMN "work_date" date NOT NULL;
