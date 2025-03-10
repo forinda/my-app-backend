@@ -1,4 +1,9 @@
 import z from 'zod';
+export const timelogApprovalStatusSchema = z.enum([
+  'pending',
+  'invoiced',
+  'rejected'
+]);
 
 export const newTimeLogSchema = z.object({
   organization_id: z.coerce
@@ -127,8 +132,53 @@ export const updateTimeLogSchema = z.object({
     .positive()
 });
 
-// export const getOrganizationMember``
+export const deleteTimeLogSchema = z.object({
+  time_log_id: z.number({
+    message: 'Time log ID is required'
+  }),
+  organization_id: z.coerce
+    .number({
+      message: 'Organization id is required'
+    })
+    .positive(),
+  deleted_by: z.coerce
+    .number({
+      message: 'Deleted by is required'
+    })
+    .positive()
+});
+
+export const updateTimelogStatusSchema = z.object({
+  timelog_ids: z
+    .array(
+      z
+        .number({
+          message: 'Time log ID is required'
+        })
+        .positive()
+    )
+    .min(1, { message: 'At least one time log ID is required' }),
+  organization_id: z.coerce
+    .number({
+      message: 'Organization id is required'
+    })
+    .positive(),
+  status: timelogApprovalStatusSchema,
+  updated_by: z.coerce
+    .number({
+      message: 'Updated by is required'
+    })
+    .positive()
+});
+
+export type TimelogApprovalStatusType = z.infer<
+  typeof timelogApprovalStatusSchema
+>;
+
+export type UpdateTimelogStatusType = z.infer<typeof updateTimelogStatusSchema>;
 
 export type CreateTimeLogType = z.infer<typeof newTimeLogSchema>;
 
 export type UpdateTimeLogType = z.infer<typeof updateTimeLogSchema>;
+
+export type DeleteTimeLogType = z.infer<typeof deleteTimeLogSchema>;
