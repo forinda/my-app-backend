@@ -4,11 +4,9 @@ import { CreateDepartmentTitleController } from './controllers/create-department
 import { UpdateDepartmentTitleController } from './controllers/update-department-title.controller';
 import { FetchDepartmentTitleController } from './controllers/fetch-departments.controller';
 
-type Props = {
-  app: Router;
-};
+import type { RouteSetupFunction } from '@/common/interfaces/controller';
 
-export function setupDepartmentTitleRoutes({ app }: Props) {
+export const setupDepartmentTitleRoutes: RouteSetupFunction = ({ app }) => {
   const router = Router();
 
   router
@@ -17,4 +15,4 @@ export function setupDepartmentTitleRoutes({ app }: Props) {
     .put('/:id', di.resolve(UpdateDepartmentTitleController).put);
 
   app.use('/department-titles', router);
-}
+};

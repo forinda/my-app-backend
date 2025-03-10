@@ -4,12 +4,9 @@ import { NewDepartmentController } from './controllers/create-department.control
 import { UpdateDepartmentController } from './controllers/update-department.controller';
 import { FetchDepartmentsController } from './controllers/fetch-departments.controller';
 import { AddUserToDepartmentController } from './controllers/add-users-to-department.controller';
+import type { RouteSetupFunction } from '@/common/interfaces/controller';
 
-type Props = {
-  app: Router;
-};
-
-export function setupDepartmentRoutes({ app }: Props) {
+export const setupDepartmentRoutes: RouteSetupFunction = ({ app }) => {
   const router = Router();
 
   router
@@ -19,4 +16,4 @@ export function setupDepartmentRoutes({ app }: Props) {
     .post('/add-member/:id', di.resolve(AddUserToDepartmentController).post);
 
   app.use('/departments', router);
-}
+};

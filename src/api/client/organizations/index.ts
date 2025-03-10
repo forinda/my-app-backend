@@ -3,12 +3,9 @@ import { Router } from 'express';
 import { CreateOrganizationController } from './controllers/create-organization.controller';
 import { FetchOrganizationsController } from './controllers/get-organizations.controller';
 import { UpdateOrganizationController } from './controllers/update-organization.controller';
+import type { RouteSetupFunction } from '@/common/interfaces/controller';
 
-type Props = {
-  app: Router;
-};
-
-export function setupOrganizationRoutes({ app }: Props) {
+export const setupOrganizationRoutes: RouteSetupFunction = ({ app }) => {
   const router = Router();
 
   router
@@ -17,4 +14,4 @@ export function setupOrganizationRoutes({ app }: Props) {
     .put('/', di.resolve(UpdateOrganizationController).post);
 
   app.use('/organizations', router);
-}
+};

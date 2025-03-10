@@ -5,12 +5,9 @@ import { UpdateWorkspaceController } from './controllers/update.controller';
 import { FetchWorkspaceController } from './controllers/fetch.controller';
 import { AddUserToWorkspaceController } from './controllers/add-users.controller';
 import { RemoveUserFromWorkspaceController } from './controllers/remove-users.controller';
+import type { RouteSetupFunction } from '@/common/interfaces/controller';
 
-type Props = {
-  app: Router;
-};
-
-export function setupWorkspaceRoutes({ app }: Props) {
+export const setupWorkspaceRoutes: RouteSetupFunction = ({ app }) => {
   const router = Router();
 
   router
@@ -24,4 +21,4 @@ export function setupWorkspaceRoutes({ app }: Props) {
     );
 
   app.use('/workspaces', router);
-}
+};

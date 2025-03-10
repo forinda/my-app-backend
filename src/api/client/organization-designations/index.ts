@@ -3,12 +3,11 @@ import { Router } from 'express';
 import { CreateOrganizationDesignationController } from './controllers/create.controller';
 import { FetchOrganizationDesignationController } from './controllers/fetch.controller';
 import { UpdateOrganizationDesignationController } from './controllers/update.controller';
+import type { RouteSetupFunction } from '@/common/interfaces/controller';
 
-type Props = {
-  app: Router;
-};
-
-export function setupOrganizationDesignationsRoutes({ app }: Props) {
+export const setupOrganizationDesignationsRoutes: RouteSetupFunction = ({
+  app
+}) => {
   const router = Router();
 
   router
@@ -17,4 +16,4 @@ export function setupOrganizationDesignationsRoutes({ app }: Props) {
     .put('/:id', di.resolve(UpdateOrganizationDesignationController).put);
 
   app.use('/organization-designations', router);
-}
+};

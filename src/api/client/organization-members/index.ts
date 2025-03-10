@@ -7,12 +7,9 @@ import { FetchOrganizationMemberInvitesController } from './controllers/fetch-in
 import { RespondToOrgInviteController } from './controllers/respond-to-invite.controller';
 import { InitOrgMemberProfileController } from './controllers/init-member-profile.controller';
 import { UpdateOrgPersonalProfileController } from './controllers/update-personal-org-profile.controller';
+import type { RouteSetupFunction } from '@/common/interfaces/controller';
 
-type Props = {
-  app: Router;
-};
-
-export function setupOrganizationMemberRoutes({ app }: Props) {
+export const setupOrganizationMemberRoutes: RouteSetupFunction = ({ app }) => {
   const router = Router();
 
   router
@@ -25,4 +22,4 @@ export function setupOrganizationMemberRoutes({ app }: Props) {
     .put('/update-profile', di.resolve(UpdateOrgPersonalProfileController).put);
 
   app.use('/organization-members', router);
-}
+};

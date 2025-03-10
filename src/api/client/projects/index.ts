@@ -5,12 +5,9 @@ import { UpdateProjectController } from './controllers/update.controller';
 import { FetchProjectController } from './controllers/fetch.controller';
 import { AddUserToProjectController } from './controllers/add-users.controller';
 import { RemoveUserFromProjectController } from './controllers/remove-users.controller';
+import type { RouteSetupFunction } from '@/common/interfaces/controller';
 
-type Props = {
-  app: Router;
-};
-
-export function setupProjectRoutes({ app }: Props) {
+export const setupProjectRoutes: RouteSetupFunction = ({ app }) => {
   const router = Router();
 
   router
@@ -24,4 +21,4 @@ export function setupProjectRoutes({ app }: Props) {
     );
 
   app.use('/projects', router);
-}
+};

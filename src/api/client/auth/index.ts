@@ -7,11 +7,9 @@ import { UserLogoutController } from './controllers/logout.controller';
 import { SetCurrentOrganizationSessionIdController } from './controllers/set-current-organization.controller';
 import { UpdateUserProfileController } from './controllers/update-profile.controller';
 
-type Props = {
-  app: Router;
-};
+import type { RouteSetupFunction } from '@/common/interfaces/controller';
 
-export function setupAuthRoutes({ app }: Props) {
+export const setupAuthRoutes: RouteSetupFunction = ({ app }) => {
   const router = Router();
 
   router
@@ -26,4 +24,4 @@ export function setupAuthRoutes({ app }: Props) {
     .put('/profile-update/:id', di.resolve(UpdateUserProfileController).put);
 
   app.use('/auth', router);
-}
+};

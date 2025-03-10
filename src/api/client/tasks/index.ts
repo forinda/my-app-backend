@@ -4,12 +4,9 @@ import { CreateTaskController } from './controllers/create.controller';
 import { UpdateTaskController } from './controllers/update.controller';
 import { FetchTaskController } from './controllers/fetch.controller';
 import { AssignTaskController } from './controllers/assign.controller';
+import type { RouteSetupFunction } from '@/common/interfaces/controller';
 
-type Props = {
-  app: Router;
-};
-
-export function setupTaskRoutes({ app }: Props) {
+export const setupTaskRoutes: RouteSetupFunction = ({ app }) => {
   const router = Router();
 
   router
@@ -19,4 +16,4 @@ export function setupTaskRoutes({ app }: Props) {
     .patch('/:id/assign', di.resolve(AssignTaskController).post);
 
   app.use('/tasks', router);
-}
+};
