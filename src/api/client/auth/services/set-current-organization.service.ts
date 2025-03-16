@@ -1,13 +1,12 @@
 import type { TransactionContext } from '@/common/decorators/service-transaction';
 import { TransactionalService } from '@/common/decorators/service-transaction';
-import { Dependency } from '@/common/di';
-import { injectable } from 'inversify';
+import { dependency } from '@/common/di';
+
 import type { ValidateSwitchOrganizationInput } from '../schema/schema';
 import { eq } from 'drizzle-orm';
 import { AuthSession } from '@/db/schema';
 
-@injectable()
-@Dependency()
+@dependency()
 export class SetCurrentOrganizationSessionIdService {
   @TransactionalService()
   async set(
