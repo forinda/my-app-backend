@@ -3,16 +3,13 @@ import {
   Controller,
   ApiControllerMethod
 } from '@/common/decorators/controller.decorator';
-import { Dependency } from '@/common/di';
 import type { ApiRequestContext } from '@/common/interfaces/controller';
-import { inject, injectable } from 'inversify';
+import { inject } from 'inversify';
 import { createHttpResponse } from '@/common/utils/responder';
 import { RemoveOrganizationMemberService } from '../services/remove-member.service';
 import type { AddMemberToOrRemoveFromOrganizationType } from '../schema';
 import { addMemberToOrRemoveFromOrgSchema } from '../schema';
 
-@injectable()
-@Dependency()
 @Controller()
 export class RemoveOrganizationMembersController extends BasePostController {
   @inject(RemoveOrganizationMemberService)

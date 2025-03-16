@@ -3,14 +3,11 @@ import {
   Controller,
   ApiControllerMethod
 } from '@/common/decorators/controller.decorator';
-import { Dependency } from '@/common/di';
 import type { ApiRequestContext } from '@/common/interfaces/controller';
-import { inject, injectable } from 'inversify';
+import { inject } from 'inversify';
 import { createHttpResponse } from '@/common/utils/responder';
 import { FetchOrganizationMembersService } from '../services/fetch-members.service';
 
-@injectable()
-@Dependency()
 @Controller()
 export class FetchOrganizationMembersController extends BaseGetController {
   @inject(FetchOrganizationMembersService)
