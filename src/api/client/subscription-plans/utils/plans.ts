@@ -1,28 +1,10 @@
-import type { SubscriptionType } from '../schema/schema';
+import type {
+  CreateSubscriptionFeatureType,
+  CreateSubscriptionPlanType,
+  SubscriptionType
+} from '../schema/schema';
 
-export const subscriptionPlans: Record<
-  SubscriptionType,
-  {
-    name: string;
-    description: string;
-    maximum_users: number;
-    maximum_projects: number;
-    per_user_monthly_price: number;
-    annual_discount: number;
-    currency: string;
-    trial_period_days: number;
-    type: SubscriptionType;
-    cta: string;
-    features: Record<
-      string,
-      {
-        name: string;
-        description: string;
-        is_active: boolean;
-      }
-    >;
-  }
-> = {
+export const subscriptionPlans = {
   starter: {
     name: 'Starter',
     type: 'starter',
@@ -34,6 +16,7 @@ export const subscriptionPlans: Record<
     currency: 'USD',
     trial_period_days: 14,
     cta: 'Start Free Trial',
+    is_popular: false,
     features: {
       basic_time_tracking: {
         name: 'Basic Time Tracking',
@@ -73,6 +56,7 @@ export const subscriptionPlans: Record<
     currency: 'USD',
     trial_period_days: 14,
     cta: 'Start Free Trial',
+    is_popular: true,
     features: {
       advanced_time_tracking: {
         name: 'Advanced Time Tracking',
@@ -122,6 +106,7 @@ export const subscriptionPlans: Record<
     currency: 'USD',
     trial_period_days: 14,
     cta: 'Start Free Trial',
+    is_popular: false,
     features: {
       comprehensive_time_tracking: {
         name: 'Comprehensive Time Tracking',
@@ -176,6 +161,7 @@ export const subscriptionPlans: Record<
     currency: 'USD',
     trial_period_days: 14,
     cta: 'Contact Sales',
+    is_popular: false,
     features: {
       custom_time_tracking: {
         name: 'Custom Time Tracking Solutions',
@@ -224,4 +210,9 @@ export const subscriptionPlans: Record<
       }
     }
   }
-};
+} satisfies Record<
+  SubscriptionType,
+  CreateSubscriptionPlanType & {
+    features: Record<string, CreateSubscriptionFeatureType>;
+  }
+>;

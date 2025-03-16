@@ -1,0 +1,1 @@
+ALTER TABLE "organization_subscriptions" ALTER COLUMN "is_popular" SET NOT NULL;

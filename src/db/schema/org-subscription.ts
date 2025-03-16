@@ -2,6 +2,7 @@ import { getTableTimestamps } from '@/common/utils/drizzle';
 import type { InferInsertModel, InferSelectModel } from 'drizzle-orm';
 import { relations } from 'drizzle-orm';
 import {
+  boolean,
   decimal,
   integer,
   pgEnum,
@@ -35,6 +36,7 @@ export const OrgSubscription = pgTable('organization_subscriptions', {
   trial_period_days: integer().notNull(),
   type: subscriptionTypes().notNull().default('starter'),
   cta: varchar().notNull(),
+  is_popular: boolean().default(false).notNull(),
   ...getTableTimestamps()
 });
 

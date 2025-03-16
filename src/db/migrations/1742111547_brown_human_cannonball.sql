@@ -1,0 +1,1 @@
+ALTER TABLE "organization_subscriptions" ADD COLUMN "is_popular" boolean DEFAULT false;

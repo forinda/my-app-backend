@@ -37,18 +37,21 @@ export const CreateSubscriptionPlanSchema = z.object({
   currency: curencySchema,
   trial_period_days: z.number().int().nonnegative(),
   type: SubscriptionTypeSchema,
-  cta: z.string().nonempty()
+  cta: z.string().nonempty(),
+  is_popular: z.boolean().default(false)
 });
 
 export const CreateSubscriptionFeatureSchema = z.object({
   name: z.string().nonempty(),
   description: z.string().nonempty(),
-  is_active: z.boolean()
+  is_active: z.boolean().optional()
 });
 
-export type SubscriptionPlan = z.infer<typeof CreateSubscriptionPlanSchema>;
+export type CreateSubscriptionPlanType = z.infer<
+  typeof CreateSubscriptionPlanSchema
+>;
 
-export type SubscriptionFeature = z.infer<
+export type CreateSubscriptionFeatureType = z.infer<
   typeof CreateSubscriptionFeatureSchema
 >;
 
