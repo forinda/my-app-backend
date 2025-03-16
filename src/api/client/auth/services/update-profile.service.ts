@@ -1,5 +1,4 @@
-import { injectable } from 'inversify';
-import { Dependency } from '@/common/di';
+import { dependency } from '@/common/di';
 import type { TransactionContext } from '@/common/decorators/service-transaction';
 import { TransactionalService } from '@/common/decorators/service-transaction';
 import { HttpStatus } from '@/common/http';
@@ -9,8 +8,7 @@ import { formatKenyanPhone } from '@/common/utils/phone-number-format';
 import type { UpdateUserProfileInput } from '../schema/schema';
 import { ApiError } from '@/common/errors/base';
 
-@injectable()
-@Dependency()
+@dependency()
 export class UpdateUserProfileService {
   @TransactionalService()
   async update({
