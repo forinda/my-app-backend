@@ -1,0 +1,1 @@
+ALTER TABLE "org_subscription_features" ADD CONSTRAINT "org_subscription_features_name_unique" UNIQUE("name");
