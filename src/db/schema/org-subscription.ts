@@ -21,13 +21,16 @@ export const subscriptionTypes = pgEnum('org_subscription_enum_types', [
 export const OrgSubscription = pgTable('organization_subscriptions', {
   id: integer().primaryKey().generatedAlwaysAsIdentity(),
   uuid: uuid().defaultRandom().unique().notNull(),
-  name: varchar().notNull(),
+  name: varchar().notNull().unique(),
   description: text().notNull(),
   maximum_users: integer().notNull(),
   maximum_projects: integer().notNull(),
   per_user_monthly_price: integer().notNull(),
   annual_discount: integer().notNull(),
+  currency: varchar().notNull().default('KES'),
+  trial_period_days: integer().notNull(),
   type: subscriptionTypes().notNull().default('starter'),
+  cta: varchar().notNull(),
   ...getTableTimestamps()
 });
 
