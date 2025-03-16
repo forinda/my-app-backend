@@ -1,5 +1,4 @@
-import { injectable } from 'inversify';
-import { Dependency, di } from '../di';
+import { dependency, di } from '../di';
 
 import type { LoggerInstance } from 'winston';
 import winston from 'winston';
@@ -10,8 +9,7 @@ import { FileManager } from '../utils/file-manager';
 
 type LogSchemes = '[API]' | '[HTTP]' | '[FILE_MANAGER]' | '[DB]' | '[AUTH]';
 
-@injectable()
-@Dependency()
+@dependency()
 export class AppLogger {
   private logger: LoggerInstance;
   constructor() {

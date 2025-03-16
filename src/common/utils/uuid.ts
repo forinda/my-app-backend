@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { injectable } from 'inversify';
-import { Dependency } from '../di';
+import { dependency } from '../di';
 
 import { v4 as uuidv4, validate as isValid } from 'uuid';
 import { ApiError } from '../errors/base';
@@ -13,8 +12,7 @@ type ValidationOptions = {
 type GenerateOptions = {
   version?: 1 | 2 | 3 | 4 | 5;
 };
-@injectable()
-@Dependency()
+@dependency()
 export class UUID {
   /**
    *

@@ -1,15 +1,13 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 
-import { injectable } from 'inversify';
-import { Dependency } from '../di';
+import { dependency } from '../di';
 import type { ApiNext, ApiReq, ApiRes } from '../http';
 import { HttpStatus } from '../http';
 import { ApiError } from './base';
 import type { Router } from 'express';
 import { createHttpResponse } from '../utils/responder';
 
-@injectable()
-@Dependency()
+@dependency()
 export class ApiErrorRouteHandler {
   private catchAllErrorRouteHandler(req: ApiReq, res: ApiRes, next: ApiNext) {
     return createHttpResponse(res, {

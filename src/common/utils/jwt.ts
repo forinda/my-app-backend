@@ -1,7 +1,7 @@
-import { inject, injectable } from 'inversify';
+import { inject } from 'inversify';
 import jwt from 'jsonwebtoken';
 import { Config } from '../config';
-import { Dependency } from '../di';
+import { dependency } from '../di';
 
 /**
  * Defines the structure of a JWT payload.
@@ -14,8 +14,7 @@ type JwtPayload = {
   };
   type: 'access' | 'refresh';
 };
-@injectable()
-@Dependency()
+@dependency()
 export class JWT {
   @inject(Config) private readonly config: Config;
 

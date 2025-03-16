@@ -1,9 +1,7 @@
-import { injectable } from 'inversify';
 import bcrypt from 'bcryptjs';
-import { Dependency } from '../di';
+import { dependency } from '../di';
 
-@injectable()
-@Dependency()
+@dependency()
 export class PasswordProcessor {
   /**
    * The `hash` method is a placeholder for a password hashing function.

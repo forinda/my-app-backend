@@ -1,10 +1,9 @@
-import { inject, injectable } from 'inversify';
+import { inject } from 'inversify';
 import { Resend } from 'resend';
-import { Dependency } from '../di';
+import { dependency } from '../di';
 import { Config } from '../config';
 
-@injectable()
-@Dependency()
+@dependency()
 export class ResendMailer {
   //   constructor(@inject(Config) private readonly config: Config) {}
   @inject(Config) private readonly config: Config;

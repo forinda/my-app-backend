@@ -1,14 +1,13 @@
 import fs from 'fs';
-import { injectable } from 'inversify';
-import { Dependency } from '../di';
+
+import { dependency } from '../di';
 import path from 'path';
 
 type RecursiveOptions = {
   recursive?: boolean;
 };
 
-@injectable()
-@Dependency()
+@dependency()
 export class FileManager {
   /**
    *

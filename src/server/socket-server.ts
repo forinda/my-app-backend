@@ -1,7 +1,6 @@
-import { Dependency } from '@/common/di';
+import { dependency } from '@/common/di';
 import type { createServer as createHttpServer } from 'http';
 import type { createServer as createHttpsServer } from 'https';
-import { injectable } from 'inversify';
 import type { Namespace, Socket } from 'socket.io';
 import { Server } from 'socket.io';
 import chalk from 'chalk';
@@ -12,8 +11,7 @@ export type ServerType =
 
 const onlineMembers = new Map<string, Set<string>>();
 
-@injectable()
-@Dependency()
+@dependency()
 export class SocketHandler {
   public readonly socketChatNamespace = new RegExp(
     /^\/[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i

@@ -1,16 +1,15 @@
 import { ApiServerSetup } from '@/app';
 import { Config } from '@/common/config';
-import { Dependency } from '@/common/di';
+import { dependency } from '@/common/di';
 import { ApiErrorRouteHandler } from '@/common/errors/route-err-handler';
 import type { Application } from 'express';
 import express from 'express';
 import { createServer } from 'http';
-import { inject, injectable } from 'inversify';
+import { inject } from 'inversify';
 import chalk from 'chalk';
 import { SocketHandler } from './socket-server';
 // import { baseLogger } from '@/common/logger';
-@injectable()
-@Dependency()
+@dependency()
 export class ApiServer {
   app: Application;
   _name: string;

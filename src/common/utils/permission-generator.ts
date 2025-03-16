@@ -1,4 +1,3 @@
-import { injectable } from 'inversify';
 import type {
   AuthorityType,
   AuthorityModuleTypes
@@ -6,10 +5,9 @@ import type {
 import { permissionTable } from '../constants/persmission-table';
 import { ApiError } from '../errors/base';
 import { HttpStatus } from '../http';
-import { Dependency } from '../di';
+import { dependency } from '../di';
 
-@injectable()
-@Dependency()
+@dependency()
 export class AuthorityManager {
   generatePermissions() {
     const permissions = Object.keys(permissionTable).map((key) => ({

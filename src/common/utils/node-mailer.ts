@@ -1,10 +1,9 @@
-import { inject, injectable } from 'inversify';
-import { Dependency } from '../di';
+import { inject } from 'inversify';
+import { dependency } from '../di';
 import type { Transporter } from 'nodemailer';
 import nodemailer from 'nodemailer';
 import { Config } from '../config';
-@injectable()
-@Dependency()
+@dependency()
 export class NodeMailer {
   @inject(Config) private readonly config: Config;
   private readonly htmlHeader = `

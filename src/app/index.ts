@@ -1,16 +1,15 @@
 import { ApiV1 } from '@/api/v1';
-import { Dependency } from '@/common/di';
+import { dependency } from '@/common/di';
 import type { Application } from 'express';
 import express from 'express';
 import cors from 'cors';
-import { inject, injectable } from 'inversify';
+import { inject } from 'inversify';
 import { Config } from '@/common/config';
 import morgan from 'morgan';
 import helmet from 'helmet';
 import cookieParser from 'cookie-parser';
 
-@injectable()
-@Dependency()
+@dependency()
 export class ApiServerSetup {
   @inject(ApiV1) private readonly apiV1: ApiV1;
   @inject(Config) private readonly config: Config;

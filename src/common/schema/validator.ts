@@ -1,11 +1,10 @@
 import type { z } from 'zod';
 import { ApiError } from '../errors/base';
 import { HttpStatus } from '../http';
-import { injectable } from 'inversify';
-import { Dependency } from '../di';
 
-@injectable()
-@Dependency()
+import { dependency } from '../di';
+
+@dependency()
 export class PayloadValidator {
   validate<T = any>(schema: z.Schema, payload: T) {
     const { success, error } = schema.safeParse(payload);

@@ -1,10 +1,22 @@
 import { useDrizzle, type DrizzleTransaction } from '@/db';
 import { ApiError } from '../errors/base';
 
-export type TransactionContext<D = any> = {
+type ContextWithData<D> = {
   data: D;
   transaction?: DrizzleTransaction;
 };
+
+type ContextWithoutData = {
+  transaction?: DrizzleTransaction;
+};
+
+export type TransactionContext<D = any> = D extends undefined
+  ? ContextWithoutData
+  : D extends null
+    ? ContextWithoutData
+    : ContextWithData<D>;
+
+// export type NodDataTransactionContext = TransactionContext<undefined>;
 
 export function TransactionalService() {
   return function (target: any, key: string, descriptor: PropertyDescriptor) {
