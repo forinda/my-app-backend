@@ -4,7 +4,7 @@
 // import { AuthorityManager } from '@/common/utils/permission-generator';
 // import { AuthModule, AuthPermission } from '@/db/schema';
 // import { eq } from 'drizzle-orm';
-// import { inject, injectable } from 'inversify';
+// import { inject } from 'inversify';
 
 // @injectable()
 // @Dependency()
