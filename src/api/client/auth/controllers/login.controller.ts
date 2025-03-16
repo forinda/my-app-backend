@@ -6,13 +6,10 @@ import {
 import { HttpStatus } from '@/common/http';
 import type { ApiRequestContext } from '@/common/interfaces/controller';
 import { inject } from 'inversify';
-
 import { LoginUserService } from '../services/login.service';
-
 import { createHttpResponse } from '@/common/utils/responder';
 import type { LoginUserInput } from '../schema/schema';
 import { loginUserSchema } from '../schema/schema';
-
 @Controller()
 export class LoginUserController extends BasePostController {
   @inject(LoginUserService) private service: LoginUserService;
