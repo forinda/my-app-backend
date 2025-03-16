@@ -11,7 +11,7 @@ import {
   uuid,
   varchar
 } from 'drizzle-orm/pg-core';
-import { OrgSubscriptionFeature } from './org-subscription-feature';
+import { OrgFeatureSubscriptionMapping } from './org-feature-subscription-mapping';
 
 export const subscriptionTypes = pgEnum('org_subscription_enum_types', [
   'starter',
@@ -43,7 +43,7 @@ export const OrgSubscription = pgTable('organization_subscriptions', {
 export const orgSubscriptionRelations = relations(
   OrgSubscription,
   ({ many }) => ({
-    features: many(OrgSubscriptionFeature)
+    subscriptionFeatures: many(OrgFeatureSubscriptionMapping)
   })
 );
 
