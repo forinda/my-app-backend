@@ -1,9 +1,7 @@
-import { Dependency } from '@/common/di';
+import { dependency } from '@/common/di';
 import type { ApiReq } from '@/common/http';
-import { injectable } from 'inversify';
 
-@injectable()
-@Dependency()
+@dependency()
 export class IpFinder {
   getClientIp(req: ApiReq) {
     const ip = req.ip;
