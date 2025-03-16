@@ -3,9 +3,8 @@ import {
   Controller,
   ApiControllerMethod
 } from '@/common/decorators/controller.decorator';
-import { Dependency } from '@/common/di';
 import type { ApiRequestContext } from '@/common/interfaces/controller';
-import { inject, injectable } from 'inversify';
+import { inject } from 'inversify';
 
 import type { UpdateTaskPayload } from '../schema/schema';
 import { updateTaskSchema } from '../schema/schema';
@@ -13,8 +12,6 @@ import { UpdateTaskService } from '../services/update.service';
 import { userAudit } from '@/common/utils/user-request-audit';
 import { createHttpResponse } from '@/common/utils/responder';
 
-@injectable()
-@Dependency()
 @Controller()
 export class UpdateTaskController extends BasePutController {
   @inject(UpdateTaskService)
