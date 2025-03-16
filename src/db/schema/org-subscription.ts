@@ -2,6 +2,7 @@ import { getTableTimestamps } from '@/common/utils/drizzle';
 import type { InferInsertModel, InferSelectModel } from 'drizzle-orm';
 import { relations } from 'drizzle-orm';
 import {
+  decimal,
   integer,
   pgEnum,
   pgTable,
@@ -23,10 +24,13 @@ export const OrgSubscription = pgTable('organization_subscriptions', {
   uuid: uuid().defaultRandom().unique().notNull(),
   name: varchar().notNull().unique(),
   description: text().notNull(),
-  maximum_users: integer().notNull(),
-  maximum_projects: integer().notNull(),
+  maximum_users: decimal().notNull(),
+  maximum_projects: decimal().notNull(),
   per_user_monthly_price: integer().notNull(),
-  annual_discount: integer().notNull(),
+  annual_discount: decimal({
+    precision: 5,
+    scale: 2
+  }).notNull(),
   currency: varchar().notNull().default('KES'),
   trial_period_days: integer().notNull(),
   type: subscriptionTypes().notNull().default('starter'),
