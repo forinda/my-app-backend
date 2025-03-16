@@ -3,9 +3,8 @@ import {
   Controller,
   ApiControllerMethod
 } from '@/common/decorators/controller.decorator';
-import { Dependency } from '@/common/di';
 import type { ApiRequestContext } from '@/common/interfaces/controller';
-import { inject, injectable } from 'inversify';
+import { inject } from 'inversify';
 
 import { createHttpResponse } from '@/common/utils/responder';
 import type { UpdateUserProfileInput } from '../schema/schema';
@@ -13,8 +12,6 @@ import { updateUserProfileSchema } from '../schema/schema';
 import { UpdateUserProfileService } from '../services/update-profile.service';
 import { userAudit } from '@/common/utils/user-request-audit';
 
-@injectable()
-@Dependency()
 @Controller()
 export class UpdateUserProfileController extends BasePutController {
   @inject(UpdateUserProfileService) private service: UpdateUserProfileService;
