@@ -1,5 +1,5 @@
-import { inject, injectable } from 'inversify';
-import { Dependency } from '@/common/di';
+import { inject } from 'inversify';
+import { dependency } from '@/common/di';
 import type { TransactionContext } from '@/common/decorators/service-transaction';
 import { TransactionalService } from '@/common/decorators/service-transaction';
 import { HttpStatus } from '@/common/http';
@@ -13,8 +13,7 @@ import type { BareObject } from '@/common/interfaces/helpers';
 import { phoneValidator } from '@/common/utils/phone-number-format';
 import { ApiError } from '@/common/errors/base';
 
-@injectable()
-@Dependency()
+@dependency()
 export class LoginUserService {
   @inject(PasswordProcessor) private passwordProcessor: PasswordProcessor;
   @inject(Config) private config: Config;
