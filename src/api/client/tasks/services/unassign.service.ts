@@ -1,8 +1,8 @@
-import { inject, injectable } from 'inversify';
+import { inject } from 'inversify';
 import type { UnAssignTaskPayload } from '../schema/schema';
 
 import { HttpStatus } from '@/common/http';
-import { Dependency } from '@/common/di';
+import { dependency } from '@/common/di';
 import {
   TransactionalService,
   type TransactionContext
@@ -11,8 +11,7 @@ import { OrgTask } from '@/db/schema';
 import { TaskCreationAndUpdateCheckUtil } from '../utils/task-creation-checks';
 import { eq } from 'drizzle-orm';
 
-@injectable()
-@Dependency()
+@dependency()
 export class UnAssignTaskService {
   @inject(TaskCreationAndUpdateCheckUtil)
   private taskCreationChecks: TaskCreationAndUpdateCheckUtil;

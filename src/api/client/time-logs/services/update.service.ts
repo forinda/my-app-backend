@@ -1,7 +1,7 @@
-import { inject, injectable } from 'inversify';
+import { inject } from 'inversify';
 import type { UpdateTimeLogType } from '../schema/schema';
 import { HttpStatus } from '@/common/http';
-import { Dependency } from '@/common/di';
+import { dependency } from '@/common/di';
 import {
   TransactionalService,
   type TransactionContext
@@ -10,8 +10,7 @@ import { OrgUserTimeLog } from '@/db/schema';
 import { eq } from 'drizzle-orm';
 import { TimeLogPrerequisiteProcessor } from '../utils/prerequisite-checks';
 
-@injectable()
-@Dependency()
+@dependency()
 export class UpdateTimeLogService {
   @inject(TimeLogPrerequisiteProcessor)
   private readonly _prerequisiteProcessor: TimeLogPrerequisiteProcessor;

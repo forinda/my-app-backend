@@ -1,7 +1,6 @@
-import { injectable } from 'inversify';
 import type { DeleteTimeLogType } from '../schema/schema';
 import { HttpStatus } from '@/common/http';
-import { Dependency } from '@/common/di';
+import { dependency } from '@/common/di';
 import {
   TransactionalService,
   type TransactionContext
@@ -10,8 +9,7 @@ import { OrgUserTimeLog } from '@/db/schema';
 import { eq, and } from 'drizzle-orm';
 import { ApiError } from '@/common/errors/base';
 
-@injectable()
-@Dependency()
+@dependency()
 export class DeleteTimeLogService {
   @TransactionalService()
   async update({

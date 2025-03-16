@@ -1,8 +1,8 @@
-import { inject, injectable } from 'inversify';
+import { inject } from 'inversify';
 import type { CreateTimeLogType } from '../schema/schema';
 
 import { HttpStatus } from '@/common/http';
-import { Dependency } from '@/common/di';
+import { dependency } from '@/common/di';
 import {
   TransactionalService,
   type TransactionContext
@@ -10,8 +10,7 @@ import {
 import { OrgUserTimeLog } from '@/db/schema';
 import { TimeLogPrerequisiteProcessor } from '../utils/prerequisite-checks';
 
-@injectable()
-@Dependency()
+@dependency()
 export class CreateTimeLogService {
   @inject(TimeLogPrerequisiteProcessor)
   private readonly _prerequisiteProcessor: TimeLogPrerequisiteProcessor;

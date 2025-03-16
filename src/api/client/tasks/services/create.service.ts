@@ -1,8 +1,8 @@
-import { inject, injectable } from 'inversify';
+import { inject } from 'inversify';
 import type { NewTaskPayload } from '../schema/schema';
 
 import { HttpStatus } from '@/common/http';
-import { Dependency } from '@/common/di';
+import { dependency } from '@/common/di';
 import {
   TransactionalService,
   type TransactionContext
@@ -11,8 +11,7 @@ import type { InsertOrgTaskInterface } from '@/db/schema';
 import { OrgTask } from '@/db/schema';
 import { TaskCreationAndUpdateCheckUtil } from '../utils/task-creation-checks';
 
-@injectable()
-@Dependency()
+@dependency()
 export class CreateTaskService {
   @inject(TaskCreationAndUpdateCheckUtil)
   private taskCreationChecks: TaskCreationAndUpdateCheckUtil;

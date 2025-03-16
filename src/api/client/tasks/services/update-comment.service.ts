@@ -1,7 +1,6 @@
-import { injectable } from 'inversify';
 import type { UpdateTaskCommentPayload } from '../schema/schema';
 import { HttpStatus } from '@/common/http';
-import { Dependency } from '@/common/di';
+import { dependency } from '@/common/di';
 import {
   TransactionalService,
   type TransactionContext
@@ -10,8 +9,7 @@ import { eq } from 'drizzle-orm';
 import { OrgTaskComment } from '@/db/schema';
 import { ApiError } from '@/common/errors/base';
 
-@injectable()
-@Dependency()
+@dependency()
 export class UpdateTaskCommentService {
   @TransactionalService()
   async update({

@@ -1,13 +1,11 @@
-import { injectable } from 'inversify';
 import { DepartmentTitle, OrgUserTimeLog } from '@/db/schema';
 import { useDrizzle } from '@/db';
 import { HttpStatus } from '@/common/http';
-import { Dependency } from '@/common/di';
+import { dependency } from '@/common/di';
 import type { ApiPaginationParams } from '@/common/utils/pagination';
 import { and, asc, eq, sql } from 'drizzle-orm';
 
-@injectable()
-@Dependency()
+@dependency()
 export class FetchTimeLogService {
   async get(organization_id: number, _?: ApiPaginationParams) {
     const db = useDrizzle();

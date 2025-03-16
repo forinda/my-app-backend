@@ -1,10 +1,9 @@
-import { injectable } from 'inversify';
 import type { NewWorkspacePayload } from '../schema/schema';
 
 import { and, eq } from 'drizzle-orm';
 
 import { HttpStatus } from '@/common/http';
-import { Dependency } from '@/common/di';
+import { dependency } from '@/common/di';
 import {
   TransactionalService,
   type TransactionContext
@@ -13,8 +12,7 @@ import { ApiError } from '@/common/errors/base';
 import type { InsertOrgWorkspaceInterface } from '@/db/schema';
 import { OrgWorkspace } from '@/db/schema';
 
-@injectable()
-@Dependency()
+@dependency()
 export class CreateWorkspaceService {
   @TransactionalService()
   async create({ data, transaction }: TransactionContext<NewWorkspacePayload>) {
