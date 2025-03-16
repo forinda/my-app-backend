@@ -14,13 +14,12 @@ import {
   OrgProjectMember
 } from '@/db/schema';
 import { and, eq, ne } from 'drizzle-orm';
-import { injectable } from 'inversify';
-import { Dependency } from '@/common/di';
+
+import { dependency } from '@/common/di';
 
 type ActionTypes = 'create' | 'update';
 
-@injectable()
-@Dependency()
+@dependency()
 export class TaskCreationAndUpdateCheckUtil {
   private runCommonChecks(transaction: DrizzleTransaction) {
     return async (data: NewTaskPayload | UpdateTaskPayload) => {

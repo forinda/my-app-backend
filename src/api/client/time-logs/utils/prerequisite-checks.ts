@@ -1,5 +1,5 @@
-import { Dependency } from '@/common/di';
-import { injectable } from 'inversify';
+import { dependency } from '@/common/di';
+
 import type { CreateTimeLogType, UpdateTimeLogType } from '../schema/schema';
 import type { DrizzleTransaction } from '@/db';
 import { and, eq } from 'drizzle-orm';
@@ -21,8 +21,7 @@ type UpdatePayload = UpdateTimeLogType & {
   current_user_id: number;
 };
 
-@injectable()
-@Dependency()
+@dependency()
 export class TimeLogPrerequisiteProcessor {
   private async checkUserProjectAccess(
     payload: CreatePayload | UpdatePayload,
