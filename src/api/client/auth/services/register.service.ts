@@ -1,5 +1,5 @@
-import { inject, injectable } from 'inversify';
-import { Dependency } from '@/common/di';
+import { inject } from 'inversify';
+import { dependency } from '@/common/di';
 import type { TransactionContext } from '@/common/decorators/service-transaction';
 import { TransactionalService } from '@/common/decorators/service-transaction';
 import { HttpStatus } from '@/common/http';
@@ -13,8 +13,7 @@ import { generateAvatar } from '@/common/utils/avatar';
 import type { RegisterUserInput } from '../schema/schema';
 import { ApiError } from '@/common/errors/base';
 
-@injectable()
-@Dependency()
+@dependency()
 export class RegisterUserService {
   @inject(PasswordProcessor) private passwordProcessor: PasswordProcessor;
   @inject(PayloadValidator) readonly validateSchema: PayloadValidator;
