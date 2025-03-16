@@ -1,5 +1,4 @@
-import { Dependency } from '@/common/di';
-import { inject, injectable } from 'inversify';
+import { inject } from 'inversify';
 import { SetCurrentOrganizationSessionIdService } from '../services/set-current-organization.service';
 import { BasePostController } from '@/common/bases/controller';
 import {
@@ -11,8 +10,6 @@ import { createHttpResponse } from '@/common/utils/responder';
 import type { ValidateSwitchOrganizationInput } from '../schema/schema';
 import { validateSwitchOrganizationSchema } from '../schema/schema';
 
-@injectable()
-@Dependency()
 @Controller()
 export class SetCurrentOrganizationSessionIdController extends BasePostController {
   @inject(SetCurrentOrganizationSessionIdService)
