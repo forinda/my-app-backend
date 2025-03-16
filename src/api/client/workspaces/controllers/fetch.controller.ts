@@ -3,14 +3,11 @@ import {
   Controller,
   ApiControllerMethod
 } from '@/common/decorators/controller.decorator';
-import { Dependency } from '@/common/di';
 import type { ApiRequestContext } from '@/common/interfaces/controller';
-import { inject, injectable } from 'inversify';
+import { inject } from 'inversify';
 import { FetchWorkspaceService } from '../services/fetch.service';
 import { createHttpResponse } from '@/common/utils/responder';
 
-@injectable()
-@Dependency()
 @Controller()
 export class FetchWorkspaceController extends BaseGetController {
   @inject(FetchWorkspaceService)
