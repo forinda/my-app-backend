@@ -5,7 +5,7 @@ import { extractPaginationParams } from '../utils/pagination';
 import { IpFinder } from '@/api/client/auth/utils/get-client-ip';
 import { convertToNumber, isNumber } from '../utils/numbers';
 import { UUID } from '../utils/uuid';
-import { di } from '../di';
+import { dependency, di } from '../di';
 import type { LoginAuthorityOption } from '../utils/controller-auth';
 import { controllerAuth } from '../utils/controller-auth';
 import { createHttpResponse } from '../utils/responder';
@@ -92,6 +92,7 @@ export function Controller() {
         }
       };
     });
+    dependency()(target);
 
     return original;
   };
