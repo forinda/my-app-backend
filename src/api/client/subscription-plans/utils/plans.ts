@@ -11,6 +11,8 @@ export const subscriptionPlans: Record<
     annual_discount: number;
     currency: string;
     trial_period_days: number;
+    type: SubscriptionType;
+    cta: string;
     features: Record<
       string,
       {
@@ -23,6 +25,7 @@ export const subscriptionPlans: Record<
 > = {
   starter: {
     name: 'Starter',
+    type: 'starter',
     description: 'Perfect for small teams just getting started',
     maximum_users: 3,
     maximum_projects: 1,
@@ -30,6 +33,7 @@ export const subscriptionPlans: Record<
     annual_discount: 17,
     currency: 'USD',
     trial_period_days: 14,
+    cta: 'Start Free Trial',
     features: {
       basic_time_tracking: {
         name: 'Basic Time Tracking',
@@ -60,6 +64,7 @@ export const subscriptionPlans: Record<
   },
   team: {
     name: 'Team',
+    type: 'team',
     description: 'For growing teams that need more flexibility',
     maximum_users: 10,
     maximum_projects: 5,
@@ -67,6 +72,7 @@ export const subscriptionPlans: Record<
     annual_discount: 17,
     currency: 'USD',
     trial_period_days: 14,
+    cta: 'Start Free Trial',
     features: {
       advanced_time_tracking: {
         name: 'Advanced Time Tracking',
@@ -107,13 +113,15 @@ export const subscriptionPlans: Record<
   },
   business: {
     name: 'Business',
+    type: 'business',
     description: 'For established businesses with complex needs',
     maximum_users: 25,
-    maximum_projects: Number.POSITIVE_INFINITY, // Unlimited projects
+    maximum_projects: Number.MAX_SAFE_INTEGER, // Unlimited projects
     per_user_monthly_price: 39,
     annual_discount: 17,
     currency: 'USD',
     trial_period_days: 14,
+    cta: 'Start Free Trial',
     features: {
       comprehensive_time_tracking: {
         name: 'Comprehensive Time Tracking',
@@ -159,13 +167,15 @@ export const subscriptionPlans: Record<
   },
   enterprise: {
     name: 'Enterprise',
+    type: 'enterprise',
     description: 'Custom solutions for large organizations',
-    maximum_users: Number.POSITIVE_INFINITY, // Unlimited users
-    maximum_projects: Number.POSITIVE_INFINITY, // Unlimited projects
+    maximum_users: Number.MAX_SAFE_INTEGER, // Unlimited users
+    maximum_projects: Number.MAX_SAFE_INTEGER, // Unlimited projects
     per_user_monthly_price: 79,
     annual_discount: 17,
     currency: 'USD',
     trial_period_days: 14,
+    cta: 'Contact Sales',
     features: {
       custom_time_tracking: {
         name: 'Custom Time Tracking Solutions',

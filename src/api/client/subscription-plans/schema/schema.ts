@@ -36,7 +36,8 @@ export const CreateSubscriptionPlanSchema = z.object({
   annual_discount: z.number().int().nonnegative(),
   currency: curencySchema,
   trial_period_days: z.number().int().nonnegative(),
-  type: SubscriptionTypeSchema
+  type: SubscriptionTypeSchema,
+  cta: z.string().nonempty()
 });
 
 export const CreateSubscriptionFeatureSchema = z.object({
