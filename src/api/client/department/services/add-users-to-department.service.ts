@@ -1,10 +1,9 @@
-import { injectable } from 'inversify';
 import type { AddUsersToDepartmentPayload } from '../schema/schema';
 
 import { and, eq, inArray } from 'drizzle-orm';
 
 import { HttpStatus } from '@/common/http';
-import { Dependency } from '@/common/di';
+import { dependency } from '@/common/di';
 import {
   TransactionalService,
   type TransactionContext
@@ -13,8 +12,7 @@ import { ApiError } from '@/common/errors/base';
 import type { InsertDepartmentMemberInterface } from '@/db/schema';
 import { Department, DepartmentMember } from '@/db/schema';
 
-@injectable()
-@Dependency()
+@dependency()
 export class AddUserToDepartmentService {
   @TransactionalService()
   async create({
