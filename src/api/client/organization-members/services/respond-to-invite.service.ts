@@ -1,8 +1,7 @@
-import { injectable } from 'inversify';
 import { and, eq } from 'drizzle-orm';
 
 import { HttpStatus } from '@/common/http';
-import { Dependency } from '@/common/di';
+import { dependency } from '@/common/di';
 import {
   TransactionalService,
   type TransactionContext
@@ -12,8 +11,7 @@ import { OrganizationInvite, OrganizationMember } from '@/db/schema';
 import type { RespondToOrgInviteType } from '../schema';
 // import { lower } from '@/db';
 
-@injectable()
-@Dependency()
+@dependency()
 export class RespondToOrgInviteService {
   @TransactionalService()
   async add({ data, transaction }: TransactionContext<RespondToOrgInviteType>) {

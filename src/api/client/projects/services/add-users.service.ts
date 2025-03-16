@@ -1,10 +1,9 @@
-import { injectable } from 'inversify';
 import type { AddUsersToProjectPayload } from '../schema/schema';
 
 import { and, eq, inArray } from 'drizzle-orm';
 
 import { HttpStatus } from '@/common/http';
-import { Dependency } from '@/common/di';
+import { dependency } from '@/common/di';
 import {
   TransactionalService,
   type TransactionContext
@@ -17,8 +16,7 @@ import {
   OrgWorkspaceMember
 } from '@/db/schema';
 
-@injectable()
-@Dependency()
+@dependency()
 export class AddUserToWorkspaceService {
   @TransactionalService()
   async create({

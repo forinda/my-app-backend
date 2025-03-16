@@ -1,10 +1,9 @@
-import { injectable } from 'inversify';
 import type { NewProjectPayload } from '../schema/schema';
 
 import { and, eq } from 'drizzle-orm';
 
 import { HttpStatus } from '@/common/http';
-import { Dependency } from '@/common/di';
+import { dependency } from '@/common/di';
 import {
   TransactionalService,
   type TransactionContext
@@ -13,8 +12,7 @@ import { ApiError } from '@/common/errors/base';
 import type { InsertOrgProjectInterface } from '@/db/schema';
 import { OrgProject, OrgProjectCategory } from '@/db/schema';
 
-@injectable()
-@Dependency()
+@dependency()
 export class CreateProjectService {
   @TransactionalService()
   async create({ data, transaction }: TransactionContext<NewProjectPayload>) {

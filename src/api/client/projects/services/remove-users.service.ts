@@ -1,10 +1,9 @@
-import { injectable } from 'inversify';
 import type { RemoveUsersFromProjectPayload } from '../schema/schema';
 
 import { and, eq, inArray } from 'drizzle-orm';
 
 import { HttpStatus } from '@/common/http';
-import { Dependency } from '@/common/di';
+import { dependency } from '@/common/di';
 import {
   TransactionalService,
   type TransactionContext
@@ -12,8 +11,7 @@ import {
 import { ApiError } from '@/common/errors/base';
 import { OrgProject, OrgProjectMember } from '@/db/schema';
 
-@injectable()
-@Dependency()
+@dependency()
 export class RemoveUserFromProjectService {
   @TransactionalService()
   async create({
