@@ -3,17 +3,13 @@ import {
   Controller,
   ApiControllerMethod
 } from '@/common/decorators/controller.decorator';
-import { Dependency } from '@/common/di';
 import type { ApiRequestContext } from '@/common/interfaces/controller';
-import { inject, injectable } from 'inversify';
-
+import { inject } from 'inversify';
 import { createHttpResponse } from '@/common/utils/responder';
 import type { RegisterUserInput } from '../schema/schema';
 import { registerUserSchema } from '../schema/schema';
 import { RegisterUserService } from '../services/register.service';
 
-@injectable()
-@Dependency()
 @Controller()
 export class RegisterUserController extends BasePostController {
   @inject(RegisterUserService) private service: RegisterUserService;
