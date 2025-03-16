@@ -1,14 +1,12 @@
-import { injectable } from 'inversify';
 import { OrganizationInvite } from '@/db/schema';
 import { useDrizzle } from '@/db';
 import { HttpStatus } from '@/common/http';
-import { Dependency } from '@/common/di';
+import { dependency } from '@/common/di';
 import { desc, eq } from 'drizzle-orm';
 import type { FetchUserOrganizationInvitesType } from '../schema';
 import type { ApiPaginationParams } from '@/common/utils/pagination';
 
-@injectable()
-@Dependency()
+@dependency()
 export class FetchOrganizationMemberInvitesService {
   async get(
     query: FetchUserOrganizationInvitesType,

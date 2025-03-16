@@ -1,8 +1,8 @@
-import { inject, injectable } from 'inversify';
+import { inject } from 'inversify';
 import { and, eq, ne } from 'drizzle-orm';
 
 import { HttpStatus } from '@/common/http';
-import { Dependency } from '@/common/di';
+import { dependency } from '@/common/di';
 import {
   TransactionalService,
   type TransactionContext
@@ -13,8 +13,7 @@ import { ApiError } from '@/common/errors/base';
 import { UUID } from '@/common/utils/uuid';
 import { convertToNumber } from '@/common/utils/numbers';
 
-@injectable()
-@Dependency()
+@dependency()
 export class InitOrgMemberProfileService {
   @inject(UUID) private uuid: UUID;
   @TransactionalService()

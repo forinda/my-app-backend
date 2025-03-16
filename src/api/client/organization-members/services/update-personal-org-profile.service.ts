@@ -1,8 +1,7 @@
-import { injectable } from 'inversify';
 import { and, eq, ne } from 'drizzle-orm';
 
 import { HttpStatus } from '@/common/http';
-import { Dependency } from '@/common/di';
+import { dependency } from '@/common/di';
 import {
   TransactionalService,
   type TransactionContext
@@ -11,8 +10,7 @@ import { Organization, OrganizationMember, User } from '@/db/schema';
 import type { UpdatePersonalOrgProfileType } from '../schema';
 import { ApiError } from '@/common/errors/base';
 
-@injectable()
-@Dependency()
+@dependency()
 export class UpdateOrgPersonalProfileService {
   @TransactionalService()
   async update({

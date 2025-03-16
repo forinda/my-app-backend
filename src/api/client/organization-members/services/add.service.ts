@@ -1,8 +1,8 @@
-import { inject, injectable } from 'inversify';
+import { inject } from 'inversify';
 import { and, eq, inArray } from 'drizzle-orm';
 
 import { HttpStatus } from '@/common/http';
-import { Dependency } from '@/common/di';
+import { dependency } from '@/common/di';
 import {
   TransactionalService,
   type TransactionContext
@@ -13,8 +13,7 @@ import type { AddMemberToOrRemoveFromOrganizationType } from '../schema';
 import { NodeMailer } from '@/common/utils/node-mailer';
 // import { lower } from '@/db';
 
-@injectable()
-@Dependency()
+@dependency()
 export class AddOrganizationMemberService {
   @inject(NodeMailer) private readonly mailer: NodeMailer;
   @TransactionalService()

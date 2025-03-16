@@ -1,10 +1,9 @@
-import { injectable } from 'inversify';
 import type { UpdateOrganizationDesignationInputType } from '../schema/schema';
 
 import { and, eq, ne } from 'drizzle-orm';
 
 import { HttpStatus } from '@/common/http';
-import { Dependency } from '@/common/di';
+import { dependency } from '@/common/di';
 import {
   TransactionalService,
   type TransactionContext
@@ -12,8 +11,7 @@ import {
 import { ApiError } from '@/common/errors/base';
 import { OrganizationDesignation } from '@/db/schema';
 
-@injectable()
-@Dependency()
+@dependency()
 export class UpdateOrganizationService {
   @TransactionalService()
   async update({
