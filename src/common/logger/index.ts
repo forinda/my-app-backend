@@ -1,74 +1,37 @@
-import { dependency, di } from '../di';
-
-import type { LoggerInstance } from 'winston';
-import winston from 'winston';
-import chalk from 'chalk';
-import { Config } from '../config';
-import path from 'path';
-import { FileManager } from '../utils/file-manager';
-
-type LogSchemes = '[API]' | '[HTTP]' | '[FILE_MANAGER]' | '[DB]' | '[AUTH]';
+import kleur from 'kleur';
+import { dependency } from '../di';
 
 @dependency()
-export class AppLogger {
-  private logger: LoggerInstance;
-  constructor() {
-    this.constructLogger();
+export class Logger {
+  private readonly highlight = {
+    info: kleur.blue,
+    success: kleur.green,
+    warn: kleur.yellow,
+    error: kleur.red,
+    debug: kleur.gray
+  };
+
+  public error(...args: unknown[]): void {
+    console.error(this.highlight.error('[ERROR]'), ...args);
   }
 
-  private constructLogger() {
-    const config = di.resolve<Config>(Config);
-    const fManager = di.resolve<FileManager>(FileManager);
-
-    const logDir = config.paths.LOGS_DIR;
-
-    if (!fManager.doesFolderExist(logDir)) {
-      fManager.createFolder(logDir, { recursive: true });
-    }
-    const fileName = new Date().toISOString().split('T')[0] + '.log';
-    const logPath = path.join(logDir, fileName);
-
-    this.logger = new winston.Logger({
-      transports: [
-        new winston.transports.Console({
-          level: 'info',
-          handleExceptions: true,
-          json: false,
-          colorize: true
-        }),
-        new winston.transports.File({
-          filename: logPath,
-          depth: 5,
-          colorize: false,
-          json: true,
-          showLevel: true,
-          formatter: (options) => {
-            const { level, message, timestamp } = options;
-
-            return decodeURIComponent(`${timestamp} ${level}: ${message}`);
-          }
-        })
-      ]
-    });
+  public warn(...args: unknown[]): void {
+    console.warn(this.highlight.warn('[WARN]'), ...args);
   }
 
-  public info(scheme: LogSchemes, message: string) {
-    const msg = `${chalk.blue(scheme)}:${message}`;
-
-    this.logger.info(msg);
+  public info(...args: unknown[]): void {
+    console.info(this.highlight.info('[INFO]'), ...args);
   }
 
-  public warn(scheme: LogSchemes, message: string) {
-    const msg = `${chalk.yellow(scheme)}:${message}`;
-
-    this.logger.warn(msg);
+  public success(...args: unknown[]): void {
+    console.log(this.highlight.success('[SUCCESS]'), ...args);
   }
 
-  public error(scheme: LogSchemes, message: string) {
-    const msg = `${chalk.red(scheme)}:${message}`;
+  public log(...args: unknown[]): void {
+    console.log(...args);
+  }
 
-    this.logger.error(msg);
+  public debug(...args: unknown[]): void {
+    console.debug(this.highlight.debug('[DEBUG]'), ...args);
   }
 }
-
-export const baseLogger = new AppLogger();

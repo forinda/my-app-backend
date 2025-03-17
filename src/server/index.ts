@@ -6,8 +6,8 @@ import type { Application } from 'express';
 import express from 'express';
 import { createServer } from 'http';
 import { inject } from 'inversify';
-import chalk from 'chalk';
 import { SocketHandler } from './socket-server';
+import { Logger } from '@/common/logger';
 // import { baseLogger } from '@/common/logger';
 @dependency()
 export class ApiServer {
@@ -17,6 +17,7 @@ export class ApiServer {
   @inject(ApiServerSetup) private readonly apiServerSetup: ApiServerSetup;
   @inject(ApiErrorRouteHandler)
   private readonly apiErrorRouteHandler: ApiErrorRouteHandler;
+  @inject(Logger) private readonly logger: Logger;
 
   @inject(Config) private readonly config: Config;
   @inject(SocketHandler) private readonly socketHandler: SocketHandler;
@@ -44,14 +45,11 @@ export class ApiServer {
 
   private onListening() {
     // console.log({ config: this.config });
-    const listeningMessage = chalk.yellow(
-      `Listening on http://localhost:${this.config.conf.PORT}`
-    );
+    const listeningMessage = `Listening on http://localhost:${this.config.conf.PORT}`;
 
     const message = `(API):${listeningMessage} ${this.config.conf.NODE_ENV === 'development' ? '🚀' : '🔒'}`;
 
-    // baseLogger.info('[API]', message);
-    console.log(message);
+    this.logger.info(message);
   }
 
   public run() {
