@@ -24,6 +24,7 @@ export const DepartmentUserRole = pgTable('department_user_roles', {
     .notNull(),
   start_date: date({ mode: 'string' }).notNull(),
   end_date: date({ mode: 'string' }),
+  is_head: boolean().notNull().default(false),
   created_by: integer()
     .references(() => User.id, foreignKeyConstraints)
     .notNull(),

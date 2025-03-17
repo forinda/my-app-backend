@@ -74,9 +74,31 @@ export class AddNewDepartmentUserRoleService {
       role_title_id: data.role_title_id,
       created_by: data.created_by!,
       updated_by: data.updated_by!,
+      is_head: data.is_head,
       end_date: null,
       department_id: data.department_id
     };
+
+    if (data.is_head) {
+      // If the role is head, we need to remove all other heads for the active roles
+      await transaction!
+        .update(DepartmentUserRole)
+        .set({ is_head: false })
+        .where(
+          and(
+            eq(DepartmentUserRole.department_id, data.department_id),
+            eq(DepartmentUserRole.is_active, true)
+          )
+        )
+        .execute();
+
+      // Now we update the department to have the new head
+      await transaction!
+        .update(Department)
+        .set({ head_id: data.user_id })
+        .where(eq(Department.id, data.department_id))
+        .execute();
+    }
 
     const role = (
       await transaction!

@@ -21,6 +21,7 @@ export const Department = pgTable(
       .references(() => Organization.id, foreignKeyConstraints),
     name: varchar().notNull(),
     description: varchar().notNull(),
+    head_id: integer().references(() => User.id, foreignKeyConstraints),
     created_by: integer()
       .notNull()
       .references(() => User.id, foreignKeyConstraints),
@@ -36,6 +37,10 @@ export const Department = pgTable(
 export const departmentRelations = relations(Department, ({ one, many }) => ({
   creator: one(User, {
     fields: [Department.created_by],
+    references: [User.id]
+  }),
+  head: one(User, {
+    fields: [Department.head_id],
     references: [User.id]
   }),
   updater: one(User, {
