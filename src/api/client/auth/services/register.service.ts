@@ -9,7 +9,7 @@ import { and, eq, or } from 'drizzle-orm';
 import { PasswordProcessor } from '@/common/utils/password';
 import { PayloadValidator } from '@/common/schema/validator';
 import { formatKenyanPhone } from '@/common/utils/phone-number-format';
-import { generateAvatar } from '@/common/utils/avatar';
+import { Avatar } from '@/common/utils/avatar';
 import type { RegisterUserInput } from '../schema/schema';
 import { ApiError } from '@/common/errors/base';
 
@@ -17,6 +17,7 @@ import { ApiError } from '@/common/errors/base';
 export class RegisterUserService {
   @inject(PasswordProcessor) private passwordProcessor: PasswordProcessor;
   @inject(PayloadValidator) readonly validateSchema: PayloadValidator;
+  @inject(Avatar) private avatar: Avatar;
 
   @TransactionalService()
   async create({ data, transaction }: TransactionContext<RegisterUserInput>) {
@@ -48,7 +49,6 @@ export class RegisterUserService {
 
       throw new ApiError(message, HttpStatus.BAD_REQUEST, {});
     }
-    console.log('---------Some-----------');
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { password: _, ...rest } = (
       await transaction!
@@ -56,7 +56,7 @@ export class RegisterUserService {
         .values({
           ...data,
           password: await this.passwordProcessor.hash(data.password),
-          avatar: generateAvatar(data.first_name, data.last_name)
+          avatar: this.avatar.generateAvatar(data.first_name, data.last_name)
         } as SelectUserInterface)
         .returning()
         .execute()

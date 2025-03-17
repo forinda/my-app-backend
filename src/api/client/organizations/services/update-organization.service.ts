@@ -10,9 +10,12 @@ import {
 } from '@/common/decorators/service-transaction';
 import { ApiError } from '@/common/errors/base';
 import { Organization } from '@/db/schema';
+import { inject } from 'inversify';
+import { Avatar } from '@/common/utils/avatar';
 
 @dependency()
 export class UpdateOrganizationService {
+  @inject(Avatar) private avatar: Avatar;
   @TransactionalService()
   async update({
     data,
@@ -50,6 +53,9 @@ export class UpdateOrganizationService {
         HttpStatus.BAD_REQUEST,
         {}
       );
+    }
+    if (exisiting!.name !== data.name || !exisiting!.logo) {
+      (data as any)['logo'] = this.avatar.generateOrgLogo(data.name);
     }
 
     await transaction!

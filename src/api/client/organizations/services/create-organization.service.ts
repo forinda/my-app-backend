@@ -11,9 +11,12 @@ import {
 import { ApiError } from '@/common/errors/base';
 import type { InsertOrganizationInterface } from '@/db/schema';
 import { Organization, OrganizationMember } from '@/db/schema';
+import { Avatar } from '@/common/utils/avatar';
+import { inject } from 'inversify';
 
 @dependency()
 export class CreateOrganizationService {
+  @inject(Avatar) private avatar: Avatar;
   @TransactionalService()
   async create({
     data,
@@ -30,7 +33,7 @@ export class CreateOrganizationService {
         {}
       );
     }
-    // console.log({ data });
+    (data as any)['logo'] = this.avatar.generateOrgLogo(data.name);
 
     const organization = (
       await transaction!
