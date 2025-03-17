@@ -35,6 +35,7 @@ export const Organization = pgTable('organizations', {
   contact_phone: varchar(),
   contact_address: varchar(),
   location: varchar().notNull(),
+  logo: varchar(),
   created_by: integer()
     .notNull()
     .references(() => User.id, foreignKeyConstraints),
