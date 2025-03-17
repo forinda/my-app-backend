@@ -21,6 +21,7 @@ import {
   type InferInsertModel,
   type InferSelectModel
 } from 'drizzle-orm';
+import { orgMemberRoles } from '@/common/constants/org-member-roles';
 export const userSalaryType = pgEnum('user_salary_type_enum', [
   'monthly',
   'hourly'
@@ -32,6 +33,8 @@ export const userEmploymentType = pgEnum('user_employment_type_enum', [
   'contract',
   'internship'
 ]);
+
+export const orgmemberRole = pgEnum('orgmember_role_enum', orgMemberRoles);
 
 export const OrganizationMember = pgTable(
   'organization_members',
@@ -65,6 +68,7 @@ export const OrganizationMember = pgTable(
     salary_type: userSalaryType().default('monthly'),
     national_id: varchar(),
     employment_type: userEmploymentType().default('full_time'),
+    role: orgmemberRole().default('Member'),
     created_by: integer()
       .notNull()
       .references(() => User.id, foreignKeyConstraints),

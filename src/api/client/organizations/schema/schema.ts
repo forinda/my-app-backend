@@ -1,4 +1,8 @@
+import { companySizes } from '@/common/constants/company-sizes';
+import { validatePhone } from '@/common/utils/phone-number-format';
 import z from 'zod';
+
+export const companySizeSchema = z.enum(companySizes);
 
 export const createOrganizationSchema = z.object({
   name: z
@@ -25,6 +29,32 @@ export const createOrganizationSchema = z.object({
     .max(255, {
       message: 'Description must be at most 255 characters long'
     }),
+  industry: z.string(),
+  size: companySizeSchema.default('1-10 employees'),
+  website: z.coerce
+    .string({})
+    .url({
+      message: 'Website URL is invalid'
+    })
+    .optional(),
+  contact_email: z.string().email().optional(),
+  contact_phone: z
+    .string()
+    .optional()
+    .refine(
+      (value) => {
+        if (value && value.length > 1) {
+          return validatePhone.validate(value);
+        }
+
+        return true;
+      },
+      {
+        message: validatePhone.message
+      }
+    ),
+  contact_address: z.string(),
+  location: z.string(),
   created_by: z.coerce.number({}).positive().optional(),
   updated_by: z.coerce.number({}).positive().optional()
 });
@@ -57,6 +87,32 @@ export const updateOrganizationSchema = z.object({
     .max(255, {
       message: 'Description must be at most 255 characters long'
     }),
+  industry: z.string().optional(),
+  size: companySizeSchema.default('1-10 employees'),
+  website: z.coerce
+    .string({})
+    .url({
+      message: 'Website URL is invalid'
+    })
+    .optional(),
+  contact_email: z.string().email().optional(),
+  contact_phone: z
+    .string()
+    .optional()
+    .refine(
+      (value) => {
+        if (value && value.length > 1) {
+          return validatePhone.validate(value);
+        }
+
+        return true;
+      },
+      {
+        message: validatePhone.message
+      }
+    ),
+  contact_address: z.string(),
+  location: z.string(),
   updated_by: z.coerce.number({}).positive()
 });
 

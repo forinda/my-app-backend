@@ -1,3 +1,4 @@
+import { orgMemberRoles } from '@/common/constants/org-member-roles';
 import { z } from 'zod';
 
 export const employmentTypeSchema = z.enum([
@@ -6,6 +7,8 @@ export const employmentTypeSchema = z.enum([
   'contract',
   'internship'
 ]);
+
+export const orgMemberRoleSchema = z.enum(orgMemberRoles);
 
 export const salaryTypeSchema = z.enum(['monthly', 'hourly']);
 
@@ -19,6 +22,7 @@ export const addMemberToOrRemoveFromOrgSchema = z.object({
     })
     .min(1, 'At least one user is required'),
   designation_id: z.coerce.number().positive(),
+  role: orgMemberRoleSchema.default('Member'),
   created_by: z.coerce.number().positive(),
   updated_by: z.coerce.number().positive()
 });

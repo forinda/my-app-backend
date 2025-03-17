@@ -1,6 +1,13 @@
 import type { InferInsertModel, InferSelectModel } from 'drizzle-orm';
 import { relations } from 'drizzle-orm';
-import { boolean, integer, pgTable, uuid, varchar } from 'drizzle-orm/pg-core';
+import {
+  boolean,
+  integer,
+  pgEnum,
+  pgTable,
+  uuid,
+  varchar
+} from 'drizzle-orm/pg-core';
 
 import { Department, User } from '.';
 import {
@@ -8,6 +15,12 @@ import {
   getTableTimestamps
 } from '@/common/utils/drizzle';
 import { OrgWorkspace } from './org-workspace';
+import { companySizes } from '@/common/constants/company-sizes';
+
+export const organizationSizeEnum = pgEnum(
+  'organization_size_enum',
+  companySizes
+);
 
 export const Organization = pgTable('organizations', {
   id: integer().primaryKey().generatedAlwaysAsIdentity(),
@@ -15,6 +28,13 @@ export const Organization = pgTable('organizations', {
   description: varchar().notNull(),
   is_active: boolean().notNull().default(true),
   uuid: uuid().defaultRandom().unique().notNull(),
+  industry: varchar().notNull(),
+  size: organizationSizeEnum().notNull().default('1-10 employees'),
+  website: varchar().notNull(),
+  contact_email: varchar(),
+  contact_phone: varchar(),
+  contact_address: varchar(),
+  location: varchar().notNull(),
   created_by: integer()
     .notNull()
     .references(() => User.id, foreignKeyConstraints),
