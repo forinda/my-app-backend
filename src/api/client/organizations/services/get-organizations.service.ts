@@ -3,7 +3,7 @@ import { useDrizzle } from '@/db';
 import { HttpStatus } from '@/common/http';
 import { dependency } from '@/common/di';
 import type { ApiPaginationParams } from '@/common/utils/pagination';
-import { eq, inArray } from 'drizzle-orm';
+import { asc, eq, inArray } from 'drizzle-orm';
 
 @dependency()
 export class FetchUserOrganizationsService {
@@ -25,7 +25,19 @@ export class FetchUserOrganizationsService {
       (organizationmember) => organizationmember.organization_id
     );
     const organizations = await db.query.Organization.findMany({
-      where: inArray(Organization.id, organizationIds)
+      where: inArray(Organization.id, organizationIds),
+      with: {
+        workspaces: {
+          columns: { name: true }
+        },
+        members: {
+          columns: {
+            role: true,
+            user_id: true
+          }
+        }
+      },
+      orderBy: [asc(Organization.name)]
     });
 
     return {
