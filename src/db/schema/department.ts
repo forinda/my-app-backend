@@ -9,6 +9,7 @@ import {
 } from '@/common/utils/drizzle';
 import { DepartmentMember } from './department-member';
 import { DepartmentUserRole } from './department-user-role';
+import { OrgWorkspace } from './org-workspace';
 
 export const Department = pgTable(
   'departments',
@@ -50,7 +51,8 @@ export const departmentRelations = relations(Department, ({ one, many }) => ({
     references: [Organization.id]
   }),
   members: many(DepartmentMember),
-  user_roles: many(DepartmentUserRole)
+  user_roles: many(DepartmentUserRole),
+  workspaces: many(OrgWorkspace)
 }));
 
 export interface SelectOrganizationDepartmentInterface

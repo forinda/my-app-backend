@@ -9,7 +9,7 @@ import {
   varchar
 } from 'drizzle-orm/pg-core';
 
-import { Department, User } from '.';
+import { Department, OrganizationMember, OrgProject, User } from '.';
 import {
   foreignKeyConstraints,
   getTableTimestamps
@@ -57,7 +57,9 @@ export const organizationRelationships = relations(
       references: [User.id]
     }),
     departments: many(Department),
-    workspaces: many(OrgWorkspace)
+    workspaces: many(OrgWorkspace),
+    members: many(OrganizationMember),
+    projects: many(OrgProject)
   })
 );
 
