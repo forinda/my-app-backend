@@ -44,6 +44,7 @@ export class CreateOrganizationService {
       user_id: organization!.created_by,
       organization_id: organization.id,
       updated_by: organization!.created_by,
+      role: 'Owner',
       date_joined: new Date().toISOString(),
       created_by: organization!.created_by
     });
