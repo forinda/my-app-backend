@@ -6,26 +6,24 @@ import {
 import type { ApiRequestContext } from '@/common/interfaces/controller';
 import { inject } from 'inversify';
 
-import type { AddUsersToDepartmentPayload } from '../schema/schema';
-import { addUsersToDepartmentSchema } from '../schema/schema';
+import type { NewDepartmentPayload } from '../schema/schema';
+import { newDepartmentSchema } from '../schema/schema';
+import { DepartmentCreationService } from '../services/create.service';
 import { userAudit } from '@/common/utils/user-request-audit';
-import { AddUserToDepartmentService } from '../services/add-users-to-department.service';
 import { createHttpResponse } from '@/common/utils/responder';
 
 @Controller()
-export class AddUserToDepartmentController extends BasePostController {
-  @inject(AddUserToDepartmentService)
-  private service: AddUserToDepartmentService;
+export class NewDepartmentController extends BasePostController {
+  @inject(DepartmentCreationService)
+  private service: DepartmentCreationService;
   @ApiControllerMethod({
-    bodySchema: addUsersToDepartmentSchema,
-    pathParamTransform: {
-      id: 'department_id'
-    },
+    bodySchema: newDepartmentSchema,
+    pathParamTransform: {},
     auth: true,
     audit: userAudit('create'),
     bodyBindOrgId: true
   })
-  async post({ res, body }: ApiRequestContext<AddUsersToDepartmentPayload>) {
+  async post({ res, body }: ApiRequestContext<NewDepartmentPayload>) {
     const feedback = await this.service.create({ data: body! });
 
     return createHttpResponse(res, {

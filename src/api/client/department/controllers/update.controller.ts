@@ -8,7 +8,7 @@ import { inject } from 'inversify';
 
 import type { UpdateDepartmentPayload } from '../schema/schema';
 import { updateDepartmentSchema } from '../schema/schema';
-import { UpdateDepartmentService } from '../services/update-department.service';
+import { UpdateDepartmentService } from '../services/update.service';
 import { userAudit } from '@/common/utils/user-request-audit';
 import { createHttpResponse } from '@/common/utils/responder';
 

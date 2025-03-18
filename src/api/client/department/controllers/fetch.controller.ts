@@ -5,7 +5,7 @@ import {
 } from '@/common/decorators/controller.decorator';
 import type { ApiRequestContext } from '@/common/interfaces/controller';
 import { inject } from 'inversify';
-import { FetchDepartmentService } from '../services/fetch-department.service';
+import { FetchDepartmentService } from '../services/fetch.service';
 import { createHttpResponse } from '@/common/utils/responder';
 
 @Controller()
