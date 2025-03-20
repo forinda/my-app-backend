@@ -172,6 +172,16 @@ export function ApiControllerMethod(props: MethodProps = {}) {
               ? convertToNumber(context.req.params![key])
               : context.req.params![key];
           });
+          // Update the params object
+          Object.keys(props.pathParamTransform!).forEach((key) => {
+            (context.params as any)[props.pathParamTransform![key]!] = isNumber(
+              context.req.params![key]
+            )
+              ? convertToNumber(context.req.params![key])
+              : context.req.params![key];
+            // remove the old key
+            delete context.params![key];
+          });
         }
         const pagination = props.paginate
           ? extractPaginationParams(context.req.query!)
