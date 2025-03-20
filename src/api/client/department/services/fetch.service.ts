@@ -57,6 +57,15 @@ export class FetchDepartmentService {
               }
             }
           }
+        },
+        head: {
+          columns: {
+            id: true,
+            avatar: true,
+            username: true,
+            first_name: true,
+            last_name: true
+          }
         }
       },
       limit: _?.limit,
