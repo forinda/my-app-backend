@@ -21,7 +21,7 @@ export class AddUserToDepartmentService {
   }: TransactionContext<AddUsersToDepartmentPayload>) {
     const existingDept = await transaction!.query.Department.findFirst({
       where: and(
-        eq(Department.id, data.department_id),
+        eq(Department.uuid, data.department_id),
         eq(Department.organization_id, data.organization_id)
       )
     });
@@ -32,7 +32,7 @@ export class AddUserToDepartmentService {
 
     const exisingMembers = await transaction!.query.DepartmentMember.findMany({
       where: and(
-        eq(DepartmentMember.department_id, data.department_id),
+        eq(DepartmentMember.department_id, existingDept.id),
         eq(DepartmentMember.organization_id, data.organization_id),
         inArray(DepartmentMember.user_id, data.users)
       )
@@ -53,7 +53,7 @@ export class AddUserToDepartmentService {
     }
     const insertData: InsertDepartmentMemberInterface[] = data.users.map(
       (user_id) => ({
-        department_id: data.department_id,
+        department_id: existingDept.id,
         organization_id: data.organization_id,
         user_id,
         created_by: data.created_by,
