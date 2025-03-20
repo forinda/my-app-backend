@@ -3,12 +3,16 @@ import { useDrizzle } from '@/db';
 import { HttpStatus } from '@/common/http';
 import { dependency } from '@/common/di';
 import { eq } from 'drizzle-orm';
+import { inject } from 'inversify';
+import { UUID } from '@/common/utils/uuid';
 
 @dependency()
 export class FetchDepartmentByIdService {
-  async get(organization_id: number, department_id: string) {
+  @inject(UUID) private uuid: UUID;
+  async get(department_id: string) {
     const db = useDrizzle();
 
+    this.uuid.validateUUID(department_id, { throwError: true });
     const depts = await db.query.Department.findFirst({
       where: eq(Department.uuid, department_id),
       with: {
@@ -16,7 +20,8 @@ export class FetchDepartmentByIdService {
           columns: {
             id: true,
             user_id: true,
-            department_id: true
+            department_id: true,
+            created_at: true
           },
           with: {
             user: {
@@ -57,9 +62,20 @@ export class FetchDepartmentByIdService {
               }
             }
           }
+        },
+        head: {
+          columns: {
+            id: true,
+            avatar: true,
+            username: true,
+            first_name: true,
+            last_name: true
+          }
         }
       }
     });
+
+    console.log(depts);
 
     return {
       data: depts,
