@@ -75,11 +75,9 @@ export const updateDepartmentSchema = z.object({
 });
 
 export const addUsersToDepartmentSchema = z.object({
-  department_id: z.coerce
-    .number({
-      message: 'Department ID is required'
-    })
-    .positive(),
+  department_id: z.coerce.string({
+    message: 'Department ID is required'
+  }),
   users: z
     .array(
       z.coerce.number({
