@@ -21,11 +21,8 @@ export class FetchDepartmentByIdController extends BaseGetController {
       id: 'department_id'
     }
   })
-  async get({ res, params, organization_id }: ApiRequestContext) {
-    const feed = await this.service.get(
-      organization_id!,
-      params!.department_id
-    );
+  async get({ res, params }: ApiRequestContext) {
+    const feed = await this.service.get(params!.department_id);
 
     return createHttpResponse(res, { ...feed, statusCode: feed.status });
   }
