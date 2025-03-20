@@ -33,7 +33,8 @@ export class FetchOrganizationMembersService {
             email: true,
             is_admin: true,
             username: true,
-            id: true
+            id: true,
+            avatar: true
           }
         },
         organization: {
