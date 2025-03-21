@@ -39,6 +39,22 @@ export class AddUserToDepartmentService {
     });
 
     if (exisingMembers.length) {
+      const usersToAddAndAlreadyExist = exisingMembers.map((m) => m.user_id);
+
+      // Update the department ID only
+      await transaction!
+        .update(DepartmentMember)
+        .set({
+          department_id: existingDept.id
+        })
+        .where(
+          and(
+            eq(DepartmentMember.organization_id, data.organization_id),
+            inArray(DepartmentMember.user_id, usersToAddAndAlreadyExist)
+          )
+        )
+        .execute();
+      // Remove the users that already exist after updating the department ID
       data.users = data.users.filter(
         (id) => !exisingMembers.some((m) => m.user_id === id)
       );
