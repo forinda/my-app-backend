@@ -52,7 +52,7 @@ export class FetchOrganizationMembersService {
             id: true
           }
         },
-        role: {
+        designation: {
           columns: {
             name: true,
             description: true,

@@ -88,7 +88,7 @@ export const OrganizationMember = pgTable(
 export const organizationMemberRelations = relations(
   OrganizationMember,
   ({ one }) => ({
-    role: one(OrganizationDesignation, {
+    designation: one(OrganizationDesignation, {
       fields: [OrganizationMember.designation_id],
       references: [OrganizationDesignation.id]
     }),

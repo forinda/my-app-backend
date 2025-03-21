@@ -10,7 +10,7 @@ import {
 } from '@/common/decorators/service-transaction';
 import { ApiError } from '@/common/errors/base';
 import type { InsertDepartmentMemberInterface } from '@/db/schema';
-import { Department, DepartmentMember } from '@/db/schema';
+import { Department, DepartmentMember, OrganizationMember } from '@/db/schema';
 
 @dependency()
 export class AddUserToDepartmentService {
@@ -54,6 +54,19 @@ export class AddUserToDepartmentService {
           )
         )
         .execute();
+      // Update org member organization member department reference
+      await transaction!
+        .update(OrganizationMember)
+        .set({
+          department_id: existingDept.id
+        })
+        .where(
+          and(
+            eq(OrganizationMember.organization_id, data.organization_id),
+            inArray(OrganizationMember.user_id, usersToAddAndAlreadyExist)
+          )
+        )
+        .execute();
       // Remove the users that already exist after updating the department ID
       data.users = data.users.filter(
         (id) => !exisingMembers.some((m) => m.user_id === id)
@@ -78,6 +91,19 @@ export class AddUserToDepartmentService {
     );
 
     await transaction!.insert(DepartmentMember).values(insertData).execute();
+    // Update org member department ID
+    await transaction!
+      .update(OrganizationMember)
+      .set({
+        department_id: existingDept.id
+      })
+      .where(
+        and(
+          eq(OrganizationMember.organization_id, data.organization_id),
+          inArray(OrganizationMember.user_id, data.users)
+        )
+      )
+      .execute();
 
     return {
       data: {},
