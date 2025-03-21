@@ -2,7 +2,14 @@ import z from 'zod';
 
 export const newDepartmentUserRoleSchema = z.object({
   user_id: z.coerce.number({}).positive(),
-  department_id: z.coerce.number({}).positive(),
+  department_id: z.coerce
+    .string({})
+    .nonempty({
+      message: 'Please select a department'
+    })
+    .uuid({
+      message: 'Please select a valid department'
+    }),
   role_title_id: z.coerce.number({}).positive(),
   start_date: z.string().datetime(),
   end_date: z.string().datetime().optional(),

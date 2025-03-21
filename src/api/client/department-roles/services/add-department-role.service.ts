@@ -21,7 +21,7 @@ export class AddNewDepartmentUserRoleService {
   }: TransactionContext<DepartmentUserRoleCreationRequest>) {
     const currentDepartment = await transaction!.query.Department.findFirst({
       where: and(
-        eq(Department.id, data.department_id),
+        eq(Department.uuid, data.department_id),
         eq(DepartmentTitle.organization_id, data.organization_id!)
       )
     });
@@ -52,7 +52,7 @@ export class AddNewDepartmentUserRoleService {
     const preExistingDeptRoles =
       await transaction!.query.DepartmentUserRole.findMany({
         where: and(
-          eq(DepartmentUserRole.department_id, data.department_id),
+          eq(DepartmentUserRole.department_id, currentDepartment.id),
           eq(DepartmentUserRole.is_active, true)
         )
       });
@@ -76,7 +76,7 @@ export class AddNewDepartmentUserRoleService {
       updated_by: data.updated_by!,
       is_head: data.is_head,
       end_date: null,
-      department_id: data.department_id
+      department_id: currentDepartment.id
     };
 
     if (data.is_head) {
@@ -86,7 +86,7 @@ export class AddNewDepartmentUserRoleService {
         .set({ is_head: false })
         .where(
           and(
-            eq(DepartmentUserRole.department_id, data.department_id),
+            eq(DepartmentUserRole.department_id, currentDepartment.id),
             eq(DepartmentUserRole.is_active, true)
           )
         )
@@ -96,7 +96,7 @@ export class AddNewDepartmentUserRoleService {
       await transaction!
         .update(Department)
         .set({ head_id: data.user_id })
-        .where(eq(Department.id, data.department_id))
+        .where(eq(Department.id, currentDepartment.id))
         .execute();
     }
 
