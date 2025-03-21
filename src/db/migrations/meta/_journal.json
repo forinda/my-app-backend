@@ -393,6 +393,13 @@
       "when": 1742193684648,
       "tag": "1742193684_sudden_molten_man",
       "breakpoints": true
+    },
+    {
+      "idx": 56,
+      "version": "7",
+      "when": 1742536317301,
+      "tag": "1742536317_lazy_gamora",
+      "breakpoints": true
     }
   ]
 }
