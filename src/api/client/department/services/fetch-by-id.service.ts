@@ -75,8 +75,6 @@ export class FetchDepartmentByIdService {
       }
     });
 
-    console.log(depts);
-
     return {
       data: depts,
       message: 'Department fetched successfully',
