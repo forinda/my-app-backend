@@ -34,7 +34,7 @@ export const userEmploymentType = pgEnum('user_employment_type_enum', [
   'internship'
 ]);
 
-export const orgmemberRole = pgEnum('orgmember_role_enum', orgMemberRoles);
+export const orgMemberRole = pgEnum('org_member_role_enum', orgMemberRoles);
 
 export const OrganizationMember = pgTable(
   'organization_members',
@@ -68,7 +68,7 @@ export const OrganizationMember = pgTable(
     salary_type: userSalaryType().default('monthly'),
     national_id: varchar(),
     employment_type: userEmploymentType().default('full_time'),
-    role: orgmemberRole().default('Member'),
+    role: orgMemberRole().notNull().default('Member'),
     created_by: integer()
       .notNull()
       .references(() => User.id, foreignKeyConstraints),

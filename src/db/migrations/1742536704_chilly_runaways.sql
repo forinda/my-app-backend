@@ -1,0 +1,1 @@
+ALTER TYPE "public"."orgmember_role_enum" RENAME TO "org_member_role_enum";
