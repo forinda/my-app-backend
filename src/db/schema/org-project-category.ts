@@ -1,4 +1,4 @@
-import { integer, pgTable, unique, varchar } from 'drizzle-orm/pg-core';
+import { integer, pgTable, text, unique, varchar } from 'drizzle-orm/pg-core';
 import type { InferInsertModel, InferSelectModel } from 'drizzle-orm';
 import { relations } from 'drizzle-orm';
 import { Organization } from './organization';
@@ -17,7 +17,8 @@ export const OrgProjectCategory = pgTable(
       .notNull()
       .references(() => Organization.id, foreignKeyConstraints),
     name: varchar().notNull(),
-    description: varchar().notNull(),
+    description: text().notNull(),
+    color: varchar().notNull().default('#4f46e5'),
     created_by: integer()
       .notNull()
       .references(() => User.id, foreignKeyConstraints),

@@ -1,0 +1,2 @@
+ALTER TABLE "organization_project_categories" ALTER COLUMN "description" SET DATA TYPE text;--> statement-breakpoint
+ALTER TABLE "organization_project_categories" ADD COLUMN "color" varchar DEFAULT '#4f46e5' NOT NULL;

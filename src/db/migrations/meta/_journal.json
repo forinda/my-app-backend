@@ -421,6 +421,13 @@
       "when": 1742766554518,
       "tag": "1742766554_naive_thunderbolt",
       "breakpoints": true
+    },
+    {
+      "idx": 60,
+      "version": "7",
+      "when": 1742771803118,
+      "tag": "1742771803_fresh_enchantress",
+      "breakpoints": true
     }
   ]
 }
