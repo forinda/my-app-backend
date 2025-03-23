@@ -1,4 +1,12 @@
 import z from 'zod';
+
+export const workspaceTemaplateEnum = z.enum([
+  'blank',
+  'team',
+  'project',
+  'creative'
+]);
+
 export const newWorkspaceSchema = z.object({
   name: z
     .string({
@@ -24,6 +32,11 @@ export const newWorkspaceSchema = z.object({
     .max(255, {
       message: 'Description must be at most 255 characters long'
     }),
+  is_active: z.coerce.boolean().default(true),
+  is_private: z.coerce.boolean().default(false),
+  is_chat_enabled: z.coerce.boolean().default(true),
+  is_task_management_enabled: z.coerce.boolean().default(true),
+  template: workspaceTemaplateEnum.default('blank'),
   created_by: z.number({}).optional(),
   updated_by: z.number({}).optional(),
   organization_id: z
@@ -63,6 +76,11 @@ export const updateWorkspaceSchema = z.object({
       message: 'Description must be at most 255 characters long'
     })
     .optional(),
+  is_active: z.coerce.boolean().default(true),
+  is_private: z.coerce.boolean().default(false),
+  is_chat_enabled: z.coerce.boolean().default(true),
+  is_task_management_enabled: z.coerce.boolean().default(true),
+  template: workspaceTemaplateEnum.default('blank'),
   updated_by: z.coerce.number({}).positive().optional(),
   organization_id: z.coerce
     .number({
@@ -135,3 +153,5 @@ export type AddUsersToWorkspacePayload = z.infer<
 export type RemoveUsersFromWorkspacePayload = z.infer<
   typeof removeUsersFromWorkspaceSchema
 >;
+
+export type WorkspaceTemplateEnumType = z.infer<typeof workspaceTemaplateEnum>;
