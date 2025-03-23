@@ -9,8 +9,11 @@ import {
   type TransactionContext
 } from '@/common/decorators/service-transaction';
 import { ApiError } from '@/common/errors/base';
-import type { InsertOrgWorkspaceInterface } from '@/db/schema';
-import { OrgWorkspace } from '@/db/schema';
+import type {
+  InsertOrgWorkspaceInterface,
+  InsertOrgWorkspaceMemberInterface
+} from '@/db/schema';
+import { OrgWorkspace, OrgWorkspaceMember } from '@/db/schema';
 
 @dependency()
 export class CreateWorkspaceService {
@@ -31,9 +34,25 @@ export class CreateWorkspaceService {
       );
     }
 
+    const createdWorkspace = (
+      await transaction!
+        .insert(OrgWorkspace)
+        .values(data as InsertOrgWorkspaceInterface)
+        .returning()
+        .execute()
+    )[0];
+    const userToAdd: InsertOrgWorkspaceMemberInterface = {
+      workspace_id: createdWorkspace.id,
+      user_id: data.created_by!,
+      is_active: true,
+      created_by: data.created_by!,
+      updated_by: data.created_by!
+    };
+
+    // Add user to workspace
     await transaction!
-      .insert(OrgWorkspace)
-      .values(data as InsertOrgWorkspaceInterface)
+      .insert(OrgWorkspaceMember)
+      .values(userToAdd)
       .returning()
       .execute();
 
