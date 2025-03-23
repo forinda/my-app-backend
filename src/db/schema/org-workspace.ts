@@ -1,6 +1,7 @@
 import {
   boolean,
   integer,
+  pgEnum,
   pgTable,
   unique,
   uuid,
@@ -15,7 +16,13 @@ import { User } from './user';
 import type { InferInsertModel, InferSelectModel } from 'drizzle-orm';
 import { relations } from 'drizzle-orm';
 import { OrgWorkspaceMember } from './org-workspace-member';
-import { Department } from './department';
+
+export const workspaceTemaplateEnum = pgEnum('workspace_template_enum', [
+  'blank',
+  'team',
+  'project',
+  'creative'
+]);
 
 export const OrgWorkspace = pgTable(
   'organization_workspaces',
@@ -28,13 +35,10 @@ export const OrgWorkspace = pgTable(
     name: varchar().notNull(),
     description: varchar().notNull(),
     is_active: boolean().default(true).notNull(),
-    department_id: integer().references(
-      () => Organization.id,
-      foreignKeyConstraints
-    ),
     is_private: boolean().default(false).notNull(),
     is_chat_enabled: boolean().default(true).notNull(),
     is_task_management_enabled: boolean().default(true).notNull(),
+    template: workspaceTemaplateEnum().default('blank'),
     created_by: integer()
       .notNull()
       .references(() => User.id, foreignKeyConstraints),
@@ -61,10 +65,6 @@ export const orgWorkspaceRelations = relations(
     organization: one(Organization, {
       fields: [OrgWorkspace.organization_id],
       references: [Organization.id]
-    }),
-    department: one(Department, {
-      fields: [OrgWorkspace.department_id],
-      references: [Department.id]
     }),
     members: many(OrgWorkspaceMember)
   })
