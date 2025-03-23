@@ -27,7 +27,13 @@ export class FetchOrganizationByIdService {
       where: inArray(Organization.id, organizationIds),
       with: {
         workspaces: {
-          columns: { name: true, id: true, is_active: true, description: true },
+          columns: {
+            name: true,
+            id: true,
+            uuid: true,
+            is_active: true,
+            description: true
+          },
           with: {
             members: {
               columns: {
