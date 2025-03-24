@@ -30,6 +30,10 @@ export const newProjectSchema = z.object({
     .max(255, {
       message: 'Description must be at most 255 characters long'
     }),
+  is_active: z.coerce.boolean().default(true),
+  is_paid: z.coerce.boolean().default(false),
+  start_date: z.coerce.string().date().optional(),
+  end_date: z.coerce.string().date().optional(),
   created_by: z.number({}).optional(),
   updated_by: z.number({}).optional(),
   organization_id: z.number({
