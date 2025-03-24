@@ -1,5 +1,6 @@
 import {
   boolean,
+  date,
   integer,
   pgEnum,
   pgTable,
@@ -17,6 +18,7 @@ import type { InferInsertModel, InferSelectModel } from 'drizzle-orm';
 import { relations } from 'drizzle-orm';
 import { OrgProjectMember } from './org-project-member';
 import { OrgProjectCategory } from './org-project-category';
+import { OrgTask } from './org-task';
 
 export const projectTypes = pgEnum('organization_project_types_enum', [
   'paid',
@@ -38,6 +40,8 @@ export const OrgProject = pgTable(
     is_active: boolean().default(true).notNull(),
     is_paid: boolean().default(false).notNull(),
     project_type: projectTypes().notNull(),
+    start_date: date({ mode: 'string' }),
+    end_date: date({ mode: 'string' }),
     category_id: integer()
       .notNull()
       .references(() => OrgProjectCategory.id, foreignKeyConstraints),
@@ -70,7 +74,8 @@ export const orgProjectRelations = relations(OrgProject, ({ one, many }) => ({
   category: one(OrgProjectCategory, {
     fields: [OrgProject.category_id],
     references: [OrgProjectCategory.id]
-  })
+  }),
+  tasks: many(OrgTask)
 }));
 
 export interface SelectOrgProjectInterface
