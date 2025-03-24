@@ -18,8 +18,8 @@ export class FetchProjectController extends BaseGetController {
     auth: true,
     bodyBindOrgId: true
   })
-  async get({ res, pagination, organization_id }: ApiRequestContext) {
-    const feed = await this.service.get(organization_id!, pagination);
+  async get({ res, pagination, organization_id, query }: ApiRequestContext) {
+    const feed = await this.service.get(organization_id!, query!, pagination);
 
     return createHttpResponse(res, { ...feed, statusCode: feed.status });
   }
