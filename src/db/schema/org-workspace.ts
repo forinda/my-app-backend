@@ -16,6 +16,7 @@ import { User } from './user';
 import type { InferInsertModel, InferSelectModel } from 'drizzle-orm';
 import { relations } from 'drizzle-orm';
 import { OrgWorkspaceMember } from './org-workspace-member';
+import { OrgTask } from './org-task';
 
 export const workspaceTemaplateEnum = pgEnum('workspace_template_enum', [
   'blank',
@@ -66,7 +67,8 @@ export const orgWorkspaceRelations = relations(
       fields: [OrgWorkspace.organization_id],
       references: [Organization.id]
     }),
-    members: many(OrgWorkspaceMember)
+    members: many(OrgWorkspaceMember),
+    tasks: many(OrgTask)
   })
 );
 
