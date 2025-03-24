@@ -428,6 +428,13 @@
       "when": 1742771803118,
       "tag": "1742771803_fresh_enchantress",
       "breakpoints": true
+    },
+    {
+      "idx": 61,
+      "version": "7",
+      "when": 1742801800721,
+      "tag": "1742801800_gorgeous_wraith",
+      "breakpoints": true
     }
   ]
 }
