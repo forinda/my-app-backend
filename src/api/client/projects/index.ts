@@ -8,6 +8,7 @@ import { RemoveUserFromProjectController } from './controllers/remove-users.cont
 import type { RouteSetupFunction } from '@/common/interfaces/controller';
 import { AddProjectTimeLogCategoryController } from './controllers/add-time-log-category.controller';
 import { ActivateOrDeactivateProjectTimeLogController } from './controllers/change-timelog-category-status.controller';
+import { FetchProjectByIdController } from './controllers/fetch-by-id.controller';
 
 export const setupProjectRoutes: RouteSetupFunction = ({ app }) => {
   const router = Router();
@@ -16,6 +17,7 @@ export const setupProjectRoutes: RouteSetupFunction = ({ app }) => {
     .get('/', di.resolve(FetchProjectController).get)
     .post('/', di.resolve(CreateProjectController).post)
     .put('/:id', di.resolve(UpdateProjectController).put)
+    .get('/:id', di.resolve(FetchProjectByIdController).get)
     .post('/add-member/:id', di.resolve(AddUserToProjectController).post)
     .post(
       '/remove-member/:id',
