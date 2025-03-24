@@ -1,6 +1,6 @@
 import type { z } from 'zod';
 import type { ApiRequestContext } from '../interfaces/controller';
-import { PayloadValidator } from '../schema/validator';
+import { SchemaValidator } from '../schema/validator';
 import { extractPaginationParams } from '../utils/pagination';
 import { IpFinder } from '@/api/client/auth/utils/get-client-ip';
 import { convertToNumber, isNumber } from '../utils/numbers';
@@ -133,7 +133,7 @@ type MethodProps = {
 export function ApiControllerMethod(props: MethodProps = {}) {
   return function (target: any, key: string, descriptor: PropertyDescriptor) {
     const originalMethod = descriptor.value;
-    const validator = new PayloadValidator();
+    const validator = new SchemaValidator();
 
     descriptor.value = async function (...args: any[]) {
       const [context] = args as [ApiRequestContext];
