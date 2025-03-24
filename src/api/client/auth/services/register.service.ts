@@ -7,7 +7,7 @@ import type { SelectUserInterface } from '@/db/schema';
 import { OrganizationInvite, User } from '@/db/schema';
 import { and, eq, or } from 'drizzle-orm';
 import { PasswordProcessor } from '@/common/utils/password';
-import { PayloadValidator } from '@/common/schema/validator';
+import { SchemaValidator } from '@/common/schema/validator';
 import { formatKenyanPhone } from '@/common/utils/phone-number-format';
 import { Avatar } from '@/common/utils/avatar';
 import type { RegisterUserInput } from '../schema/schema';
@@ -16,7 +16,7 @@ import { ApiError } from '@/common/errors/base';
 @dependency()
 export class RegisterUserService {
   @inject(PasswordProcessor) private passwordProcessor: PasswordProcessor;
-  @inject(PayloadValidator) readonly validateSchema: PayloadValidator;
+  @inject(SchemaValidator) readonly validateSchema: SchemaValidator;
   @inject(Avatar) private avatar: Avatar;
 
   @TransactionalService()
