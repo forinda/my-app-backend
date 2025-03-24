@@ -149,9 +149,11 @@ export const fetchProjectCategoryQuerySchema = z.object({
       message: 'Category ID is required'
     })
     .optional(),
-  category_id: z.number({
-    message: 'Category ID is required'
-  }),
+  category_id: z
+    .number({
+      message: 'Category ID is required'
+    })
+    .optional(),
   q: z
     .string({
       message: 'Search query must be a string'
