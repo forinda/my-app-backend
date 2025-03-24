@@ -17,7 +17,9 @@ export class FetchProjectCategoriesService {
             id: true,
             name: true,
             description: true,
-            created_at: true
+            created_at: true,
+            start_date: true,
+            end_date: true
           }
         }
       },
