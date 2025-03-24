@@ -9,8 +9,11 @@ import {
   type TransactionContext
 } from '@/common/decorators/service-transaction';
 import { ApiError } from '@/common/errors/base';
-import type { InsertOrgProjectInterface } from '@/db/schema';
-import { OrgProject, OrgProjectCategory } from '@/db/schema';
+import type {
+  InsertOrgProjectInterface,
+  InsertOrgProjectMemberInterface
+} from '@/db/schema';
+import { OrgProject, OrgProjectCategory, OrgProjectMember } from '@/db/schema';
 
 @dependency()
 export class CreateProjectService {
@@ -42,11 +45,23 @@ export class CreateProjectService {
       throw new ApiError('Category not found', HttpStatus.NOT_FOUND, {});
     }
 
-    await transaction!
-      .insert(OrgProject)
-      .values(data as InsertOrgProjectInterface)
-      .returning()
-      .execute();
+    const created = (
+      await transaction!
+        .insert(OrgProject)
+        .values(data as InsertOrgProjectInterface)
+        .returning()
+        .execute()
+    )[0];
+    const user_to_add: InsertOrgProjectMemberInterface = {
+      project_id: created.id,
+      user_id: data.created_by!,
+      created_by: data.created_by!,
+      updated_by: data.created_by!,
+      is_active: true
+    };
+
+    // Add user to project
+    await transaction!.insert(OrgProjectMember).values(user_to_add).execute();
 
     return {
       data: {},
