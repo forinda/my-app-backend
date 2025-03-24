@@ -11,6 +11,16 @@ export class FetchProjectCategoriesService {
     const db = useDrizzle();
     const categories = await db.query.OrgProjectCategory.findMany({
       where: eq(OrgProjectCategory.organization_id, organization_id),
+      with: {
+        projects: {
+          columns: {
+            id: true,
+            name: true,
+            description: true,
+            created_at: true
+          }
+        }
+      },
       limit: _?.limit,
       offset: _?.offset,
       orderBy: [asc(OrgProjectCategory.created_at)]
