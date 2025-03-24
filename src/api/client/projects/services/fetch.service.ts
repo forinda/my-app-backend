@@ -52,7 +52,25 @@ export class FetchProjectsService {
     // Fetch projects with pagination and related members
     const projects = await db.query.OrgProject.findMany({
       where: finalFilter,
-      with: { members: true },
+      with: {
+        members: true,
+        category: {
+          columns: {
+            id: true,
+            name: true
+          }
+        },
+        tasks: {
+          columns: {
+            id: true,
+            status: true,
+            start_date: true,
+            due_date: true,
+            end_date: true,
+            story_points: true
+          }
+        }
+      },
       limit,
       offset,
       orderBy: [asc(OrgProject.created_at)]

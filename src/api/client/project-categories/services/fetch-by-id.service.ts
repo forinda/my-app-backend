@@ -34,6 +34,17 @@ export class FetchProjectCategoryByIdService {
                 name: true,
                 description: true
               }
+            },
+            tasks: {
+              columns: {
+                id: true,
+                title: true,
+                description: true,
+                status: true,
+                priority: true,
+                due_date: true,
+                created_at: true
+              }
             }
           }
         }
