@@ -9,7 +9,7 @@ import {
   OrgSubscription,
   OrgSubscriptionFeature
 } from '@/db/schema';
-import { PayloadValidator } from '@/common/schema/validator';
+import { SchemaValidator } from '@/common/schema/validator';
 import {
   CreateSubscriptionFeatureSchema,
   CreateSubscriptionPlanSchema
@@ -17,7 +17,7 @@ import {
 
 @dependency()
 export class SetupSubscriptionPlansUtil {
-  @inject(PayloadValidator) private validator: PayloadValidator;
+  @inject(SchemaValidator) private validator: SchemaValidator;
 
   async setupPlans(transaction: DrizzleTransaction) {
     for (const { features, ...plan } of Object.values(subscriptionPlans)) {
@@ -29,7 +29,9 @@ export class SetupSubscriptionPlansUtil {
         existing = (
           await transaction
             .insert(OrgSubscription)
-            .values(this.validator.validate(CreateSubscriptionPlanSchema, plan))
+            .values(
+              this.validator.validate(CreateSubscriptionPlanSchema, plan) as any
+            )
             .returning()
             .execute()
         )[0];
