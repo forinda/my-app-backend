@@ -53,7 +53,20 @@ export class FetchProjectsService {
     const projects = await db.query.OrgProject.findMany({
       where: finalFilter,
       with: {
-        members: true,
+        members: {
+          with: {
+            user: {
+              columns: {
+                username: true,
+                email: true,
+                first_name: true,
+                last_name: true,
+                phone_number: true,
+                avatar: true
+              }
+            }
+          }
+        },
         category: {
           columns: {
             id: true,
