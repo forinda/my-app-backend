@@ -137,7 +137,33 @@ export const activateOrDeactivateProjectTimeLogCategorySchema = z.object({
     message: 'Organization ID is required'
   })
 });
-// export const getOrganizationMember``
+
+export const fetchProjectCategoryQuerySchema = z.object({
+  organization_id: z
+    .number({
+      message: 'Organization ID is required'
+    })
+    .optional(),
+  id: z
+    .number({
+      message: 'Category ID is required'
+    })
+    .optional(),
+  category_id: z.number({
+    message: 'Category ID is required'
+  }),
+  q: z
+    .string({
+      message: 'Search query must be a string'
+    })
+    .regex(/^[a-zA-Z0-9\s\-_.,!?]*$/, {
+      message: 'Search query contains invalid characters'
+    })
+    .max(100, {
+      message: 'Search query must be less than 100 characters'
+    })
+    .optional()
+});
 
 export type NewProjectPayload = z.infer<typeof newProjectSchema>;
 
