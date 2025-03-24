@@ -5,8 +5,8 @@ import { HttpStatus } from '../http';
 import { dependency } from '../di';
 
 @dependency()
-export class PayloadValidator {
-  validate<T = any>(schema: z.Schema, payload: T) {
+export class SchemaValidator {
+  validate<T = any>(schema: z.Schema<T>, payload: any) {
     const { success, error } = schema.safeParse(payload);
 
     if (!success) {
