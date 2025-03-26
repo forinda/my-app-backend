@@ -33,7 +33,11 @@ export const taskStatus = pgEnum('organization_task_status_enum', [
 export const taskPriority = pgEnum('organization_task_priority_enum', [
   'low',
   'medium',
-  'high'
+  'high',
+  'blocker',
+  'critical',
+  'major',
+  'minor'
 ]);
 
 export const OrgTask = pgTable(

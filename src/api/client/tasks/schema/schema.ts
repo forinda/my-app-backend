@@ -12,7 +12,9 @@ export const taskStatusSchema = z
   ])
   .default('pending');
 
-const taskPrioritySchema = z.enum(['low', 'medium', 'high']).default('low');
+const taskPrioritySchema = z
+  .enum(['low', 'medium', 'high', 'blocker', 'critical', 'major', 'minor'])
+  .default('low');
 
 export const newTaskSchema = z.object({
   organization_id: z.coerce
@@ -38,9 +40,9 @@ export const newTaskSchema = z.object({
       message: 'Description must be at least 3 characters long'
     }),
   status: taskStatusSchema,
-  start_date: z.date({}).optional(),
-  end_date: z.date({}).optional(),
-  due_date: z.date({}).optional(),
+  start_date: z.coerce.string().datetime().optional(),
+  end_date: z.coerce.string().datetime().optional(),
+  due_date: z.coerce.string().datetime().optional(),
   workspace_id: z
     .string({
       message: 'Workspace ID is required'
