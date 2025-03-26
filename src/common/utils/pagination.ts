@@ -13,4 +13,22 @@ export function extractPaginationParams(query: ApiReq['query']) {
   return { page, limit, offset };
 }
 
+export function paginator<T = unknown>(
+  data: T[],
+  total: number,
+  { limit, page }: ApiPaginationParams
+) {
+  return {
+    data,
+    meta: {
+      pagination: {
+        total,
+        limit,
+        page,
+        pages: Math.ceil(total / limit)
+      }
+    }
+  };
+}
+
 export type ApiPaginationParams = ReturnType<typeof extractPaginationParams>;

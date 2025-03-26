@@ -102,9 +102,13 @@ export const orgTaskRelations = relations(OrgTask, ({ one, many }) => ({
   }),
   parent: one(OrgTask, {
     fields: [OrgTask.parent_id],
-    references: [OrgTask.id]
+    references: [OrgTask.id],
+    relationName: 'subtasks'
   }),
-  subtasks: many(OrgTask),
+  subtasks: many(OrgTask, {
+    relationName: 'subtasks'
+    // fields: [OrgTask.id],
+  }),
   comments: many(OrgTaskComment)
 }));
 

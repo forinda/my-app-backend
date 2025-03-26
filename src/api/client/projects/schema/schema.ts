@@ -1,3 +1,4 @@
+import { searchQueryStringSchema } from '@/common/schema/search-query-string';
 import z from 'zod';
 
 const projectTypeSchema = z.enum(['paid', 'free', 'test', 'trial']);
@@ -158,17 +159,7 @@ export const fetchProjectCategoryQuerySchema = z.object({
       message: 'Category ID is required'
     })
     .optional(),
-  q: z
-    .string({
-      message: 'Search query must be a string'
-    })
-    .regex(/^[a-zA-Z0-9\s\-_.,!?]*$/, {
-      message: 'Search query contains invalid characters'
-    })
-    .max(100, {
-      message: 'Search query must be less than 100 characters'
-    })
-    .optional()
+  q: searchQueryStringSchema.optional()
 });
 
 export type NewProjectPayload = z.infer<typeof newProjectSchema>;

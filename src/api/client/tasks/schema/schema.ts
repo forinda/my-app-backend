@@ -1,3 +1,4 @@
+import { searchQueryStringSchema } from '@/common/schema/search-query-string';
 import z from 'zod';
 
 export const taskStatusSchema = z
@@ -41,10 +42,12 @@ export const newTaskSchema = z.object({
   end_date: z.date({}).optional(),
   due_date: z.date({}).optional(),
   workspace_id: z
-    .number({
+    .string({
       message: 'Workspace ID is required'
     })
-    .positive(),
+    .nonempty({
+      message: 'Workspace ID is required'
+    }),
   project_id: z
     .number({
       message: 'Project ID is required'
@@ -52,10 +55,80 @@ export const newTaskSchema = z.object({
     .positive(),
   assignee_id: z.coerce.number({}).positive().optional(),
   parent_id: z.coerce.number({}).positive().optional(),
-  story_points: z.coerce.number({}).positive().default(0),
+  story_points: z.coerce.number({}).min(0).default(0),
   priority: taskPrioritySchema,
   created_by: z.coerce.number({}).positive().optional(),
   updated_by: z.coerce.number({}).positive().optional()
+});
+
+export const filterTasksSchema = z.object({
+  q: searchQueryStringSchema.optional(),
+  project_id: z.coerce
+
+    .number({
+      message: 'Project ID is required'
+    })
+    .positive()
+    .optional(),
+  workspace_id: z.coerce
+
+    .number({
+      message: 'Workspace ID is required'
+    })
+    .positive()
+    .optional(),
+  assignee_id: z.coerce
+
+    .number({
+      message: 'Assignee ID is required'
+    })
+    .positive()
+    .optional(),
+  status: z.coerce
+
+    .string({
+      message: 'Status is required'
+    })
+    .optional(),
+  priority: z.coerce
+
+    .string({
+      message: 'Priority is required'
+    })
+    .optional(),
+  parent_id: z.coerce
+
+    .number({
+      message: 'Parent ID is required'
+    })
+    .positive()
+    .optional(),
+  start_date: z.coerce
+
+    .string({
+      message: 'Start date is required'
+    })
+    .optional(),
+  end_date: z.coerce
+
+    .string({
+      message: 'End date is required'
+    })
+    .optional(),
+  due_date: z.coerce
+
+    .string({
+      message: 'Due date is required'
+    })
+    .optional(),
+  story_points: z.coerce
+
+    .number({
+      message: 'Story points is required'
+    })
+    .min(0)
+    .default(0)
+    .optional()
 });
 
 export const updateTaskSchema = z.object({
@@ -92,13 +165,15 @@ export const updateTaskSchema = z.object({
   end_date: z.date({}).optional(),
   due_date: z.date({}).optional(),
   workspace_id: z
-    .number({
+    .string({
       message: 'Workspace ID is required'
     })
-    .positive(),
+    .nonempty({
+      message: 'Workspace ID is required'
+    }),
   assignee_id: z.coerce.number({}).positive().optional(),
   parent_id: z.coerce.number({}).positive().optional(),
-  story_points: z.coerce.number({}).positive().default(0),
+  story_points: z.coerce.number({}).min(0).default(0),
   priority: taskPrioritySchema,
   updated_by: z.coerce.number({}).positive().optional()
 });
