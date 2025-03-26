@@ -20,7 +20,7 @@ export class FetchTaskByIdService {
       where: filterCondition,
       with: {
         parent: true,
-        subtasks: {
+        sub_tasks: {
           columns: {
             id: true,
             title: true,
