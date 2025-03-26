@@ -56,8 +56,6 @@ export class FetchTasksService {
     }
     const finalFilter = and(orgCondition, ...fiters);
 
-    console.log(finalFilter);
-
     const totalItems = await db.$count(OrgTask, finalFilter);
     const data = await db.query.OrgTask.findMany({
       where: finalFilter,
