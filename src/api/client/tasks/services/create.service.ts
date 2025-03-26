@@ -17,13 +17,17 @@ export class CreateTaskService {
   private taskCreationChecks: TaskCreationAndUpdateCheckUtil;
   @TransactionalService()
   async create({ data, transaction }: TransactionContext<NewTaskPayload>) {
-    await this.taskCreationChecks.runCreationOrUpdateChecks(
+    const res = await this.taskCreationChecks.runCreationOrUpdateChecks(
       'create',
       transaction!
     )(data);
+
     await transaction!
       .insert(OrgTask)
-      .values(data as InsertOrgTaskInterface)
+      .values({
+        ...data,
+        workspace_id: res.workspace!.id
+      } as InsertOrgTaskInterface)
       .returning()
       .execute();
 

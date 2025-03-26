@@ -7,6 +7,7 @@ import type {
 } from '../schema/schema';
 import { ApiError } from '@/common/errors/base';
 import { HttpStatus } from '@/common/http';
+import type { SelectOrgWorkspaceInterface } from '@/db/schema';
 import {
   OrgTask,
   OrgProject,
@@ -23,6 +24,8 @@ type ActionTypes = 'create' | 'update';
 export class TaskCreationAndUpdateCheckUtil {
   private runCommonChecks(transaction: DrizzleTransaction) {
     return async (data: NewTaskPayload | UpdateTaskPayload) => {
+      let workspace: SelectOrgWorkspaceInterface | undefined = undefined;
+
       if (data.parent_id) {
         const parentTask = await transaction!.query.OrgTask.findFirst({
           where: and(
@@ -48,9 +51,9 @@ export class TaskCreationAndUpdateCheckUtil {
         }
       }
       if (data.workspace_id) {
-        const workspace = await transaction!.query.OrgWorkspace.findFirst({
+        workspace = await transaction!.query.OrgWorkspace.findFirst({
           where: and(
-            eq(OrgWorkspace.id, data.workspace_id),
+            eq(OrgWorkspace.uuid, data.workspace_id),
             eq(OrgWorkspace.organization_id, data.organization_id)
           )
         });
@@ -87,6 +90,10 @@ export class TaskCreationAndUpdateCheckUtil {
           throw new ApiError('Assignee not found', HttpStatus.NOT_FOUND, {});
         }
       }
+
+      return {
+        workspace
+      };
     };
   }
   private runCreationChecks(transaction: DrizzleTransaction) {
@@ -131,10 +138,13 @@ export class TaskCreationAndUpdateCheckUtil {
     transaction: DrizzleTransaction
   ) {
     return async (data: NewTaskPayload | UpdateTaskPayload) => {
-      await this.runCommonChecks(transaction)(data);
+      const result = await this.runCommonChecks(transaction)(data);
+
       await (type === 'create'
         ? this.runCreationChecks(transaction)(data as NewTaskPayload)
         : this.runUpdateChecks(transaction)(data as UpdateTaskPayload));
+
+      return result;
     };
   }
 

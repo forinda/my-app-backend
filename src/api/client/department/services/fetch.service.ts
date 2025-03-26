@@ -2,7 +2,7 @@ import { Department } from '@/db/schema';
 import { useDrizzle } from '@/db';
 import { HttpStatus } from '@/common/http';
 import { dependency } from '@/common/di';
-import type { ApiPaginationParams } from '@/common/utils/pagination';
+import { type ApiPaginationParams, paginator } from '@/common/utils/pagination';
 import { asc, eq } from 'drizzle-orm';
 
 @dependency()
@@ -10,8 +10,10 @@ export class FetchDepartmentService {
   async get(organization_id: number, _?: ApiPaginationParams) {
     const db = useDrizzle();
 
+    const fetchCondition = eq(Department.organization_id, organization_id);
+    const totalItems = await db.$count(Department, fetchCondition);
     const depts = await db.query.Department.findMany({
-      where: eq(Department.organization_id, organization_id),
+      where: fetchCondition,
       with: {
         members: {
           columns: {
@@ -74,7 +76,8 @@ export class FetchDepartmentService {
     });
 
     return {
-      data: depts,
+      ...paginator(depts, totalItems, _!),
+      // data: depts,
       message: 'Departments fetched successfully',
       status: HttpStatus.OK
     };

@@ -19,7 +19,7 @@ export class UpdateTaskService {
   private taskCreationChecks: TaskCreationAndUpdateCheckUtil;
   @TransactionalService()
   async update({ data, transaction }: TransactionContext<UpdateTaskPayload>) {
-    await this.taskCreationChecks.runCreationOrUpdateChecks(
+    const res = await this.taskCreationChecks.runCreationOrUpdateChecks(
       'update',
       transaction!
     )(data);
@@ -28,7 +28,10 @@ export class UpdateTaskService {
 
     await transaction!
       .update(OrgTask)
-      .set(rest as InsertOrgTaskInterface)
+      .set({
+        ...rest,
+        workspace_id: res.workspace!.id
+      } as InsertOrgTaskInterface)
       .where(eq(OrgTask.id, data.task_id!))
       .execute();
 

@@ -2,16 +2,21 @@ import { OrgTask } from '@/db/schema';
 import { useDrizzle } from '@/db';
 import { HttpStatus } from '@/common/http';
 import { dependency } from '@/common/di';
-import { paginator, type ApiPaginationParams } from '@/common/utils/pagination';
-import { asc, eq } from 'drizzle-orm';
+import { and, eq } from 'drizzle-orm';
+import { inject } from 'inversify';
+import { UUID } from '@/common/utils/uuid';
 
 @dependency()
-export class FetchTasksService {
-  async get(organization_id: number, _?: ApiPaginationParams) {
+export class FetchTaskByIdService {
+  @inject(UUID) private _: UUID;
+  async get(organization_id: number, task_id: string) {
+    this._.validateUUID(task_id, { throwError: true });
     const db = useDrizzle();
-    const filterCondition = eq(OrgTask.organization_id, organization_id);
-    const totalItems = await db.$count(OrgTask, filterCondition);
-    const data = await db.query.OrgTask.findMany({
+    const filterCondition = and(
+      eq(OrgTask.uuid, task_id),
+      eq(OrgTask.organization_id, organization_id)
+    );
+    const data = await db.query.OrgTask.findFirst({
       where: filterCondition,
       with: {
         parent: true,
@@ -76,15 +81,12 @@ export class FetchTasksService {
             avatar: true
           }
         }
-      },
-      limit: _?.limit,
-      offset: _?.offset,
-      orderBy: [asc(OrgTask.created_at)]
+      }
     });
 
     return {
-      ...paginator(data, totalItems, _!),
-      message: 'Tasks fetched successfully',
+      data,
+      message: 'Task fetched successfully',
       status: HttpStatus.OK
     };
   }
