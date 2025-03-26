@@ -84,18 +84,8 @@ export const filterTasksSchema = z.object({
     })
     .positive()
     .optional(),
-  status: z.coerce
-
-    .string({
-      message: 'Status is required'
-    })
-    .optional(),
-  priority: z.coerce
-
-    .string({
-      message: 'Priority is required'
-    })
-    .optional(),
+  status: taskStatusSchema.optional(),
+  priority: taskPrioritySchema.optional(),
   parent_id: z.coerce
 
     .number({
@@ -273,3 +263,5 @@ export type UpdateTaskPayload = z.infer<typeof updateTaskSchema>;
 export type AssignTaskPayload = z.infer<typeof assignTaskSchema>;
 
 export type UnAssignTaskPayload = z.infer<typeof unAssignTaskSchema>;
+
+export type FilterTasksPayload = z.infer<typeof filterTasksSchema>;

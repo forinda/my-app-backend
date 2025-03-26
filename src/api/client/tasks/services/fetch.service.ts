@@ -3,16 +3,64 @@ import { useDrizzle } from '@/db';
 import { HttpStatus } from '@/common/http';
 import { dependency } from '@/common/di';
 import { paginator, type ApiPaginationParams } from '@/common/utils/pagination';
-import { asc, eq } from 'drizzle-orm';
+import { and, asc, between, eq, ilike, or } from 'drizzle-orm';
+import type { FilterTasksPayload } from '../schema/schema';
 
 @dependency()
 export class FetchTasksService {
-  async get(organization_id: number, _?: ApiPaginationParams) {
+  async get(
+    organization_id: number,
+    query: FilterTasksPayload,
+    _?: ApiPaginationParams
+  ) {
     const db = useDrizzle();
-    const filterCondition = eq(OrgTask.organization_id, organization_id);
-    const totalItems = await db.$count(OrgTask, filterCondition);
+    const fiters = [];
+    const orgCondition = eq(OrgTask.organization_id, organization_id);
+
+    if (query?.project_id) {
+      fiters.push(eq(OrgTask.project_id, query.project_id));
+    }
+    if (query?.workspace_id) {
+      fiters.push(eq(OrgTask.workspace_id, query.workspace_id));
+    }
+    if (query?.assignee_id) {
+      fiters.push(eq(OrgTask.assignee_id, query.assignee_id));
+    }
+    if (query?.status) {
+      fiters.push(eq(OrgTask.status, query.status));
+    }
+    if (query?.priority) {
+      fiters.push(eq(OrgTask.priority, query.priority));
+    }
+    if (query?.parent_id) {
+      fiters.push(eq(OrgTask.parent_id, query.parent_id));
+    }
+    if (query?.q) {
+      fiters.push(
+        or(
+          ilike(OrgTask.title, `%${query.q}%`),
+          ilike(OrgTask.description, `%${query.q}%`)
+        )
+      );
+    }
+    if (query?.start_date && !query?.end_date) {
+      fiters.push(eq(OrgTask.start_date, query.start_date));
+    }
+    if (query?.end_date && !query?.start_date) {
+      fiters.push(eq(OrgTask.end_date, query.end_date));
+    }
+    if (query?.start_date && query?.end_date) {
+      fiters.push(
+        between(OrgTask.start_date, query.start_date, query.end_date)
+      );
+    }
+    const finalFilter = and(orgCondition, ...fiters);
+
+    console.log(finalFilter);
+
+    const totalItems = await db.$count(OrgTask, finalFilter);
     const data = await db.query.OrgTask.findMany({
-      where: filterCondition,
+      where: finalFilter,
       with: {
         parent: true,
         sub_tasks: {
