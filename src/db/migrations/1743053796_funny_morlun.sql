@@ -1,0 +1,1 @@
+ALTER TABLE "organization_time_log_categories" ADD COLUMN "color" varchar DEFAULT '#000000' NOT NULL;

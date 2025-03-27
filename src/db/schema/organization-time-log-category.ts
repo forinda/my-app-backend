@@ -18,6 +18,7 @@ export const OrgTimeLogCategory = pgTable(
       .references(() => Organization.id, foreignKeyConstraints),
     name: varchar().notNull(),
     description: text().notNull(),
+    color: varchar().notNull().default('#000000'),
     created_by: integer()
       .notNull()
       .references(() => User.id, foreignKeyConstraints),
