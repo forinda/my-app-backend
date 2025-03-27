@@ -1,3 +1,4 @@
+import { searchQueryStringSchema } from '@/common/schema/search-query-string';
 import z from 'zod';
 
 export const newTimeLogCategorySchema = z.object({
@@ -63,6 +64,27 @@ export const updateTimeLogCategorySchema = z.object({
   organization_id: z.coerce.number({}).positive().optional()
 });
 
+export const filterTimeLogCategorySchema = z.object({
+  id: z
+    .number({
+      message: 'Category ID is required'
+    })
+    .positive()
+    .optional(),
+  color: z
+    .string({
+      message: 'Color is required'
+    })
+    .min(3, {
+      message: 'Color must be at least 3 characters long'
+    })
+    .max(255, {
+      message: 'Color must be at most 255 characters long'
+    })
+    .optional(),
+  q: searchQueryStringSchema.optional()
+});
+
 // export const getOrganizationMember``
 
 export type CreateTimeLogCategoryType = z.infer<
@@ -71,4 +93,8 @@ export type CreateTimeLogCategoryType = z.infer<
 
 export type UpdateTimeLogCategoryType = z.infer<
   typeof updateTimeLogCategorySchema
+>;
+
+export type FilterTimeLogCategoryType = z.infer<
+  typeof filterTimeLogCategorySchema
 >;
