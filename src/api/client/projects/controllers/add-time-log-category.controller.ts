@@ -6,7 +6,7 @@ import {
 import type { ApiRequestContext } from '@/common/interfaces/controller';
 import { inject } from 'inversify';
 import type { AddProjectTimeLogCategoryPayload } from '../schema/schema';
-import { addUsersToProjectSchema } from '../schema/schema';
+import { addProjectTimeLogCategorySchema } from '../schema/schema';
 import { userAudit } from '@/common/utils/user-request-audit';
 import { createHttpResponse } from '@/common/utils/responder';
 import { AddProjectTimeLogCategoryService } from '../services/add-time-log-category.service';
@@ -16,7 +16,7 @@ export class AddProjectTimeLogCategoryController extends BasePostController {
   @inject(AddProjectTimeLogCategoryService)
   private service: AddProjectTimeLogCategoryService;
   @ApiControllerMethod({
-    bodySchema: addUsersToProjectSchema,
+    bodySchema: addProjectTimeLogCategorySchema,
     auth: true,
     audit: userAudit('create'),
     bodyBindOrgId: true
