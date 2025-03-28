@@ -82,7 +82,8 @@ export const filterTimeLogCategorySchema = z.object({
       message: 'Color must be at most 255 characters long'
     })
     .optional(),
-  q: searchQueryStringSchema.optional()
+  q: searchQueryStringSchema.optional(),
+  all: z.coerce.boolean().optional()
 });
 
 // export const getOrganizationMember``
