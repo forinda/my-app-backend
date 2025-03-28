@@ -9,6 +9,7 @@ import type { RouteSetupFunction } from '@/common/interfaces/controller';
 import { AddProjectTimeLogCategoryController } from './controllers/add-time-log-category.controller';
 import { ActivateOrDeactivateProjectTimeLogController } from './controllers/change-timelog-category-status.controller';
 import { FetchProjectByIdController } from './controllers/fetch-by-id.controller';
+import { FetchProjectTimeCategoriesController } from './controllers/fetch-time-categories.controller';
 
 export const setupProjectRoutes: RouteSetupFunction = ({ app }) => {
   const router = Router();
@@ -17,6 +18,10 @@ export const setupProjectRoutes: RouteSetupFunction = ({ app }) => {
     .get('/', di.resolve(FetchProjectController).get)
     .post('/', di.resolve(CreateProjectController).post)
     .put('/:id', di.resolve(UpdateProjectController).put)
+    .get(
+      '/time-categories',
+      di.resolve(FetchProjectTimeCategoriesController).get
+    )
     .get('/:id', di.resolve(FetchProjectByIdController).get)
     .post('/add-member/:id', di.resolve(AddUserToProjectController).post)
     .post(
