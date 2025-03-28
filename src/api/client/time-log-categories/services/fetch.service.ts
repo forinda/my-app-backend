@@ -36,8 +36,8 @@ export class FetchTimeLogCategoriesService {
     const totalItems = await db.$count(OrgTimeLogCategory, finalFilter);
     const categories = await db.query.OrgTimeLogCategory.findMany({
       where: finalFilter,
-      limit: _?.limit,
-      offset: _?.offset,
+      limit: filter.all ? undefined : _?.limit,
+      offset: filter.all ? undefined : _?.offset,
       orderBy: [asc(OrgTimeLogCategory.created_at)]
     });
 
