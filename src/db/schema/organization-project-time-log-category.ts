@@ -68,7 +68,7 @@ export const organizationTaskProjectCategoryRelations = relations(
       fields: [OrgProjectTimeLogCategory.project_id],
       references: [OrgProject.id]
     }),
-    taskLogCategory: one(OrgTimeLogCategory, {
+    time_log_category: one(OrgTimeLogCategory, {
       fields: [OrgProjectTimeLogCategory.task_log_category_id],
       references: [OrgTimeLogCategory.id]
     })
