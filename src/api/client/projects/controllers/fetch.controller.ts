@@ -7,6 +7,7 @@ import type { ApiRequestContext } from '@/common/interfaces/controller';
 import { inject } from 'inversify';
 import { FetchProjectsService } from '../services/fetch.service';
 import { createHttpResponse } from '@/common/utils/responder';
+import { fetchProjectCategoryQuerySchema } from '../schema/schema';
 
 @Controller()
 export class FetchProjectController extends BaseGetController {
@@ -16,7 +17,8 @@ export class FetchProjectController extends BaseGetController {
   @ApiControllerMethod({
     paginate: true,
     auth: true,
-    bodyBindOrgId: true
+    bodyBindOrgId: true,
+    querySchema: fetchProjectCategoryQuerySchema
   })
   async get({ res, pagination, organization_id, query }: ApiRequestContext) {
     const feed = await this.service.get(organization_id!, query!, pagination);
