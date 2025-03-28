@@ -1,4 +1,4 @@
-import { OrgTask } from '@/db/schema';
+import { OrgProject, OrgTask } from '@/db/schema';
 import { useDrizzle } from '@/db';
 import { HttpStatus } from '@/common/http';
 import { dependency } from '@/common/di';
@@ -18,7 +18,14 @@ export class FetchTasksService {
     const orgCondition = eq(OrgTask.organization_id, organization_id);
 
     if (query?.project_id) {
-      fiters.push(eq(OrgTask.project_id, query.project_id));
+      const project = await db.query.OrgProject.findFirst({
+        where: and(
+          eq(OrgProject.organization_id, organization_id),
+          eq(OrgProject.uuid, query.project_id)
+        )
+      });
+
+      fiters.push(eq(OrgTask.project_id, project!.id!));
     }
     if (query?.workspace_id) {
       fiters.push(eq(OrgTask.workspace_id, query.workspace_id));

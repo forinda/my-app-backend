@@ -67,10 +67,10 @@ export const filterTasksSchema = z.object({
   q: searchQueryStringSchema.optional(),
   project_id: z.coerce
 
-    .number({
-      message: 'Project ID is required'
+    .string({
+      message: 'Please select a project'
     })
-    .positive()
+    .uuid()
     .optional(),
   workspace_id: z.coerce
 
