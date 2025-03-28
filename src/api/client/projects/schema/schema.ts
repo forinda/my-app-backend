@@ -114,12 +114,21 @@ export const removeUsersFromProjectSchema = z.object({
 });
 
 export const addProjectTimeLogCategorySchema = z.object({
-  project_id: z.number({
-    message: 'Project ID is required'
-  }),
-  category_id: z.number({
-    message: 'Category ID is required'
-  }),
+  project_id: z
+    .string({
+      message: 'Project ID is required'
+    })
+    .uuid(),
+  category_ids: z
+    .array(
+      z.number({
+        message: 'Category ID is required'
+      })
+    )
+    .min(1, {
+      message: 'At least one category is required'
+    }),
+
   created_by: z.number({}),
   updated_by: z.number({}),
   organization_id: z.number({
@@ -159,7 +168,17 @@ export const fetchProjectCategoryQuerySchema = z.object({
       message: 'Category ID is required'
     })
     .optional(),
+  all: z.coerce.boolean().optional(),
   q: searchQueryStringSchema.optional()
+});
+
+export const fetchProjectTimeCategoriesSchema = z.object({
+  project_id: z.string({
+    message: 'Project ID is required'
+  }),
+  // .uuid()
+  q: searchQueryStringSchema.optional(),
+  all: z.boolean().optional()
 });
 
 export type NewProjectPayload = z.infer<typeof newProjectSchema>;
@@ -178,4 +197,12 @@ export type AddProjectTimeLogCategoryPayload = z.infer<
 
 export type ActivateOrDeactivateProjectTimeLogCategoryPayload = z.infer<
   typeof activateOrDeactivateProjectTimeLogCategorySchema
+>;
+
+export type FetchProjectCategoryQueryPayload = z.infer<
+  typeof fetchProjectCategoryQuerySchema
+>;
+
+export type FetchProjectTimeCategoriesPayload = z.infer<
+  typeof fetchProjectTimeCategoriesSchema
 >;
