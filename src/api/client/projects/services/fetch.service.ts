@@ -4,28 +4,18 @@ import { HttpStatus } from '@/common/http';
 import { dependency } from '@/common/di';
 import type { ApiPaginationParams } from '@/common/utils/pagination';
 import { and, asc, eq, ilike, or } from 'drizzle-orm';
-import type { BareObject } from '@/common/interfaces/helpers';
-import { inject } from 'inversify';
-import { SchemaValidator } from '@/common/schema/validator';
-import { fetchProjectCategoryQuerySchema } from '../schema/schema';
+import type { FetchProjectCategoryQueryPayload } from '../schema/schema';
 
 @dependency()
 export class FetchProjectsService {
-  @inject(SchemaValidator) private validator: SchemaValidator;
-
   async get(
     organization_id: number,
-    query: BareObject,
+    filters: FetchProjectCategoryQueryPayload,
     pagination?: ApiPaginationParams
   ) {
     const db = useDrizzle();
     const { limit, offset } = pagination || {};
 
-    // Validate and extract filter options from the query
-    const filters = this.validator.validate(
-      fetchProjectCategoryQuerySchema,
-      query
-    );
     const filterOptions = [];
 
     if (filters?.category_id) {
