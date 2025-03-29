@@ -12,7 +12,8 @@ import {
   OrgTask,
   OrgProject,
   OrgWorkspace,
-  OrgProjectMember
+  OrgProjectMember,
+  Organization
 } from '@/db/schema';
 import { and, eq, ne } from 'drizzle-orm';
 
@@ -112,6 +113,39 @@ export class TaskCreationAndUpdateCheckUtil {
           {}
         );
       }
+      const org = await transaction!.query.Organization.findFirst({
+        where: eq(Organization.id, data.organization_id),
+        columns: { id: true, task_ref_format: true, wc_task_count: true }
+      });
+
+      if (!org) {
+        throw new ApiError('Organization not found', HttpStatus.NOT_FOUND, {});
+      }
+
+      return {
+        task_ref_format: org.task_ref_format,
+        ref_count: org.wc_task_count
+      };
+    };
+  }
+
+  private generateNextTaskRef(transaction: DrizzleTransaction) {
+    return async function (
+      task_ref_format: string,
+      ref_count: number,
+      org_id: number
+    ) {
+      const replaceble = /{{id}}/g;
+      const nextCount = ref_count + 1;
+
+      await transaction!
+        .update(Organization)
+        .set({ wc_task_count: nextCount })
+        .where(eq(Organization.id, org_id));
+
+      return task_ref_format
+        .replace(replaceble, nextCount.toString())
+        .padStart(4, '0');
     };
   }
   private runUpdateChecks(transaction: DrizzleTransaction) {
@@ -140,11 +174,22 @@ export class TaskCreationAndUpdateCheckUtil {
     return async (data: NewTaskPayload | UpdateTaskPayload) => {
       const result = await this.runCommonChecks(transaction)(data);
 
-      await (type === 'create'
-        ? this.runCreationChecks(transaction)(data as NewTaskPayload)
-        : this.runUpdateChecks(transaction)(data as UpdateTaskPayload));
+      // const
+      if (type === 'create') {
+        const { task_ref_format, ref_count } = await this.runCreationChecks(
+          transaction
+        )(data as NewTaskPayload);
+        const nextRef = await this.generateNextTaskRef(transaction)(
+          task_ref_format,
+          ref_count!,
+          data.organization_id
+        );
 
-      return result;
+        return { ...result, nextRef };
+      }
+      await this.runUpdateChecks(transaction)(data as UpdateTaskPayload);
+
+      return { ...result, nextRef: undefined };
     };
   }
 
