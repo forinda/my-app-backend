@@ -3,140 +3,206 @@ import { useDrizzle } from '@/db';
 import { HttpStatus } from '@/common/http';
 import { dependency } from '@/common/di';
 import { paginator, type ApiPaginationParams } from '@/common/utils/pagination';
+import type { SQL } from 'drizzle-orm';
 import { and, asc, between, eq, ilike, or } from 'drizzle-orm';
 import type { FilterTasksPayload } from '../schema/schema';
 
 @dependency()
 export class FetchTasksService {
-  async get(
-    organization_id: number,
-    query: FilterTasksPayload,
-    _?: ApiPaginationParams
-  ) {
+  private async fetchProjectIdByUuid(organization_id: number, uuid: string) {
     const db = useDrizzle();
-    const fiters = [];
-    const orgCondition = eq(OrgTask.organization_id, organization_id);
+    const project = await db.query.OrgProject.findFirst({
+      where: and(
+        eq(OrgProject.organization_id, organization_id),
+        eq(OrgProject.uuid, uuid)
+      ),
+      columns: { id: true, organization_id: true }
+    });
 
-    if (query?.project_id) {
-      const project = await db.query.OrgProject.findFirst({
-        where: and(
-          eq(OrgProject.organization_id, organization_id),
-          eq(OrgProject.uuid, query.project_id)
-        )
-      });
+    return project;
+  }
 
-      fiters.push(eq(OrgTask.project_id, project!.id!));
+  private buildFilters(
+    organization_id: number,
+    project_id: number,
+    query: FilterTasksPayload
+  ) {
+    const filters: SQL[] = [];
+
+    if (query.project_id) {
+      filters.push(eq(OrgTask.project_id, project_id));
     }
-    if (query?.workspace_id) {
-      fiters.push(eq(OrgTask.workspace_id, query.workspace_id));
+    if (query.workspace_id) {
+      filters.push(eq(OrgTask.workspace_id, query.workspace_id));
     }
-    if (query?.assignee_id) {
-      fiters.push(eq(OrgTask.assignee_id, query.assignee_id));
+    if (query.assignee_id) {
+      filters.push(eq(OrgTask.assignee_id, query.assignee_id));
     }
-    if (query?.status) {
-      fiters.push(eq(OrgTask.status, query.status));
+    if (query.status) {
+      filters.push(eq(OrgTask.status, query.status));
     }
-    if (query?.priority) {
-      fiters.push(eq(OrgTask.priority, query.priority));
+    if (query.priority) {
+      filters.push(eq(OrgTask.priority, query.priority));
     }
-    if (query?.parent_id) {
-      fiters.push(eq(OrgTask.parent_id, query.parent_id));
+    if (query.parent_id) {
+      filters.push(eq(OrgTask.parent_id, query.parent_id));
     }
-    if (query?.q) {
-      fiters.push(
-        or(
-          ilike(OrgTask.title, `%${query.q}%`),
-          ilike(OrgTask.description, `%${query.q}%`)
-        )
+    if (query.q) {
+      const qs = or(
+        ilike(OrgTask.title, `%${query.q!}%`),
+        ilike(OrgTask.description, `%${query.q!}%`),
+        ilike(OrgTask.ref, `%${query.q!}%`)
       );
+
+      filters.push(qs!);
     }
-    if (query?.start_date && !query?.end_date) {
-      fiters.push(eq(OrgTask.start_date, query.start_date));
-    }
-    if (query?.end_date && !query?.start_date) {
-      fiters.push(eq(OrgTask.end_date, query.end_date));
-    }
-    if (query?.start_date && query?.end_date) {
-      fiters.push(
+    if (query.start_date && query.end_date) {
+      filters.push(
         between(OrgTask.start_date, query.start_date, query.end_date)
       );
+    } else {
+      if (query.start_date) {
+        filters.push(eq(OrgTask.start_date, query.start_date));
+      }
+      if (query.end_date) {
+        filters.push(eq(OrgTask.end_date, query.end_date));
+      }
     }
-    const finalFilter = and(orgCondition, ...fiters);
 
-    const totalItems = await db.$count(OrgTask, finalFilter);
-    const data = await db.query.OrgTask.findMany({
-      where: finalFilter,
-      with: {
-        parent: true,
-        sub_tasks: {
-          columns: {
-            id: true,
-            title: true,
-            description: true,
-            status: true,
-            created_at: true
-          }
+    return and(eq(OrgTask.organization_id, organization_id), ...filters);
+  }
+
+  private buildColumns(fields?: string) {
+    if (!fields) return undefined;
+
+    return fields
+      .split(',')
+      .map((field) => field.trim())
+      .reduce(
+        (acc, field) => {
+          acc[field] = true;
+
+          return acc;
         },
-        assignee: {
-          columns: {
-            id: true,
-            username: true,
-            first_name: true,
-            last_name: true,
-            email: true,
-            avatar: true
-          }
+        {} as Record<string, boolean>
+      );
+  }
+
+  private buildRelations() {
+    return {
+      parent: true,
+      sub_tasks: {
+        columns: {
+          id: true,
+          title: true,
+          description: true,
+          status: true,
+          created_at: true
+        }
+      },
+      assignee: {
+        columns: {
+          id: true,
+          username: true,
+          first_name: true,
+          last_name: true,
+          email: true,
+          avatar: true
+        }
+      },
+      comments: {
+        columns: {
+          id: true,
+          text: true,
+          created_at: true,
+          task_id: true
         },
-        comments: {
-          columns: {
-            id: true,
-            text: true,
-            created_at: true,
-            task_id: true
-          },
-          with: {
-            creator: {
-              columns: {
-                first_name: true,
-                last_name: true,
-                avatar: true
-              }
+        with: {
+          creator: {
+            columns: {
+              first_name: true,
+              last_name: true,
+              avatar: true
             }
-          }
-        },
-        project: {
-          columns: {
-            id: true,
-            name: true,
-            description: true,
-            start_date: true,
-            end_date: true
-          }
-        },
-        workspace: {
-          columns: {
-            id: true,
-            name: true
-          }
-        },
-        creator: {
-          columns: {
-            id: true,
-            username: true,
-            first_name: true,
-            last_name: true,
-            email: true,
-            avatar: true
           }
         }
       },
-      limit: _?.limit,
-      offset: _?.offset,
-      orderBy: [asc(OrgTask.created_at)]
-    });
+      project: {
+        columns: {
+          id: true,
+          name: true,
+          description: true,
+          start_date: true,
+          end_date: true
+        }
+      },
+      workspace: {
+        columns: {
+          id: true,
+          name: true
+        }
+      },
+      creator: {
+        columns: {
+          id: true,
+          username: true,
+          first_name: true,
+          last_name: true,
+          email: true,
+          avatar: true
+        }
+      }
+    };
+  }
+
+  async get(
+    organization_id: number,
+    query: FilterTasksPayload,
+    pagination?: ApiPaginationParams
+  ) {
+    const db = useDrizzle();
+    let projectId: number | undefined;
+
+    // Handle project UUID to ID conversion if needed
+    if (query.project_id) {
+      const project = await this.fetchProjectIdByUuid(
+        organization_id,
+        query.project_id
+      );
+
+      if (!project) {
+        return {
+          data: [],
+          total: 0,
+          message: 'Project not found',
+          status: HttpStatus.NOT_FOUND
+        };
+      }
+      projectId = project.id;
+    }
+
+    const finalFilter = this.buildFilters(organization_id, projectId!, query);
+    const columns = this.buildColumns(query.fields);
+    const relations = JSON.parse(
+      (query.relations as unknown as string) ?? 'false'
+    )!
+      ? this.buildRelations()
+      : {};
+
+    const [totalItems, data] = await Promise.all([
+      db.$count(OrgTask, finalFilter),
+      db.query.OrgTask.findMany({
+        where: finalFilter,
+        columns,
+        with: relations,
+        limit: pagination?.limit,
+        offset: pagination?.offset,
+        orderBy: [asc(OrgTask.created_at)]
+      })
+    ]);
 
     return {
-      ...paginator(data, totalItems, _!),
+      ...paginator(data, totalItems, pagination!),
       message: 'Tasks fetched successfully',
       status: HttpStatus.OK
     };
