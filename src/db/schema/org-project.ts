@@ -19,6 +19,7 @@ import { relations } from 'drizzle-orm';
 import { OrgProjectMember } from './org-project-member';
 import { OrgProjectCategory } from './org-project-category';
 import { OrgTask } from './org-task';
+import { OrgProjectTimeLogCategory } from '@/db/schema/organization-project-time-log-category';
 
 export const projectTypes = pgEnum('organization_project_types_enum', [
   'paid',
@@ -62,7 +63,7 @@ export const orgProjectRelations = relations(OrgProject, ({ one, many }) => ({
     fields: [OrgProject.created_by],
     references: [User.id]
   }),
-  updator: one(User, {
+  updater: one(User, {
     fields: [OrgProject.updated_by],
     references: [User.id]
   }),
@@ -75,7 +76,8 @@ export const orgProjectRelations = relations(OrgProject, ({ one, many }) => ({
     fields: [OrgProject.category_id],
     references: [OrgProjectCategory.id]
   }),
-  tasks: many(OrgTask)
+  tasks: many(OrgTask),
+  time_categories: many(OrgProjectTimeLogCategory)
 }));
 
 export interface SelectOrgProjectInterface
