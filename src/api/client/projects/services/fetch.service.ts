@@ -8,14 +8,26 @@ import type { FetchProjectCategoryQueryPayload } from '../schema/schema';
 
 @dependency()
 export class FetchProjectsService {
-  async get(
-    organization_id: number,
-    filters: FetchProjectCategoryQueryPayload,
-    pagination?: ApiPaginationParams
-  ) {
-    const db = useDrizzle();
-    const { limit, offset } = pagination || {};
+  private buildColumns(fields?: string) {
+    if (!fields) return undefined;
 
+    return fields
+      .split(',')
+      .map((field) => field.trim())
+      .reduce(
+        (acc, field) => {
+          acc[field] = true;
+
+          return acc;
+        },
+        {} as Record<string, boolean>
+      );
+  }
+
+  private buildConditions(
+    organization_id: number,
+    filters: FetchProjectCategoryQueryPayload
+  ) {
     const filterOptions = [];
 
     if (filters?.category_id) {
@@ -32,48 +44,79 @@ export class FetchProjectsService {
         )
       );
     }
+    if (filters.project_id) {
+      filterOptions.push(eq(OrgProject.uuid, filters.project_id));
+    }
 
-    // Build the final filter condition
-    const finalFilter =
-      filterOptions.length > 0
-        ? and(eq(OrgProject.organization_id, organization_id), ...filterOptions)
-        : eq(OrgProject.organization_id, organization_id);
+    return and(
+      eq(OrgProject.organization_id, organization_id),
+      ...filterOptions
+    );
+  }
 
-    // Fetch projects with pagination and related members
-    const projects = await db.query.OrgProject.findMany({
-      where: finalFilter,
-      with: {
-        members: {
-          with: {
-            user: {
-              columns: {
-                username: true,
-                email: true,
-                first_name: true,
-                last_name: true,
-                phone_number: true,
-                avatar: true
-              }
+  private buildRelations(
+    shouldBuild: Pick<
+      FetchProjectCategoryQueryPayload,
+      'relations'
+    >['relations']
+  ) {
+    const parsed = JSON.parse(
+      (shouldBuild as unknown as string) ?? 'true'
+    ) as boolean;
+
+    console.log({ parsed });
+
+    if (!parsed) return undefined;
+
+    return {
+      members: {
+        with: {
+          user: {
+            columns: {
+              username: true,
+              email: true,
+              first_name: true,
+              last_name: true,
+              phone_number: true,
+              avatar: true
             }
-          }
-        },
-        category: {
-          columns: {
-            id: true,
-            name: true
-          }
-        },
-        tasks: {
-          columns: {
-            id: true,
-            status: true,
-            start_date: true,
-            due_date: true,
-            end_date: true,
-            story_points: true
           }
         }
       },
+      category: {
+        columns: {
+          id: true,
+          name: true
+        }
+      },
+      tasks: {
+        columns: {
+          id: true,
+          status: true,
+          start_date: true,
+          due_date: true,
+          end_date: true,
+          story_points: true
+        }
+      }
+    };
+  }
+  async get(
+    organization_id: number,
+    filters: FetchProjectCategoryQueryPayload,
+    pagination?: ApiPaginationParams
+  ) {
+    const db = useDrizzle();
+    const { limit, offset } = pagination || {};
+
+    const finalFilter = this.buildConditions(organization_id, filters);
+    const columns = this.buildColumns(filters.fields);
+    const relations = this.buildRelations(filters.relations);
+    // Fetch projects with pagination and related members
+    const projects = await db.query.OrgProject.findMany({
+      where: finalFilter,
+      columns,
+      with: relations,
       limit,
       offset,
       orderBy: [asc(OrgProject.created_at)]
