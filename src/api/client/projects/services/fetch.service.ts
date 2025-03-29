@@ -34,10 +34,10 @@ export class FetchProjectsService {
     }
 
     // Build the final filter condition
-    const finalFilter = and(
-      eq(OrgProject.organization_id, organization_id),
-      ...filterOptions
-    );
+    const finalFilter =
+      filterOptions.length > 0
+        ? and(eq(OrgProject.organization_id, organization_id), ...filterOptions)
+        : eq(OrgProject.organization_id, organization_id);
 
     // Fetch projects with pagination and related members
     const projects = await db.query.OrgProject.findMany({
