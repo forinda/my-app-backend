@@ -1,0 +1,1 @@
+ALTER TABLE "organizations" ADD COLUMN "task_ref_format" varchar DEFAULT 'TASK-{{id}}' NOT NULL;

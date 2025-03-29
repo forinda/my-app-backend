@@ -1,4 +1,5 @@
 import { companySizes } from '@/common/constants/company-sizes';
+import { taskRefFormatSchema } from '@/common/schema/task-ref';
 import { validatePhone } from '@/common/utils/phone-number-format';
 import z from 'zod';
 
@@ -55,6 +56,7 @@ export const createOrganizationSchema = z.object({
     ),
   contact_address: z.string(),
   location: z.string(),
+  task_ref_format: taskRefFormatSchema,
   created_by: z.coerce.number({}).positive().optional(),
   updated_by: z.coerce.number({}).positive().optional()
 });
@@ -112,6 +114,7 @@ export const updateOrganizationSchema = z.object({
       }
     ),
   contact_address: z.string(),
+  task_ref_format: taskRefFormatSchema,
   location: z.string(),
   updated_by: z.coerce.number({}).positive()
 });

@@ -36,9 +36,11 @@ export const Organization = pgTable('organizations', {
   contact_address: varchar(),
   location: varchar().notNull(),
   logo: varchar(),
+  task_ref_format: varchar().notNull().default('TASK-{{id}}'),
   created_by: integer()
     .notNull()
     .references(() => User.id, foreignKeyConstraints),
+
   updated_by: integer()
     .notNull()
     .references(() => User.id, foreignKeyConstraints),
