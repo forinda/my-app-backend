@@ -26,7 +26,8 @@ export class CreateTaskService {
       .insert(OrgTask)
       .values({
         ...data,
-        workspace_id: res.workspace!.id
+        workspace_id: res.workspace!.id,
+        ref: res.nextRef!
       } as InsertOrgTaskInterface)
       .returning()
       .execute();
