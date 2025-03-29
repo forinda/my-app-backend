@@ -1,3 +1,4 @@
+import moment from 'moment';
 import z from 'zod';
 export const timelogApprovalStatusSchema = z.enum([
   'pending',
@@ -62,7 +63,23 @@ export const newTimeLogSchema = z.object({
     .date()
     .nonempty({
       message: 'Work date is required'
-    }),
+    })
+    .refine(
+      (date) => {
+        const today = moment().endOf('day');
+        const threeDaysAgo = moment().subtract(3, 'days').startOf('day');
+
+        const dateMoment = moment(date);
+
+        return (
+          dateMoment.isSameOrBefore(today) &&
+          dateMoment.isSameOrAfter(threeDaysAgo)
+        );
+      },
+      {
+        message: 'Date must be within the last 3 days'
+      }
+    ),
   created_by: z.coerce
     .number({
       message: 'Created by is required'
