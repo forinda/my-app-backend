@@ -2,6 +2,16 @@ import { searchQueryStringSchema } from '@/common/schema/search-query-string';
 import z from 'zod';
 
 const projectTypeSchema = z.enum(['paid', 'free', 'test', 'trial']);
+const allowedProjectFields = [
+  'id',
+  'name',
+  'description',
+  'category_id',
+  'is_active',
+  'is_paid',
+  'start_date',
+  'end_date'
+] as const;
 
 export const newProjectSchema = z.object({
   name: z
@@ -169,7 +179,27 @@ export const fetchProjectCategoryQuerySchema = z.object({
     })
     .optional(),
   all: z.coerce.boolean().optional(),
-  q: searchQueryStringSchema.optional()
+  q: searchQueryStringSchema.optional(),
+  project_id: z
+    .string({
+      message: 'Project ID is required'
+    })
+    .uuid()
+    .optional(),
+  fields: z.coerce
+    .string()
+    .transform((val) => {
+      const decoded = decodeURIComponent(val); // Convert array to string first
+      const parts = decoded.split(
+        /[\s,]+/
+      ) as unknown as typeof allowedProjectFields;
+
+      return parts
+        .filter((item) => allowedProjectFields.includes(item))
+        .join(',');
+    })
+    .optional(),
+  relations: z.coerce.boolean().default(true).optional()
 });
 
 export const fetchProjectTimeCategoriesSchema = z.object({
