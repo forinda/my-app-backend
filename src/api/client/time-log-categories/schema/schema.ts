@@ -1,6 +1,18 @@
 import { searchQueryStringSchema } from '@/common/schema/search-query-string';
 import z from 'zod';
 
+const allowedFields = [
+  'id',
+  'name',
+  'description',
+  'color',
+  'created_at',
+  'updated_at',
+  'created_by',
+  'updated_by',
+  'organization_id'
+] as const;
+
 export const newTimeLogCategorySchema = z.object({
   name: z
     .string({
@@ -83,7 +95,23 @@ export const filterTimeLogCategorySchema = z.object({
     })
     .optional(),
   q: searchQueryStringSchema.optional(),
-  all: z.coerce.boolean().optional()
+  all: z.coerce.boolean().optional(),
+  relations: z.coerce.boolean().default(true).optional(),
+  project_id: z
+    .string({
+      message: 'Please select a project'
+    })
+    .uuid()
+    .optional(),
+  fields: z.coerce
+    .string()
+    .transform((val) => {
+      const decoded = decodeURIComponent(val); // Convert array to string first
+      const parts = decoded.split(/[\s,]+/) as unknown as typeof allowedFields;
+
+      return parts.filter((item) => allowedFields.includes(item)).join(',');
+    })
+    .optional()
 });
 
 // export const getOrganizationMember``
