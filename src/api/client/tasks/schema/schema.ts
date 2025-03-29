@@ -1,5 +1,17 @@
 import { searchQueryStringSchema } from '@/common/schema/search-query-string';
+// import type { SelectOrgTaskInterface } from '@/db/schema';
 import z from 'zod';
+
+const taskFields = [
+  'workspace_id',
+  'assignee_id',
+  'description',
+  'due_date',
+  'title',
+  'id',
+  'uuid',
+  'status'
+] as const;
 
 export const taskStatusSchema = z
   .enum([
@@ -120,6 +132,24 @@ export const filterTasksSchema = z.object({
     })
     .min(0)
     .default(0)
+    .optional(),
+  relations: z.coerce.boolean().default(true).optional(),
+  ref: z
+    .string({
+      message: 'Ref is required'
+    })
+    .nonempty({
+      message: 'Ref is required'
+    })
+    .optional(),
+  fields: z.coerce
+    .string()
+    .transform((val) => {
+      const decoded = decodeURIComponent(val); // Convert array to string first
+      const parts = decoded.split(/[\s,]+/) as unknown as typeof taskFields;
+
+      return parts.filter((item) => taskFields.includes(item)).join(',');
+    })
     .optional()
 });
 
