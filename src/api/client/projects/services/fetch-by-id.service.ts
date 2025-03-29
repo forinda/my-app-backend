@@ -42,6 +42,7 @@ export class FetchProjectByIdService {
           columns: {
             id: true,
             title: true,
+            ref: true,
             description: true,
             status: true,
             priority: true,
