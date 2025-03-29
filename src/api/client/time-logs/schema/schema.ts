@@ -40,14 +40,20 @@ export const newTimeLogSchema = z.object({
     .positive()
     .max(24, {
       message: 'Hours must be at most 24'
+    })
+    .min(0, {
+      message: 'Hours must be at least 0'
     }),
   minutes: z.coerce
     .number({
       message: 'Please enter minutes worked'
     })
     .positive()
-    .max(60, {
-      message: 'Minutes must be at most 60'
+    .max(59, {
+      message: 'Minutes must be at most 59'
+    })
+    .min(0, {
+      message: 'Minutes must be at least 0'
     }),
   work_date: z.coerce
     .string({
