@@ -15,6 +15,8 @@ export type DrizzleTransaction = Parameters<
   Parameters<Pick<DrizzleHookReturnType, 'transaction'>['transaction']>[0]
 >[0];
 
+export type DbType = DrizzleHookReturnType;
+
 // custom lower function
 export function lower(email: AnyPgColumn): SQL {
   return sql`lower(${email})`;
