@@ -44,6 +44,7 @@ export class FetchTimeLogCategoriesService {
           )!
         );
       }
+
       if (filter?.color) {
         filters.push(eq(OrgTimeLogCategory.color, filter.color));
       }
