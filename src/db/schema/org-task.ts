@@ -49,6 +49,7 @@ export const OrgTask = pgTable(
       .notNull()
       .references(() => Organization.id, foreignKeyConstraints),
     title: varchar().notNull(),
+    ref: varchar().notNull(),
     description: text().notNull(),
     status: taskStatus().default('pending').notNull(),
     start_date: date({ mode: 'string' }),
@@ -76,7 +77,10 @@ export const OrgTask = pgTable(
     deleted_by: integer().references(() => User.id, foreignKeyConstraints),
     ...getTableTimestamps()
   },
-  (t) => [unique().on(t.organization_id, t.title)]
+  (t) => [
+    unique().on(t.organization_id, t.title),
+    unique().on(t.ref, t.organization_id)
+  ]
 );
 
 export const orgTaskRelations = relations(OrgTask, ({ one, many }) => ({

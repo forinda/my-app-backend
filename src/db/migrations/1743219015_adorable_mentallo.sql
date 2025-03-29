@@ -1,0 +1,1 @@
+ALTER TABLE "organizations" ADD COLUMN "wc_task_count" integer DEFAULT 0;

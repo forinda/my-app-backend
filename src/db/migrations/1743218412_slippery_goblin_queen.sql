@@ -1,0 +1,2 @@
+ALTER TABLE "organization_tasks" ADD COLUMN "ref" varchar;--> statement-breakpoint
+ALTER TABLE "organization_tasks" ADD CONSTRAINT "organization_tasks_ref_organization_id_unique" UNIQUE("ref","organization_id");

@@ -1,0 +1,1 @@
+ALTER TABLE "organization_tasks" ALTER COLUMN "ref" SET NOT NULL;
