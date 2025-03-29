@@ -88,7 +88,15 @@ export class FetchTasksService {
       );
   }
 
-  private buildRelations() {
+  private buildRelations(
+    shouldBuild: Pick<FilterTasksPayload, 'relations'>['relations']
+  ) {
+    const parsed = JSON.parse(
+      (shouldBuild as unknown as string) ?? 'true'
+    ) as boolean;
+
+    if (!parsed) return undefined;
+
     return {
       parent: true,
       sub_tasks: {
@@ -183,18 +191,14 @@ export class FetchTasksService {
 
     const finalFilter = this.buildFilters(organization_id, projectId!, query);
     const columns = this.buildColumns(query.fields);
-    const relations = JSON.parse(
-      (query.relations as unknown as string) ?? 'false'
-    )!
-      ? this.buildRelations()
-      : {};
+    const relations = this.buildRelations(query.relations) as any;
 
     const [totalItems, data] = await Promise.all([
       db.$count(OrgTask, finalFilter),
       db.query.OrgTask.findMany({
         where: finalFilter,
         columns,
-        with: relations,
+        with: relations!,
         limit: pagination?.limit,
         offset: pagination?.offset,
         orderBy: [asc(OrgTask.created_at)]
