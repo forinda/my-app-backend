@@ -2,6 +2,7 @@ import { searchQueryStringSchema } from '@/common/schema/search-query-string';
 import z from 'zod';
 
 const projectTypeSchema = z.enum(['paid', 'free', 'test', 'trial']);
+const projectMemberRoleSchema = z.enum(['Admin', 'Member', 'Moderator']);
 const allowedProjectFields = [
   'id',
   'name',
@@ -97,6 +98,7 @@ export const addUsersToProjectSchema = z.object({
     .min(1, {
       message: 'At least one user is required'
     }),
+  role: projectMemberRoleSchema.default('Member'),
   created_by: z.number({}),
   updated_by: z.number({}),
   organization_id: z.number({
