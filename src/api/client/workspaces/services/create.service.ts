@@ -46,7 +46,8 @@ export class CreateWorkspaceService {
       user_id: data.created_by!,
       is_active: true,
       created_by: data.created_by!,
-      updated_by: data.created_by!
+      updated_by: data.created_by!,
+      role: 'Admin'
     };
 
     // Add user to workspace
