@@ -68,16 +68,16 @@ export const newTimeLogSchema = z.object({
       (date) => {
         const today = moment().endOf('day');
         const threeDaysAgo = moment().subtract(3, 'days').startOf('day');
-
         const dateMoment = moment(date);
 
         return (
+          dateMoment.isValid() &&
           dateMoment.isSameOrBefore(today) &&
           dateMoment.isSameOrAfter(threeDaysAgo)
         );
       },
       {
-        message: 'Date must be within the last 3 days'
+        message: 'Date must be within the last 3 days (including today)'
       }
     ),
   created_by: z.coerce
