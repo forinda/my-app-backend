@@ -1,4 +1,4 @@
-import { boolean, integer, pgTable } from 'drizzle-orm/pg-core';
+import { boolean, integer, pgEnum, pgTable } from 'drizzle-orm/pg-core';
 import {
   foreignKeyConstraints,
   getTableTimestamps
@@ -7,6 +7,12 @@ import { User } from './user';
 import type { InferInsertModel, InferSelectModel } from 'drizzle-orm';
 import { relations } from 'drizzle-orm';
 import { OrgWorkspace } from './org-workspace';
+
+export const OrgWorkspaceMemberRole = pgEnum('org_workspace_member_role_enum', [
+  'Admin',
+  'Member',
+  'Moderator'
+]);
 
 export const OrgWorkspaceMember = pgTable('organization_workspace_members', {
   id: integer().primaryKey().generatedAlwaysAsIdentity(),
@@ -17,6 +23,7 @@ export const OrgWorkspaceMember = pgTable('organization_workspace_members', {
     .notNull()
     .references(() => OrgWorkspace.id, foreignKeyConstraints),
   is_active: boolean().default(true).notNull(),
+  role: OrgWorkspaceMemberRole().notNull().default('Member'),
   created_by: integer()
     .notNull()
     .references(() => User.id, foreignKeyConstraints),
