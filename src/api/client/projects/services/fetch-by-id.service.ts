@@ -41,6 +41,7 @@ export class FetchProjectByIdService {
         tasks: {
           columns: {
             id: true,
+            uuid: true,
             title: true,
             ref: true,
             description: true,
