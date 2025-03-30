@@ -56,7 +56,7 @@ export class FetchWorkspaceMembersService {
             u.id AS user_id,
             u.email,
             u.username,
-            mem.is_active,
+            mem.is_active AS is_active_in_workspace,
             mem.role AS workspace_role
           FROM organization_workspace_members AS mem
           INNER JOIN workspace AS ws ON ws.id = mem.workspace_id
