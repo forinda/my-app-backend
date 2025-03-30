@@ -1,3 +1,4 @@
+import { searchQueryStringSchema } from '@/common/schema/search-query-string';
 import z from 'zod';
 
 export const workspaceTemaplateEnum = z.enum([
@@ -140,6 +141,30 @@ export const removeUsersFromWorkspaceSchema = z.object({
     .positive()
 });
 
+export const fetchWorkspacemembersSchema = z.object({
+  q: searchQueryStringSchema.optional(),
+  project_id: z.coerce
+    .string({
+      message: 'Project ID is required'
+    })
+    .nonempty({
+      message: 'Project ID cannot be empty'
+    })
+    .uuid()
+    .optional(),
+  is_active_in_workspace: z.coerce
+    .boolean({
+      message: 'Status is required'
+    })
+    .optional(),
+
+  is_active_in_project: z.coerce
+    .boolean({
+      message: 'Status is required'
+    })
+    .optional()
+});
+
 // export const getOrganizationMember``
 
 export type NewWorkspacePayload = z.infer<typeof newWorkspaceSchema>;
@@ -155,3 +180,7 @@ export type RemoveUsersFromWorkspacePayload = z.infer<
 >;
 
 export type WorkspaceTemplateEnumType = z.infer<typeof workspaceTemaplateEnum>;
+
+export type FetchWorkspaceMembersPayload = z.infer<
+  typeof fetchWorkspacemembersSchema
+>;
