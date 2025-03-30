@@ -17,8 +17,8 @@ export const setupTaskRoutes: RouteSetupFunction = ({ app }) => {
     .get('/', di.resolve(FetchTaskController).get)
     .post('/', di.resolve(CreateTaskController).post)
     .post('/add-comment', di.resolve(AddTaskCommentController).put)
-    .put('/update-comment', di.resolve(UpdateTaskCommentController).put)
     .put('/:id', di.resolve(UpdateTaskController).put)
+    .put('/update-comment', di.resolve(UpdateTaskCommentController).put)
     .get('/:id', di.resolve(FetchTaskByIdController).get)
     .patch('/:id/assign', di.resolve(AssignTaskController).post)
     .patch('/:id/unassign', di.resolve(UnAssignTaskController).post);
