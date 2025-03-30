@@ -194,6 +194,52 @@ export const updateTimelogStatusSchema = z.object({
     .positive()
 });
 
+export const fetchTimeLogSchema = z
+  .object({
+    id: z.coerce
+      .number({
+        message: 'Time log ID is required'
+      })
+      .positive()
+      .optional(),
+    mode: z
+      .enum(['ProjectApprovable', 'InvoiceApprovable', 'PersonalTimelog'])
+      .default('PersonalTimelog'),
+    all: z.coerce.boolean().optional(),
+    owner_id: z.coerce
+      .number({
+        message: 'User ID is required'
+      })
+      .positive()
+      .optional(),
+    project_id: z.coerce
+      .number({
+        message: 'Project ID is required'
+      })
+      .positive()
+      .optional(),
+    task_id: z.coerce
+      .number({
+        message: 'Task ID is required'
+      })
+      .positive()
+      .optional()
+  })
+  .superRefine((data, ctx) => {
+    if (data.mode === 'PersonalTimelog') {
+      if (!data.owner_id) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          path: ['owner_id'],
+          message: 'User ID is required in PersonalTimelog mode',
+          params: {}
+        });
+
+        return;
+      }
+    }
+  });
+
 export type TimelogApprovalStatusType = z.infer<
   typeof timelogApprovalStatusSchema
 >;
