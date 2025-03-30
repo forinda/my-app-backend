@@ -57,6 +57,7 @@ export class CreateProjectService {
       user_id: data.created_by!,
       created_by: data.created_by!,
       updated_by: data.created_by!,
+      role: 'Admin',
       is_active: true
     };
 
