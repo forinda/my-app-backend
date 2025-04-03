@@ -15,6 +15,7 @@ import {
   foreignKeyConstraints,
   getTableTimestamps
 } from '@/common/utils/drizzle';
+import { orgMemberRole } from './organization-member';
 
 export const orgInviteStatusEnum = pgEnum('organization_invite_status_enum', [
   'pending',
@@ -34,6 +35,7 @@ export const OrganizationInvite = pgTable('organization_invites', {
     .references(() => OrganizationDesignation.id, foreignKeyConstraints),
   email: varchar().notNull(),
   expiry_date: timestamp({ mode: 'string' }).notNull(),
+  role: orgMemberRole().notNull().default('Member'),
   created_by: integer()
     .notNull()
     .references(() => User.id, foreignKeyConstraints),
