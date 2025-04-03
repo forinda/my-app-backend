@@ -8,7 +8,7 @@ import { createServer } from 'http';
 import { inject } from 'inversify';
 import { SocketHandler } from './socket-server';
 import { Logger } from '@/common/logger';
-// import { baseLogger } from '@/common/logger';
+import { SwaggerSetup } from '@/common/swagger/setup';
 @dependency()
 export class ApiServer {
   app: Application;
@@ -18,6 +18,7 @@ export class ApiServer {
   @inject(ApiErrorRouteHandler)
   private readonly apiErrorRouteHandler: ApiErrorRouteHandler;
   @inject(Logger) private readonly logger: Logger;
+  @inject(SwaggerSetup) private readonly swaggerSetup: SwaggerSetup;
 
   @inject(Config) private readonly config: Config;
   @inject(SocketHandler) private readonly socketHandler: SocketHandler;
@@ -45,11 +46,18 @@ export class ApiServer {
 
   private onListening() {
     // console.log({ config: this.config });
-    const listeningMessage = `Listening on http://localhost:${this.config.conf.PORT}`;
-
+    const port = this.config.conf.PORT;
+    const listeningMessage = `Listening on http://localhost:${port}`;
     const message = `(API):${listeningMessage} ${this.config.conf.NODE_ENV === 'development' ? '🚀' : '🔒'}`;
 
     this.logger.info(message);
+
+    // Log Swagger documentation paths
+    this.logger.info('📚 API Documentation available at:');
+    this.logger.info(`   - Swagger UI: http://localhost:${port}/api-docs`);
+    this.logger.info(
+      `   - Swagger JSON: http://localhost:${port}/swagger.json`
+    );
   }
 
   public run() {
