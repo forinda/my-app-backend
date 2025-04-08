@@ -8,11 +8,13 @@ import { Config } from '@/common/config';
 import morgan from 'morgan';
 import helmet from 'helmet';
 import cookieParser from 'cookie-parser';
+import { SwaggerSetup } from '@/common/swagger/setup';
 
 @dependency()
 export class ApiServerSetup {
   @inject(ApiV1) private readonly apiV1: ApiV1;
   @inject(Config) private readonly config: Config;
+  @inject(SwaggerSetup) private readonly swaggerSetup: SwaggerSetup;
 
   setupExpressApp(app: Application) {
     app.use(express.json({ limit: '100mb' }));
@@ -43,6 +45,10 @@ export class ApiServerSetup {
     );
     app.use(helmet());
     app.use(morgan('dev'));
+
+    // Setup Swagger documentation
+    this.swaggerSetup.setup(app);
+
     this.apiV1.setup(app);
   }
 }
