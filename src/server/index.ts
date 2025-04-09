@@ -39,6 +39,7 @@ export class ApiServer {
   bootstrap(name: string = 'default') {
     this._name = name;
     this.apiServerSetup.setupExpressApp(this.app);
+    this.swaggerSetup.setup(this.app);
     this.apiErrorRouteHandler.plugin({ app: this.app });
 
     return this.app;
