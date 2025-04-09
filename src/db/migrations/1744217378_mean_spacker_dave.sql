@@ -1,0 +1,1 @@
+ALTER TABLE "organization_invites" ADD COLUMN "role" "org_member_role_enum" DEFAULT 'Member' NOT NULL;
