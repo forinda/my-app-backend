@@ -1,4 +1,6 @@
 import { companySizes } from '@/common/constants/company-sizes';
+import { orgMemberRoles } from '@/common/constants/org-member-roles';
+import { searchQueryStringSchema } from '@/common/schema/search-query-string';
 import { taskRefFormatSchema } from '@/common/schema/task-ref';
 import { validatePhone } from '@/common/utils/phone-number-format';
 import z from 'zod';
@@ -119,10 +121,21 @@ export const updateOrganizationSchema = z.object({
   updated_by: z.coerce.number({}).positive()
 });
 
+export const fetchOrganizationInvitesSchema = z.object({
+  q: searchQueryStringSchema.optional(),
+  role: z.enum(orgMemberRoles).optional(),
+  designation_id: z.coerce.number().positive().optional(),
+  status: z.enum(['pending', 'accepted', 'rejected']).optional()
+});
+
 export type CreateOrganizationInputType = z.infer<
   typeof createOrganizationSchema
 >;
 
 export type UpdateOrganizationInputType = z.infer<
   typeof updateOrganizationSchema
+>;
+
+export type FetchOrganizationInvitesInputType = z.infer<
+  typeof fetchOrganizationInvitesSchema
 >;

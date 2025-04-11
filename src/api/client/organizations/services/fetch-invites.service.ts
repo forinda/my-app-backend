@@ -3,14 +3,42 @@ import { useDrizzle } from '@/db';
 import { HttpStatus } from '@/common/http';
 import { dependency } from '@/common/di';
 import type { ApiPaginationParams } from '@/common/utils/pagination';
-import { eq } from 'drizzle-orm';
+import type { SQL } from 'drizzle-orm';
+import { and, eq, ilike, or } from 'drizzle-orm';
+import type { FetchOrganizationInvitesInputType } from '../schema/schema';
 
 @dependency()
 export class FetchOrganizationInvitesService {
-  async get(organization_id: number, _?: ApiPaginationParams) {
+  async get(
+    organization_id: number,
+    filters: FetchOrganizationInvitesInputType,
+    _?: ApiPaginationParams
+  ) {
     const db = useDrizzle();
+    const orgCondition = eq(
+      OrganizationInvite.organization_id,
+      organization_id
+    );
+    const conditions: SQL<any>[] = [];
+
+    if (filters.designation_id) {
+      conditions.push(
+        eq(OrganizationInvite.designation_id, filters.designation_id)
+      );
+    }
+    if (filters.role) {
+      conditions.push(eq(OrganizationInvite.role, filters.role));
+    }
+    if (filters.status) {
+      conditions.push(eq(OrganizationInvite.status, filters.status));
+    }
+    if (filters.q) {
+      const likeQuery = `%${filters.q}%`;
+
+      conditions.push(or(ilike(OrganizationInvite.email, likeQuery))!);
+    }
     const invites = await db.query.OrganizationInvite.findMany({
-      where: eq(OrganizationInvite.organization_id, organization_id),
+      where: and(orgCondition, ...conditions),
       with: {
         designation: {
           columns: {
