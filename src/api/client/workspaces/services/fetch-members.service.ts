@@ -23,6 +23,12 @@ export class FetchWorkspaceMembersService {
     this.uuid.validateUUID(workspace_id, { throwError: true });
 
     type WorkspaceMemberType = {
+      member_id: number;
+      workspace_id: number;
+      is_active_in_workspace: boolean;
+      active_in_project: boolean | null;
+      project_role: SelectOrgProjectMemberInterface['role'] | null;
+      workspace_role: SelectOrgProjectMemberInterface['role'];
       first_name: string;
       last_name: string;
       avatar: string;
@@ -91,6 +97,9 @@ export class FetchWorkspaceMembersService {
         ),
         members AS (
           SELECT
+            mem.id AS member_id,
+            mem.workspace_id,
+            mem.user_id,
             u.first_name, u.last_name, u.avatar,
             u.id AS user_id, u.email, u.username,
             mem.is_active as is_active_in_workspace,
