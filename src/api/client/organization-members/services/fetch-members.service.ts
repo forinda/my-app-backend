@@ -98,6 +98,7 @@ export class FetchOrganizationMembersService {
     if (filter.designation_id) {
       conditions.push(sql`MEM.designation_id = ${filter.designation_id}`);
     }
+
     const conditionsSql = sql.join(conditions, sql` AND `);
 
     const whereClause = sql`WHERE ${conditionsSql}`;
