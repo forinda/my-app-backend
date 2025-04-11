@@ -53,7 +53,8 @@ export class AddNewDepartmentUserRoleService {
       await transaction!.query.DepartmentUserRole.findMany({
         where: and(
           eq(DepartmentUserRole.department_id, currentDepartment.id),
-          eq(DepartmentUserRole.is_active, true)
+          eq(DepartmentUserRole.is_active, true),
+          eq(DepartmentUserRole.role_title_id, data.role_title_id)
         )
       });
 
@@ -87,7 +88,8 @@ export class AddNewDepartmentUserRoleService {
         .where(
           and(
             eq(DepartmentUserRole.department_id, currentDepartment.id),
-            eq(DepartmentUserRole.is_active, true)
+            eq(DepartmentUserRole.is_active, true),
+            eq(DepartmentUserRole.role_title_id, data.role_title_id)
           )
         )
         .execute();
