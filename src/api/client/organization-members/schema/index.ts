@@ -9,6 +9,8 @@ export const employmentTypeSchema = z.enum([
   'internship'
 ]);
 
+const existingMemberAction = z.enum(['include', 'exclude']).default('exclude');
+
 export const orgMemberRoleSchema = z.enum(orgMemberRoles);
 
 export const salaryTypeSchema = z.enum(['monthly', 'hourly']);
@@ -84,9 +86,12 @@ export const filterOrganizationMembersSchema = z.object({
   current_organization_id: z.string(),
   q: searchQueryStringSchema.optional(),
   is_active: z.coerce.boolean().optional(),
-  department_id: z.coerce.number().optional(),
   designation_id: z.coerce.number().optional(),
-  role: orgMemberRoleSchema.optional()
+  role: orgMemberRoleSchema.optional(),
+  workspace_id: z.coerce.string().uuid().optional(),
+  existing_workspace_member_action: existingMemberAction.optional(),
+  department_id: z.string().uuid().optional(),
+  existing_department_member_action: existingMemberAction.optional()
 });
 
 export type FilterOrganizationmembersType = z.infer<

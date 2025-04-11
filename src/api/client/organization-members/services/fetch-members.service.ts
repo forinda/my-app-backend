@@ -65,13 +65,14 @@ export class FetchOrganizationMembersService {
     filter: FilterOrganizationmembersType,
     pagination: ApiPaginationParams
   ) {
-    const query = this.buildMembersQuery(filter, pagination);
+    const query = await this.buildMembersQuery(filter, db, pagination);
 
     return await db.execute(query);
   }
 
-  private buildMembersQuery(
+  private async buildMembersQuery(
     filter: FilterOrganizationmembersType,
+    db: ReturnType<typeof useDrizzle>,
     pagination: ApiPaginationParams
   ) {
     const conditions = [sql`ORG.uuid = ${filter.current_organization_id}`];
@@ -92,11 +93,70 @@ export class FetchOrganizationMembersService {
     }
 
     if (filter.department_id) {
-      conditions.push(sql`MEM.department_id = ${filter.department_id}`);
+      // conditions.push(sql`MEM.department_id = ${filter.department_id}`);
+      const departmentsQuery = sql`
+        select
+        dm.user_id,
+        dm.department_id
+      from
+        department_members as dm
+        inner join departments dp on dp.id = dm.department_id
+        and dp.uuid = ${filter.department_id}
+      `;
+      const { rows } = await db.execute<{
+        user_id: number;
+        department_id: number;
+      }>(departmentsQuery);
+
+      if (rows.length > 0) {
+        const userIds = rows.map((row) => row.user_id);
+
+        if (filter.existing_department_member_action === 'exclude') {
+          conditions.push(
+            sql`MEM.user_id NOT IN (${sql.join(userIds, sql`, `)})`
+          );
+        } else if (filter.existing_department_member_action === 'include') {
+          conditions.push(sql`MEM.user_id IN (${sql.join(userIds, sql`, `)})`);
+        }
+      }
     }
 
     if (filter.designation_id) {
       conditions.push(sql`MEM.designation_id = ${filter.designation_id}`);
+    }
+    if (filter.workspace_id) {
+      const membersQuery = sql<{
+        user_id: number;
+        workspace_id: number;
+      }>`
+          select
+            wm.user_id,
+            wm.workspace_id
+          from
+            organization_workspace_members as wm
+            inner join organization_workspaces ws on wm.workspace_id = ws.id
+            and ws.uuid = ${filter.workspace_id}
+  `;
+      const { rows } = await db.execute<{
+        user_id: number;
+        workspace_id: number;
+      }>(membersQuery);
+
+      if (filter.existing_workspace_member_action === 'exclude') {
+        conditions.push(
+          sql`MEM.user_id NOT IN (${sql.join(
+            rows.map((row) => row.user_id),
+            sql`, `
+          )})`
+        );
+      } else if (filter.existing_workspace_member_action === 'include') {
+        conditions.push(
+          sql`MEM.user_id IN (${sql.join(
+            rows.map((row) => row.user_id),
+            sql`, `
+          )})`
+        );
+      }
     }
 
     const conditionsSql = sql.join(conditions, sql` AND `);
