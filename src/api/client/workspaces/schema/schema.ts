@@ -92,10 +92,13 @@ export const updateWorkspaceSchema = z.object({
 
 export const addUsersToWorkspaceSchema = z.object({
   workspace_id: z.coerce
-    .number({
+    .string({
       message: 'Department ID is required'
     })
-    .positive(),
+    .nonempty({
+      message: 'Department ID cannot be empty'
+    })
+    .uuid(),
   users: z
     .array(
       z.coerce
@@ -118,10 +121,10 @@ export const addUsersToWorkspaceSchema = z.object({
 
 export const removeUsersFromWorkspaceSchema = z.object({
   workspace_id: z.coerce
-    .number({
+    .string({
       message: 'Department ID is required'
     })
-    .positive(),
+    .uuid(),
   users: z
     .array(
       z
