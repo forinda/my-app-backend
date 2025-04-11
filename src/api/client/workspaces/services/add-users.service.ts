@@ -21,7 +21,7 @@ export class AddUserToWorkspaceService {
   }: TransactionContext<AddUsersToWorkspacePayload>) {
     const existingWorkspace = await transaction!.query.OrgWorkspace.findFirst({
       where: and(
-        eq(OrgWorkspace.id, data.workspace_id),
+        eq(OrgWorkspace.uuid, data.workspace_id),
         eq(OrgWorkspace.organization_id, data.organization_id)
       )
     });
@@ -33,7 +33,7 @@ export class AddUserToWorkspaceService {
     const exisingMembers = await transaction!.query.OrgWorkspaceMember.findMany(
       {
         where: and(
-          eq(OrgWorkspaceMember.workspace_id, data.workspace_id),
+          eq(OrgWorkspaceMember.workspace_id, existingWorkspace.id),
           inArray(OrgWorkspaceMember.user_id, data.users)
         )
       }
@@ -63,7 +63,7 @@ export class AddUserToWorkspaceService {
         user_id,
         created_by: data.created_by,
         updated_by: data.updated_by,
-        workspace_id: data.workspace_id,
+        workspace_id: existingWorkspace.id,
         is_active: true
       })
     );
