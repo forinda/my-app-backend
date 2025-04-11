@@ -8,8 +8,8 @@ export const createOrgDesignationSchema = z.object({
     .nonempty({
       message: 'Name cannot be empty'
     })
-    .min(3, {
-      message: 'Name must be at least 3 characters long'
+    .min(2, {
+      message: 'Name must be at least 2 characters long'
     })
     .max(255, {
       message: 'Name must be at most 255 characters long'
@@ -43,8 +43,8 @@ export const updateOrganizationDesignationSchema = z.object({
     .string({
       message: 'Name is required'
     })
-    .min(3, {
-      message: 'Name must be at least 3 characters long'
+    .min(2, {
+      message: 'Name must be at least 2 characters long'
     })
     .max(255, {
       message: 'Name must be at most 255 characters long'
@@ -53,8 +53,8 @@ export const updateOrganizationDesignationSchema = z.object({
     .string({
       message: 'Description is required'
     })
-    .min(3, {
-      message: 'Description must be at least 3 characters long'
+    .min(2, {
+      message: 'Description must be at least 2 characters long'
     })
     .max(255, {
       message: 'Description must be at most 255 characters long'

@@ -2,7 +2,7 @@ import type { RouteSetupFunction } from '@/common/interfaces/controller';
 import { setupAuthRoutes } from './auth';
 import { setupOrganizationRoutes } from './organizations';
 import { setupDepartmentRoutes } from './department';
-import { setupOrganizationDesignationsRoutes } from './organization-designations';
+import { setupOrganizationDesignationsRoutes } from './designations';
 import { setupOrganizationMemberRoutes } from './organization-members';
 import { setupDepartmentTitleRoutes } from './department-title';
 import { setupDepartmentRolesRoutes } from './department-roles';
