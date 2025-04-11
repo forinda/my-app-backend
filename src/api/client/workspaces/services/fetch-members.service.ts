@@ -37,6 +37,7 @@ export class FetchWorkspaceMembersService {
       user_id: number;
       email: string;
       username: string;
+      date_joined: string;
     };
 
     let query: SQL<WorkspaceMemberType[]>;
@@ -63,6 +64,7 @@ export class FetchWorkspaceMembersService {
             u.email,
             u.username,
             mem.is_active AS is_active_in_workspace,
+            mem.created_at AS date_joined,
             mem.role AS workspace_role
           FROM organization_workspace_members AS mem
           INNER JOIN workspace AS ws ON ws.id = mem.workspace_id
@@ -100,10 +102,13 @@ export class FetchWorkspaceMembersService {
             mem.id AS member_id,
             mem.workspace_id,
             mem.user_id,
-            u.first_name, u.last_name, u.avatar,
-            u.id AS user_id, u.email, u.username,
+            u.first_name,
+            u.last_name,
+            u.avatar,
+            u.email, u.username,
             mem.is_active as is_active_in_workspace,
             mem.role AS workspace_role,
+            mem.created_at AS date_joined,
             NULL AS active_in_project,
             NULL AS project_role
           FROM organization_workspace_members AS mem
