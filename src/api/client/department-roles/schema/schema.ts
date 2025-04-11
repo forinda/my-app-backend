@@ -30,6 +30,18 @@ export const updateDepartmentUserRoleSchema = z.object({
   organization_id: z.coerce.number({}).positive()
 });
 
+export const getDepartmentUserRoleSchema = z.object({
+  department_id: z.coerce
+    .string({})
+    .uuid({
+      message: 'Please provide a valid department id'
+    })
+    .optional(),
+  // organization_id: z.coerce.number({}).positive(),
+  is_active: z.boolean({}).optional(),
+  is_head: z.boolean({}).optional()
+});
+
 // export const getOrganizationMember``
 
 export type DepartmentUserRoleCreationRequest = z.infer<
@@ -38,4 +50,8 @@ export type DepartmentUserRoleCreationRequest = z.infer<
 
 export type UpdateUserRoleRequest = z.infer<
   typeof updateDepartmentUserRoleSchema
+>;
+
+export type GetDepartmentUserRoleRequest = z.infer<
+  typeof getDepartmentUserRoleSchema
 >;

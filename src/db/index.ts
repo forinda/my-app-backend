@@ -1,21 +1,34 @@
 import 'dotenv/config';
 import { drizzle } from 'drizzle-orm/node-postgres';
+import type { NodePgDatabase } from 'drizzle-orm/node-postgres';
 import * as schema from './schema';
 import type { AnyPgColumn } from 'drizzle-orm/pg-core';
 import type { SQL } from 'drizzle-orm';
 import { sql } from 'drizzle-orm';
 
-export function useDrizzle() {
-  return drizzle(process.env.DATABASE_URL!, { casing: 'snake_case', schema });
+// Define type that includes schema
+export type Database = NodePgDatabase<typeof schema>;
+
+// Singleton instance with proper typing
+let drizzleInstance: Database | null = null;
+
+export function useDrizzle(): Database {
+  if (!drizzleInstance) {
+    drizzleInstance = drizzle(process.env.DATABASE_URL!, {
+      casing: 'snake_case',
+      schema
+    });
+  }
+
+  return drizzleInstance;
 }
 
-type DrizzleHookReturnType = ReturnType<typeof useDrizzle>;
-// export interface DrizzleTransaction extends DrizzleReturnType[''] {}
+// Since we now have a proper Database type, we can simplify these types
 export type DrizzleTransaction = Parameters<
-  Parameters<Pick<DrizzleHookReturnType, 'transaction'>['transaction']>[0]
+  Parameters<Database['transaction']>[0]
 >[0];
 
-export type DbType = DrizzleHookReturnType;
+export type DbType = Database;
 
 // custom lower function
 export function lower(email: AnyPgColumn): SQL {
