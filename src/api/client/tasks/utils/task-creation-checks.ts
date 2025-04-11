@@ -197,7 +197,7 @@ export class TaskCreationAndUpdateCheckUtil {
     return async (data: AssignTaskPayload) => {
       if (data.assignee_id) {
         const assignee = await transaction!.query.OrganizationMember.findFirst({
-          where: eq(OrgProjectMember.id, data.assignee_id)
+          where: eq(OrgProjectMember.user_id, data.assignee_id)
         });
 
         if (!assignee) {
