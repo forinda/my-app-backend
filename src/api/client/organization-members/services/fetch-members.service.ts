@@ -81,7 +81,8 @@ export class FetchOrganizationMembersService {
       conditions.push(sql`(
         U.first_name ILIKE ${`%${filter.q}%`} OR
         U.last_name ILIKE ${`%${filter.q}%`} OR
-        U.username ILIKE ${`%${filter.q}%`}
+        U.username ILIKE ${`%${filter.q}%`} OR
+        U.email ILIKE ${`%${filter.q}%`}
       )`);
     }
 
@@ -116,6 +117,7 @@ export class FetchOrganizationMembersService {
           'first_name', U.first_name,
           'last_name', U.last_name,
           'username', U.username,
+          'email', U.email,
           'avatar', U.avatar,
           'is_admin', U.is_admin
         ) AS user,
