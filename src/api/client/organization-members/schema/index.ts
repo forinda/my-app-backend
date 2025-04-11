@@ -1,4 +1,5 @@
 import { orgMemberRoles } from '@/common/constants/org-member-roles';
+import { searchQueryStringSchema } from '@/common/schema/search-query-string';
 import { z } from 'zod';
 
 export const employmentTypeSchema = z.enum([
@@ -80,7 +81,12 @@ export type AddMemberToOrRemoveFromOrganizationType = z.infer<
 export type RespondToOrgInviteType = z.infer<typeof respondToOrgInviteSchema>;
 
 export const filterOrganizationMembersSchema = z.object({
-  current_organization_id: z.string()
+  current_organization_id: z.string(),
+  q: searchQueryStringSchema.optional(),
+  is_active: z.coerce.boolean().optional(),
+  department_id: z.coerce.number().optional(),
+  designation_id: z.coerce.number().optional(),
+  role: orgMemberRoleSchema.optional()
 });
 
 export type FilterOrganizationmembersType = z.infer<
