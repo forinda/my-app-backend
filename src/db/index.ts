@@ -5,6 +5,8 @@ import * as schema from './schema';
 import type { AnyPgColumn } from 'drizzle-orm/pg-core';
 import type { SQL } from 'drizzle-orm';
 import { sql } from 'drizzle-orm';
+// import { Logger } from '@/common/logger';
+// import { di } from '@/common/di';
 
 // Define type that includes schema
 export type Database = NodePgDatabase<typeof schema>;
@@ -13,8 +15,11 @@ export type Database = NodePgDatabase<typeof schema>;
 let drizzleInstance: Database | null = null;
 
 export function useDrizzle(): Database {
+  const { DATABASE_URL } = process.env;
+
+  // di.resolve(Logger).info({ DATABASE_URL });
   if (!drizzleInstance) {
-    drizzleInstance = drizzle(process.env.DATABASE_URL!, {
+    drizzleInstance = drizzle(DATABASE_URL!, {
       casing: 'snake_case',
       schema
     });
