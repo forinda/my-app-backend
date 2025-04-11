@@ -8,10 +8,8 @@ import { inject } from 'inversify';
 
 import { AddOrganizationMemberService } from '../services/add.service';
 import { userAudit } from '@/common/utils/user-request-audit';
-import {
-  addMemberToOrRemoveFromOrgSchema,
-  type AddMemberToOrRemoveFromOrganizationType
-} from '../schema';
+import { type AddMemberToOrRemoveFromOrganizationType } from '../schema';
+import { addMemberToOrRemoveFromOrgSchema } from '../schema/addMemberToOrRemoveFromOrgSchema';
 import { createHttpResponse } from '@/common/utils/responder';
 
 @Controller()

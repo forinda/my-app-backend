@@ -8,12 +8,14 @@ import { RespondToOrgInviteController } from './controllers/respond-to-invite.co
 import { InitOrgMemberProfileController } from './controllers/init-member-profile.controller';
 import { UpdateOrgPersonalProfileController } from './controllers/update-personal-org-profile.controller';
 import type { RouteSetupFunction } from '@/common/interfaces/controller';
+import { FetchOrganizationMemberByIdController } from './controllers/fetch-by-id.controller';
 
 export const setupOrganizationMemberRoutes: RouteSetupFunction = ({ app }) => {
   const router = Router();
 
   router
     .get('/', di.resolve(FetchOrganizationMembersController).get)
+    .get('/single', di.resolve(FetchOrganizationMemberByIdController).get)
     .post('/add', di.resolve(AddOrganizationMemberController).post)
     .post('/remove', di.resolve(RemoveOrganizationMembersController).post)
     .get('/invites', di.resolve(FetchOrganizationMemberInvitesController).get)

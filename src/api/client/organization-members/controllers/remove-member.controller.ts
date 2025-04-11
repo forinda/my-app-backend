@@ -8,7 +8,7 @@ import { inject } from 'inversify';
 import { createHttpResponse } from '@/common/utils/responder';
 import { RemoveOrganizationMemberService } from '../services/remove-member.service';
 import type { AddMemberToOrRemoveFromOrganizationType } from '../schema';
-import { addMemberToOrRemoveFromOrgSchema } from '../schema';
+import { addMemberToOrRemoveFromOrgSchema } from '../schema/addMemberToOrRemoveFromOrgSchema';
 
 @Controller()
 export class RemoveOrganizationMembersController extends BasePostController {

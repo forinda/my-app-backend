@@ -8,7 +8,7 @@ import { inject } from 'inversify';
 
 import { userAudit } from '@/common/utils/user-request-audit';
 import type { InitializeUserOrganizationProfileType } from '../schema';
-import { initializeUserOrgProfileSchema } from '../schema';
+import { initializeUserOrgProfileSchema } from '../schema/initializeUserOrgProfileSchema';
 import { createHttpResponse } from '@/common/utils/responder';
 import { InitOrgMemberProfileService } from '../services/init-member-profile.service';
 

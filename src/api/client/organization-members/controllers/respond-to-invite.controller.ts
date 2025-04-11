@@ -8,7 +8,7 @@ import { inject } from 'inversify';
 
 import { userAudit } from '@/common/utils/user-request-audit';
 import type { RespondToOrgInviteType } from '../schema';
-import { respondToOrgInviteSchema } from '../schema';
+import { respondToOrgInviteSchema } from '../schema/respondToOrgInviteSchema';
 import { RespondToOrgInviteService } from '../services/respond-to-invite.service';
 import { createHttpResponse } from '@/common/utils/responder';
 
