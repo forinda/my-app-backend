@@ -19,7 +19,9 @@ export class FetchOrganizationMemberInvitesService {
         organization: {
           columns: {
             id: true,
-            name: true
+            name: true,
+            logo: true,
+            industry: true
           }
         },
         designation: {
