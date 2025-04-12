@@ -50,6 +50,15 @@ export class FetchOrganizationMemberByIdService {
             name: true,
             is_active: true
           }
+        },
+        user: {
+          columns: {
+            id: true,
+            first_name: true,
+            last_name: true,
+            email: true,
+            avatar: true
+          }
         }
       }
     });
