@@ -16,8 +16,7 @@ export const initializeUserOrgProfileSchema = z.object({
   zip_code: z.string(),
   national_id: z.string(),
   currency: z.string().default('KSH'),
-  current_salary: z.number(),
-  starting_salary: z.number(),
+  starting_salary: z.number().positive().default(0),
   salary_type: salaryTypeSchema.default('hourly'),
   employment_type: employmentTypeSchema.default('full_time'),
   updated_by: z.coerce.number().positive()
