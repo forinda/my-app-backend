@@ -176,6 +176,7 @@ export class FetchOrganizationMembersService {
         COUNT(*) OVER() AS total_count,
         JSON_BUILD_OBJECT(
           'id', U.id,
+          'uuid', U.uuid,
           'first_name', U.first_name,
           'last_name', U.last_name,
           'username', U.username,

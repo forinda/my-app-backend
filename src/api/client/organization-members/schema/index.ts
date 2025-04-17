@@ -13,7 +13,12 @@ export const fetchUserorganizationInvitesSchema = z.object({
 
 export const fetchSingleOrganizationMemberSchema = z.object({
   // organization_id: z.coerce.number().positive(),
-  user_id: z.coerce.number().positive().optional()
+  user_id: z.coerce
+    .string({
+      required_error: 'User ID is required'
+    })
+    .uuid()
+    .optional()
 });
 
 export type UpdatePersonalOrgProfileType = z.infer<

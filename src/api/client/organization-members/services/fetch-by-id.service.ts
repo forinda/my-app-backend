@@ -1,4 +1,4 @@
-import { Organization, OrganizationMember } from '@/db/schema';
+import { Organization, OrganizationMember, User } from '@/db/schema';
 import { useDrizzle } from '@/db';
 import { HttpStatus } from '@/common/http';
 import { dependency } from '@/common/di';
@@ -25,9 +25,24 @@ export class FetchOrganizationMemberByIdService {
         status: HttpStatus.NOT_FOUND
       };
     }
+    const existingUser = await db.query.User.findFirst({
+      where: eq(User.uuid, filter.user_id!),
+      columns: {
+        id: true,
+        uuid: true
+      }
+    });
+
+    if (!existingUser) {
+      return {
+        message: 'User not found',
+        status: HttpStatus.NOT_FOUND
+      };
+    }
+    const user_id = existingUser.id;
     const member = await db.query.OrganizationMember.findFirst({
       where: and(
-        eq(OrganizationMember.user_id, filter.user_id!),
+        eq(OrganizationMember.user_id, user_id!),
         eq(OrganizationMember.organization_id, org_id)
       ),
       with: {
