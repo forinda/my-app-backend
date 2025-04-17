@@ -36,7 +36,7 @@ export class InitOrgMemberProfileService {
     if (!existingUser) {
       throw new ApiError('User not found', HttpStatus.NOT_FOUND, {});
     }
-    const existingOrgMember =
+    const { ...existingOrgMember } =
       await transaction!.query.OrganizationMember.findFirst({
         where: and(
           eq(OrganizationMember.organization_id, data.organization_id),
@@ -97,8 +97,10 @@ export class InitOrgMemberProfileService {
         );
       }
     }
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { id: _, ...initialState } = existingOrgMember;
     const update = {
-      ...existingOrgMember,
+      ...initialState,
       ...data,
       starting_salary: convertToNumber(
         existingOrgMember.starting_salary
@@ -108,7 +110,7 @@ export class InitOrgMemberProfileService {
       current_salary: convertToNumber(
         existingOrgMember.current_salary
           ? existingOrgMember.current_salary
-          : data.current_salary
+          : data.starting_salary
       ) as unknown as string
     };
 

@@ -57,7 +57,8 @@ export class FetchOrganizationMemberByIdService {
             first_name: true,
             last_name: true,
             email: true,
-            avatar: true
+            avatar: true,
+            uuid: true
           }
         }
       }
