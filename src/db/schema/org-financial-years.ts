@@ -15,6 +15,7 @@ import { User } from './user';
 import type { InferInsertModel, InferSelectModel } from 'drizzle-orm';
 import { relations } from 'drizzle-orm';
 import { Organization } from './organization';
+import { OrganizationFinancialYearQuarter } from './org-financial-year-quarter';
 
 export const FINANCIAL_YEAR_TYPE = ['quarterly', 'biannual', 'annual'] as const;
 
@@ -35,10 +36,10 @@ export const OrganizationFinancialYear = pgTable(
     financial_year: varchar().notNull(),
     financial_year_type: financialYearType().notNull(),
     start_date: date({
-      mode: 'date'
+      mode: 'string'
     }).notNull(),
     end_date: date({
-      mode: 'date'
+      mode: 'string'
     }).notNull(),
     created_by: integer()
       .notNull()
@@ -54,7 +55,7 @@ export const OrganizationFinancialYear = pgTable(
 
 export const organizationFinancialYearRelations = relations(
   OrganizationFinancialYear,
-  ({ one }) => ({
+  ({ one, many }) => ({
     creator: one(User, {
       fields: [OrganizationFinancialYear.created_by],
       references: [User.id]
@@ -66,6 +67,9 @@ export const organizationFinancialYearRelations = relations(
     deleter: one(User, {
       fields: [OrganizationFinancialYear.deleted_by],
       references: [User.id]
+    }),
+    quarters: many(OrganizationFinancialYearQuarter, {
+      relationName: 'fy_quarters'
     })
   })
 );
