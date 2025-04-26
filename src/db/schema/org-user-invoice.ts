@@ -16,6 +16,7 @@ import { User } from './user';
 import type { InferInsertModel, InferSelectModel } from 'drizzle-orm';
 import { relations } from 'drizzle-orm';
 import { OrganizationFinancialYearQuarter } from './org-financial-year-quarter';
+import { OrgUserInvoiceItem } from './org-user-invoice-item';
 
 export const INVOICE_STATUS = [
   'paid',
@@ -85,7 +86,7 @@ export const OrganizationUserInvoice = pgTable(
 
 export const organizationUserInvoiceRelations = relations(
   OrganizationUserInvoice,
-  ({ one }) => ({
+  ({ one, many }) => ({
     creator: one(User, {
       fields: [OrganizationUserInvoice.created_by],
       references: [User.id]
@@ -109,6 +110,17 @@ export const organizationUserInvoiceRelations = relations(
     quarter: one(OrganizationFinancialYearQuarter, {
       fields: [OrganizationUserInvoice.financial_year_quarter_id],
       references: [OrganizationFinancialYearQuarter.id]
+    }),
+    approver: one(User, {
+      fields: [OrganizationUserInvoice.approved_by],
+      references: [User.id]
+    }),
+    payer: one(User, {
+      fields: [OrganizationUserInvoice.paid_by],
+      references: [User.id]
+    }),
+    items: many(OrgUserInvoiceItem, {
+      relationName: 'org_user_invoice_items'
     })
   })
 );

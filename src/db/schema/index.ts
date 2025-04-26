@@ -59,3 +59,5 @@ export * from './org-financial-years';
 export * from './org-financial-year-quarter';
 
 export * from './org-user-invoice';
+
+export * from './org-user-invoice-item';
