@@ -4,7 +4,9 @@ import { envSchema } from '../schema/env.schema';
 
 import { dependency } from '../di';
 import { PATHS } from './../../../paths';
-envConf({ path: PATHS.ENV_FILE });
+envConf({
+  //  path: PATHS.ENV_FILE
+});
 
 @dependency()
 export class Config {
