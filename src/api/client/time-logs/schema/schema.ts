@@ -229,7 +229,13 @@ export const fetchTimeLogSchema = z
         message: 'Task ID is required'
       })
       .positive()
-      .optional()
+      .optional(),
+    task_log_category_id: z.coerce
+      .number({
+        message: 'Task log category ID is required'
+      })
+      .positive()
+      .optional() // Added missing optional() method
   })
   .superRefine((data, ctx) => {
     if (data.mode === 'PersonalTimelog') {

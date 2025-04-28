@@ -23,7 +23,8 @@ export class FetchTimeLogService {
       project_id,
       invoice_status,
       approval_status,
-      q
+      q,
+      task_log_category_id
     } = query;
 
     if (owner_id) {
@@ -46,7 +47,9 @@ export class FetchTimeLogService {
 
       Where.push(or(ilike(OrgUserTimeLog.description, searchQuery))!);
     }
-
+    if (task_log_category_id) {
+      Where.push(eq(OrgUserTimeLog.task_log_category_id, task_log_category_id));
+    }
     const titles = await db.query.OrgUserTimeLog.findMany({
       where: and(eq(OrgUserTimeLog.organization_id, organization_id), ...Where),
       with: {
