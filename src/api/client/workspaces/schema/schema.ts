@@ -166,6 +166,7 @@ export const fetchWorkspacemembersSchema = z.object({
       message: 'Status is required'
     })
     .optional()
+  // mode: z.enum(['ExcludeExisting', 'All']).optional()
 });
 
 // export const getOrganizationMember``

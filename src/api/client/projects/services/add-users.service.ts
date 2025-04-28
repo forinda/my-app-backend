@@ -34,14 +34,12 @@ export class AddUserToWorkspaceService {
       throw new ApiError('Workspace not found', HttpStatus.NOT_FOUND, {});
     }
 
-    const exisingMembers = await transaction!.query.OrgWorkspaceMember.findMany(
-      {
-        where: and(
-          eq(OrgWorkspaceMember.workspace_id, data.project_id),
-          inArray(OrgWorkspaceMember.user_id, data.users)
-        )
-      }
-    );
+    const exisingMembers = await transaction!.query.OrgProjectMember.findMany({
+      where: and(
+        eq(OrgProjectMember.project_id, data.project_id),
+        inArray(OrgProjectMember.user_id, data.users)
+      )
+    });
 
     if (exisingMembers.length) {
       // Remove existing members from the list
@@ -51,6 +49,8 @@ export class AddUserToWorkspaceService {
     }
 
     if (!data.users.length) {
+      console.log(exisingMembers);
+
       // return {
       //   data: {},
       //   status: HttpStatus.OK,
