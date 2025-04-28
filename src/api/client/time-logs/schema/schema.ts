@@ -235,7 +235,19 @@ export const fetchTimeLogSchema = z
         message: 'Task log category ID is required'
       })
       .positive()
-      .optional() // Added missing optional() method
+      .optional(),
+    date_from: z.coerce
+      .string({
+        message: 'Date from is required'
+      })
+      .date()
+      .optional(),
+    date_to: z.coerce
+      .string({
+        message: 'Date to is required'
+      })
+      .date()
+      .optional()
   })
   .superRefine((data, ctx) => {
     if (data.mode === 'PersonalTimelog') {
@@ -248,6 +260,17 @@ export const fetchTimeLogSchema = z
         });
 
         return;
+      }
+    }
+    if (data.date_from && !data.date_to) {
+      // Check if from is greater than to
+      if (moment(data.date_from).isAfter(data.date_to)) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          path: ['date_to'],
+          message: 'Date from cannot be after Date to',
+          params: {}
+        });
       }
     }
   });
