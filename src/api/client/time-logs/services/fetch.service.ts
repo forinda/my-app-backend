@@ -57,18 +57,26 @@ export class FetchTimeLogService {
       Where.push(
         between(
           OrgUserTimeLog.work_date,
-          moment(date_from).toISOString(),
-          moment(date_to).toISOString()
+          moment(date_from).startOf('day').toISOString(),
+          moment(date_to).endOf('day').toISOString()
         )
       );
     }
     if (date_from && !date_to) {
       Where.push(
-        gte(OrgUserTimeLog.work_date, moment(date_from).toISOString())
+        gte(
+          OrgUserTimeLog.work_date,
+          moment(date_from).startOf('day').toISOString()
+        )
       );
     }
     if (!date_from && date_to) {
-      Where.push(lte(OrgUserTimeLog.work_date, moment(date_to).toISOString()));
+      Where.push(
+        lte(
+          OrgUserTimeLog.work_date,
+          moment(date_to).endOf('day').toISOString()
+        )
+      );
     }
 
     const titles = await db.query.OrgUserTimeLog.findMany({
