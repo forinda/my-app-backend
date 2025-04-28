@@ -17,14 +17,27 @@ import { OrgTask } from './org-task';
 import { relations } from 'drizzle-orm';
 import { OrgTimeLogCategory } from './organization-time-log-category';
 
+export const TIMELOG_APPROVAL_STATUS = [
+  'pending',
+  'invoiced',
+  'rejected'
+] as const;
+
+export const TIMELOG_INVOICE_STATUS = [
+  'pending',
+  'invoiced',
+  'rejected',
+  'paid'
+] as const;
+
 export const orgUserTimeLogApprovalStatus = pgEnum(
   'org_user_time_log_approval_status',
-  ['pending', 'invoiced', 'rejected']
+  TIMELOG_APPROVAL_STATUS
 );
 
 export const orgUserTimeLogInvoiceStatus = pgEnum(
   'org_user_time_log_invoice_status',
-  ['pending', 'invoiced', 'rejected', 'paid']
+  TIMELOG_INVOICE_STATUS
 );
 
 export const OrgUserTimeLog = pgTable('org_user_time_logs', {

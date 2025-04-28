@@ -1,3 +1,5 @@
+import { searchQueryStringSchema } from '@/common/schema/search-query-string';
+import { TIMELOG_APPROVAL_STATUS, TIMELOG_INVOICE_STATUS } from '@/db/schema';
 import moment from 'moment';
 import z from 'zod';
 export const timelogApprovalStatusSchema = z.enum([
@@ -204,8 +206,12 @@ export const fetchTimeLogSchema = z
       .optional(),
     mode: z
       .enum(['ProjectApprovable', 'InvoiceApprovable', 'PersonalTimelog'])
-      .default('PersonalTimelog'),
+      .default('PersonalTimelog')
+      .optional(),
     all: z.coerce.boolean().optional(),
+    approval_status: z.enum(TIMELOG_APPROVAL_STATUS).optional(),
+    invoice_status: z.enum(TIMELOG_INVOICE_STATUS).optional(),
+    q: searchQueryStringSchema.optional(),
     owner_id: z.coerce
       .number({
         message: 'User ID is required'
@@ -251,3 +257,5 @@ export type CreateTimeLogType = z.infer<typeof newTimeLogSchema>;
 export type UpdateTimeLogType = z.infer<typeof updateTimeLogSchema>;
 
 export type DeleteTimeLogType = z.infer<typeof deleteTimeLogSchema>;
+
+export type FetchTimeLogType = z.infer<typeof fetchTimeLogSchema>;

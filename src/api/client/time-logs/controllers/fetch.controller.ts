@@ -20,8 +20,8 @@ export class FetchTimeLogController extends BaseGetController {
     bodyBindOrgId: true,
     querySchema: fetchTimeLogSchema
   })
-  async get({ res, pagination, organization_id }: ApiRequestContext) {
-    const feed = await this.service.get(organization_id!, pagination);
+  async get({ res, pagination, query, organization_id }: ApiRequestContext) {
+    const feed = await this.service.get(organization_id!, query!, pagination);
 
     return createHttpResponse(res, { ...feed, statusCode: feed.status });
   }
