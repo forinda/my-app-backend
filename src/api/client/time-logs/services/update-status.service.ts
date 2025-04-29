@@ -25,6 +25,13 @@ export class UpdateTimeLogStatusService {
         notInArray(OrgUserTimeLog.invoice_status, ['invoiced', 'paid'])
       )
     });
+
+    if (!timeLogs || timeLogs.length === 0) {
+      throw new ApiError(
+        'No time logs found/already approved for the given Skipping process',
+        HttpStatus.NOT_FOUND
+      );
+    }
     const allTasksOfCurrentUser = timeLogs.filter(
       (timeLog) => timeLog.user_id === data.current_user_id
     );
