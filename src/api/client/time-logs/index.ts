@@ -13,9 +13,9 @@ export const setupTimeLogRoutes: RouteSetupFunction = ({ app }) => {
   router
     .get('/', di.resolve(FetchTimeLogController).get)
     .post('/', di.resolve(CreateTimeLogController).post)
+    .put('/update-status', di.resolve(UpdateTimeLogStatusController).put)
     .put('/:id', di.resolve(UpdateTimeLogController).put)
-    .delete('/:id', di.resolve(DeleteTimeLogController).delete)
-    .put('/update-status', di.resolve(UpdateTimeLogStatusController).put);
+    .delete('/:id', di.resolve(DeleteTimeLogController).delete);
 
   app.use('/time-logs', router);
 };

@@ -7,7 +7,7 @@ import type { ApiRequestContext } from '@/common/interfaces/controller';
 import { inject } from 'inversify';
 
 import type { UpdateTimelogStatusType } from '../schema/schema';
-import { updateTimeLogSchema } from '../schema/schema';
+import { updateTimelogStatusSchema } from '../schema/schema';
 import { userAudit } from '@/common/utils/user-request-audit';
 import { createHttpResponse } from '@/common/utils/responder';
 import { UpdateTimeLogStatusService } from '../services/update-status.service';
@@ -17,7 +17,7 @@ export class UpdateTimeLogStatusController extends BasePutController {
   @inject(UpdateTimeLogStatusService)
   private service: UpdateTimeLogStatusService;
   @ApiControllerMethod({
-    bodySchema: updateTimeLogSchema,
+    bodySchema: updateTimelogStatusSchema,
     auth: true,
     bodyBindOrgId: true,
     audit: userAudit('update')

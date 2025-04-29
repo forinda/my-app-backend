@@ -20,7 +20,7 @@ export class UpdateTimeLogStatusService {
   >) {
     const timeLogs = await transaction!.query.OrgUserTimeLog.findMany({
       where: and(
-        inArray(OrgUserTimeLog, data.timelog_ids),
+        inArray(OrgUserTimeLog.id, data.timelog_ids),
         eq(OrgUserTimeLog.organization_id, data.organization_id),
         notInArray(OrgUserTimeLog.invoice_status, ['invoiced', 'paid'])
       )
@@ -44,7 +44,7 @@ export class UpdateTimeLogStatusService {
       })
       .where(
         and(
-          inArray(OrgUserTimeLog, data.timelog_ids),
+          inArray(OrgUserTimeLog.id, data.timelog_ids),
           eq(OrgUserTimeLog.organization_id, data.organization_id),
           ne(OrgUserTimeLog.approval_status, data.status)
         )
