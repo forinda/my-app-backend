@@ -17,5 +17,5 @@ export const setupFinancialYearsRoutes: RouteSetupFunction = ({ app }) => {
     .put('/:id', di.resolve(UpdateFinancialYearController).put)
     .delete('/:id', di.resolve(DeleteFinancialYearController).delete);
 
-  app.use('/fy', router);
+  app.use('/financial-years', router);
 };

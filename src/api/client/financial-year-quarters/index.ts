@@ -19,8 +19,5 @@ export const setupFinancialYearQuartersRoutes: RouteSetupFunction = ({
     .put('/:id', di.resolve(UpdateFinancialYearQuarterController).put)
     .delete('/:id', di.resolve(DeleteFinancialYearQuarterController).delete);
 
-  app.use(
-    '/organizations/:organization_id/financial-years/:financial_year_id/quarters',
-    router
-  );
+  app.use('/financial-year-quarters', router);
 };

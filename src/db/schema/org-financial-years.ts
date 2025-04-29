@@ -68,9 +68,7 @@ export const organizationFinancialYearRelations = relations(
       fields: [OrganizationFinancialYear.deleted_by],
       references: [User.id]
     }),
-    quarters: many(OrganizationFinancialYearQuarter, {
-      relationName: 'fy_quarters'
-    })
+    quarters: many(OrganizationFinancialYearQuarter)
   })
 );
 
