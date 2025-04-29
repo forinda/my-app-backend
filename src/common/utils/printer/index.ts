@@ -2,6 +2,10 @@ import path from 'path';
 import fs from 'fs';
 import util from 'util';
 import moment from 'moment';
+import type {
+  Page as PuppeteerPage,
+  Browser as PuppeteerBrowser
+} from 'puppeteer';
 import puppeteer from 'puppeteer';
 import { renderFile as renderHtmlString } from 'ejs';
 import { dependency } from '@/common/di';
@@ -70,8 +74,8 @@ export class Printer {
     const { response, template, fileClassName, printData } = props;
 
     let fileName = props.fileName;
-    let browser: puppeteer.Browser | null = null;
-    let page: puppeteer.Page | null = null;
+    let browser: PuppeteerBrowser | null = null;
+    let page: PuppeteerPage | null = null;
 
     try {
       if (!this.PRINT_EJS_TEMPLATES[template]) {
