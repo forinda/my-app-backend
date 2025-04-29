@@ -35,7 +35,7 @@ export const updateFinancialYearQuarterSchema = z.object({
       message: 'Quarter ID is required'
     })
     .positive(),
-  financial_year_id: z.coerce
+  organization_financial_year_id: z.coerce
     .number({
       message: 'Financial year ID is required'
     })

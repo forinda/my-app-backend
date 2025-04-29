@@ -80,6 +80,19 @@ export class CreateFinancialYearQuarterService {
         {}
       );
     }
+    // Check if the start and end dates are valid and within the financial year range
+    const startDate = new Date(data.start_date);
+    const endDate = new Date(data.end_date);
+    const fyStartDate = new Date(financialYear.start_date);
+    const fyEndDate = new Date(financialYear.end_date);
+
+    if (startDate < fyStartDate || endDate > fyEndDate) {
+      throw new ApiError(
+        'Quarter dates must be within the financial year range',
+        HttpStatus.BAD_REQUEST,
+        {}
+      );
+    }
     const quarterData: InsertOrganizationFinancialYearQuarterInterface = {
       organization_financial_year_id: data.organization_financial_year_id,
       //   organization_id: data.organization_id,

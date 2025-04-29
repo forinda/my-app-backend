@@ -18,7 +18,9 @@ export class UpdateFinancialYearQuarterController extends BasePutController {
 
   @ApiControllerMethod({
     auth: true,
-    bodySchema: updateFinancialYearQuarterSchema,
+    bodySchema: updateFinancialYearQuarterSchema.omit({
+      organization_financial_year_id: true
+    }),
     bodyBindOrgId: true,
     audit: userAudit('update'),
     pathParamTransform: {

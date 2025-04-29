@@ -1,4 +1,7 @@
-import { OrganizationFinancialYearQuarter } from '@/db/schema';
+import {
+  OrganizationFinancialYear,
+  OrganizationFinancialYearQuarter
+} from '@/db/schema';
 import { HttpStatus } from '@/common/http';
 import { dependency } from '@/common/di';
 import { and, eq, ne } from 'drizzle-orm';
@@ -23,8 +26,16 @@ export class UpdateFinancialYearQuarterService {
           eq(OrganizationFinancialYearQuarter.id, data.quarter_id),
           eq(
             OrganizationFinancialYearQuarter.organization_financial_year_id,
-            data.financial_year_id
+            data.organization_financial_year_id
           )
+        )
+      });
+
+    const financialYear =
+      await transaction!.query.OrganizationFinancialYear.findFirst({
+        where: eq(
+          OrganizationFinancialYear.id,
+          data.organization_financial_year_id
         )
       });
 
@@ -43,7 +54,7 @@ export class UpdateFinancialYearQuarterService {
           where: and(
             eq(
               OrganizationFinancialYearQuarter.organization_financial_year_id,
-              data.financial_year_id
+              data.organization_financial_year_id
             ),
             eq(OrganizationFinancialYearQuarter.quarter, data.quarter),
             ne(OrganizationFinancialYearQuarter.id, data.quarter_id) // not equal to current ID
@@ -58,7 +69,19 @@ export class UpdateFinancialYearQuarterService {
         );
       }
     }
+    // Check if the start and end dates are valid and within the financial year range
+    const startDate = new Date(data.start_date!);
+    const endDate = new Date(data.end_date!);
+    const fyStartDate = new Date(financialYear!.start_date);
+    const fyEndDate = new Date(financialYear!.end_date);
 
+    if (startDate < fyStartDate || endDate > fyEndDate) {
+      throw new ApiError(
+        'Quarter dates must be within the financial year range',
+        HttpStatus.BAD_REQUEST,
+        {}
+      );
+    }
     // Update the quarter
     const [updatedQuarter] = await transaction!
       .update(OrganizationFinancialYearQuarter)
