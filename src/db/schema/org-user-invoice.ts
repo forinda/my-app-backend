@@ -27,9 +27,22 @@ export const INVOICE_STATUS = [
   'approved'
 ] as const;
 
+export const INVOICE_PAYMENT_METHOD = [
+  'credit_card',
+  'bank_transfer',
+  'cash',
+  'cheque',
+  'paypal'
+] as const;
+
 export type InvoiceStatusType = (typeof INVOICE_STATUS)[number];
 
 export const invoiceStatusType = pgEnum('invoice_status_enum', INVOICE_STATUS);
+
+export const invoicePaymentMethodType = pgEnum(
+  'invoice_payment_method_enum',
+  INVOICE_PAYMENT_METHOD
+);
 
 export const OrganizationUserInvoice = pgTable(
   'organization_user_invoice',
@@ -66,6 +79,8 @@ export const OrganizationUserInvoice = pgTable(
         () => OrganizationFinancialYearQuarter.id,
         foreignKeyConstraints
       ),
+    payment_method: invoicePaymentMethodType().default('bank_transfer'),
+    notes: varchar().default(''),
     created_by: integer()
       .notNull()
       .references(() => User.id, foreignKeyConstraints),
@@ -76,6 +91,14 @@ export const OrganizationUserInvoice = pgTable(
     approved_at: date({
       mode: 'string'
     }),
+    tax_amount: decimal('tax_amount', {
+      precision: 16,
+      scale: 2
+    }).default('0'),
+    discount_amount: decimal('discount_amount', {
+      precision: 16,
+      scale: 2
+    }).default('0'),
     paid_by: integer().references(() => User.id, foreignKeyConstraints),
     paid_at: date({
       mode: 'string'
