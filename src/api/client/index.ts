@@ -13,6 +13,9 @@ import { setupTaskRoutes } from './tasks';
 import { setupTimeLogCategoriesRoutes } from './time-log-categories';
 import { setupTimeLogRoutes } from './time-logs';
 import { setupSubscriptionPlansRoutes } from './subscription-plans';
+import { setupFinancialYearsRoutes } from './financial-years';
+import { setupFinancialYearQuartersRoutes } from './financial-year-quarters';
+
 export const apiFunctions: RouteSetupFunction[] = [
   setupAuthRoutes,
   setupOrganizationRoutes,
@@ -27,5 +30,7 @@ export const apiFunctions: RouteSetupFunction[] = [
   setupTaskRoutes,
   setupTimeLogCategoriesRoutes,
   setupTimeLogRoutes,
-  setupSubscriptionPlansRoutes
+  setupSubscriptionPlansRoutes,
+  setupFinancialYearsRoutes,
+  setupFinancialYearQuartersRoutes
 ];
