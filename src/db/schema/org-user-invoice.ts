@@ -44,7 +44,7 @@ export const invoicePaymentMethodType = pgEnum(
   INVOICE_PAYMENT_METHOD
 );
 
-export const OrganizationUserInvoice = pgTable(
+export const OrgUserInvoice = pgTable(
   'organization_user_invoice',
   {
     id: integer().primaryKey().generatedAlwaysAsIdentity(),
@@ -112,42 +112,42 @@ export const OrganizationUserInvoice = pgTable(
 );
 
 export const organizationUserInvoiceRelations = relations(
-  OrganizationUserInvoice,
+  OrgUserInvoice,
   ({ one, many }) => ({
     creator: one(User, {
-      fields: [OrganizationUserInvoice.created_by],
+      fields: [OrgUserInvoice.created_by],
       references: [User.id]
     }),
     updater: one(User, {
-      fields: [OrganizationUserInvoice.updated_by],
+      fields: [OrgUserInvoice.updated_by],
       references: [User.id]
     }),
     deleter: one(User, {
-      fields: [OrganizationUserInvoice.deleted_by],
+      fields: [OrgUserInvoice.deleted_by],
       references: [User.id]
     }),
     organization: one(Organization, {
-      fields: [OrganizationUserInvoice.organization_id],
+      fields: [OrgUserInvoice.organization_id],
       references: [Organization.id]
     }),
     user: one(User, {
-      fields: [OrganizationUserInvoice.user_id],
+      fields: [OrgUserInvoice.user_id],
       references: [User.id]
     }),
     quarter: one(OrganizationFinancialYearQuarter, {
-      fields: [OrganizationUserInvoice.financial_year_quarter_id],
+      fields: [OrgUserInvoice.financial_year_quarter_id],
       references: [OrganizationFinancialYearQuarter.id]
     }),
-    financialYear: one(OrganizationFinancialYear, {
-      fields: [OrganizationUserInvoice.financial_year_id],
+    financial_year: one(OrganizationFinancialYear, {
+      fields: [OrgUserInvoice.financial_year_id],
       references: [OrganizationFinancialYear.id]
     }),
     approver: one(User, {
-      fields: [OrganizationUserInvoice.approved_by],
+      fields: [OrgUserInvoice.approved_by],
       references: [User.id]
     }),
     payer: one(User, {
-      fields: [OrganizationUserInvoice.paid_by],
+      fields: [OrgUserInvoice.paid_by],
       references: [User.id]
     }),
     items: many(OrgUserInvoiceItem, {
@@ -157,9 +157,9 @@ export const organizationUserInvoiceRelations = relations(
 );
 
 export type SelectOrganizationUserInvoiceInterface = InferSelectModel<
-  typeof OrganizationUserInvoice
+  typeof OrgUserInvoice
 >;
 
 export type InsertOrganizationUserInvoiceInterface = InferInsertModel<
-  typeof OrganizationUserInvoice
+  typeof OrgUserInvoice
 >;

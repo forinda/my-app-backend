@@ -1,5 +1,5 @@
 import { decimal, integer, pgTable, unique } from 'drizzle-orm/pg-core';
-import { OrganizationUserInvoice } from './org-user-invoice';
+import { OrgUserInvoice } from './org-user-invoice';
 import { OrgUserTimeLog } from './org-user-time-log';
 import { foreignKeyConstraints } from '@/common/utils/drizzle';
 import type { InferInsertModel, InferSelectModel } from 'drizzle-orm';
@@ -11,7 +11,7 @@ export const OrgUserInvoiceItem = pgTable(
     id: integer().primaryKey().generatedAlwaysAsIdentity(),
     organization_invoice_id: integer()
       .notNull()
-      .references(() => OrganizationUserInvoice.id, foreignKeyConstraints),
+      .references(() => OrgUserInvoice.id, foreignKeyConstraints),
     task_log_id: integer()
       .notNull()
       .references(() => OrgUserTimeLog.id, foreignKeyConstraints),
@@ -26,9 +26,9 @@ export const OrgUserInvoiceItem = pgTable(
 export const invoiceItemRelations = relations(
   OrgUserInvoiceItem,
   ({ one }) => ({
-    invoice: one(OrganizationUserInvoice, {
+    invoice: one(OrgUserInvoice, {
       fields: [OrgUserInvoiceItem.organization_invoice_id],
-      references: [OrganizationUserInvoice.id]
+      references: [OrgUserInvoice.id]
     }),
     taskLog: one(OrgUserTimeLog, {
       fields: [OrgUserInvoiceItem.task_log_id],

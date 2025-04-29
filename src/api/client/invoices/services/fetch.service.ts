@@ -1,19 +1,9 @@
-import { OrganizationInvoice } from '@/db/schema';
+import { OrgUserInvoice } from '@/db/schema';
 import { useDrizzle } from '@/db';
 import { HttpStatus } from '@/common/http';
 import { dependency } from '@/common/di';
 import { type ApiPaginationParams, paginator } from '@/common/utils/pagination';
-import {
-  and,
-  asc,
-  between,
-  desc,
-  eq,
-  gte,
-  ilike,
-  isNull,
-  lte
-} from 'drizzle-orm';
+import { and, between, desc, eq, gte, isNull, lte } from 'drizzle-orm';
 import type { FilterInvoicePayload } from '../schema/schema';
 
 @dependency()
@@ -27,49 +17,49 @@ export class FetchInvoicesService {
 
     // Build where conditions dynamically
     const whereConditions = [
-      eq(OrganizationInvoice.organization_id, organization_id),
-      isNull(OrganizationInvoice.deleted_at)
+      eq(OrgUserInvoice.organization_id, organization_id),
+      isNull(OrgUserInvoice.deleted_at)
     ];
 
     // Apply filters if provided
     if (filters) {
       if (filters.financial_year_id) {
         whereConditions.push(
-          eq(OrganizationInvoice.financial_year_id, filters.financial_year_id)
+          eq(OrgUserInvoice.financial_year_id, filters.financial_year_id)
         );
       }
 
-      if (filters.client_name) {
-        whereConditions.push(
-          ilike(OrganizationInvoice.client_name, `%${filters.client_name}%`)
-        );
-      }
+      //   if (filters.client_name) {
+      //     whereConditions.push(
+      //       ilike(OrgUserInvoice.client_name, `%${filters.client_name}%`)
+      //     );
+      //   }
 
-      if (filters.client_email) {
-        whereConditions.push(
-          ilike(OrganizationInvoice.client_email, `%${filters.client_email}%`)
-        );
-      }
+      //   if (filters.client_email) {
+      //     whereConditions.push(
+      //       ilike(OrgUserInvoice.client_email, `%${filters.client_email}%`)
+      //     );
+      //   }
 
       if (filters.status) {
-        whereConditions.push(eq(OrganizationInvoice.status, filters.status));
+        whereConditions.push(eq(OrgUserInvoice.invoice_status, filters.status));
       }
 
       if (filters.start_date && filters.end_date) {
         whereConditions.push(
           between(
-            OrganizationInvoice.issue_date,
+            OrgUserInvoice.invoice_date,
             filters.start_date,
             filters.end_date
           )
         );
       } else if (filters.start_date) {
         whereConditions.push(
-          gte(OrganizationInvoice.issue_date, filters.start_date)
+          gte(OrgUserInvoice.invoice_date, filters.start_date)
         );
       } else if (filters.end_date) {
         whereConditions.push(
-          lte(OrganizationInvoice.issue_date, filters.end_date)
+          lte(OrgUserInvoice.invoice_date, filters.end_date)
         );
       }
 
@@ -79,27 +69,27 @@ export class FetchInvoicesService {
       ) {
         whereConditions.push(
           between(
-            OrganizationInvoice.total_amount,
+            OrgUserInvoice.amount,
             filters.min_amount.toString(),
             filters.max_amount.toString()
           )
         );
       } else if (filters.min_amount !== undefined) {
         whereConditions.push(
-          gte(OrganizationInvoice.total_amount, filters.min_amount.toString())
+          gte(OrgUserInvoice.amount, filters.min_amount.toString())
         );
       } else if (filters.max_amount !== undefined) {
         whereConditions.push(
-          lte(OrganizationInvoice.total_amount, filters.max_amount.toString())
+          lte(OrgUserInvoice.amount, filters.max_amount.toString())
         );
       }
     }
 
     const fetchCondition = and(...whereConditions);
 
-    const totalItems = await db.$count(OrganizationInvoice, fetchCondition);
+    const totalItems = await db.$count(OrgUserInvoice, fetchCondition);
 
-    const invoices = await db.query.OrganizationInvoice.findMany({
+    const invoices = await db.query.OrgUserInvoice.findMany({
       where: fetchCondition,
       with: {
         items: true,
@@ -107,7 +97,7 @@ export class FetchInvoicesService {
       },
       limit: pagination?.limit,
       offset: pagination?.offset,
-      orderBy: [desc(OrganizationInvoice.created_at)]
+      orderBy: [desc(OrgUserInvoice.created_at)]
     });
 
     return {

@@ -8,6 +8,7 @@ import { inject } from 'inversify';
 import { CreateInvoiceService } from '../services/create.service';
 import { createHttpResponse } from '@/common/utils/responder';
 import { newInvoiceSchema } from '../schema/schema';
+import { userAudit } from '@/common/utils/user-request-audit';
 
 @Controller()
 export class NewInvoiceController extends BasePostController {
@@ -18,7 +19,7 @@ export class NewInvoiceController extends BasePostController {
     auth: true,
     bodySchema: newInvoiceSchema,
     bodyBindOrgId: true,
-    bodyBindUser: true
+    audit: userAudit('create')
   })
   async post({ res, body }: ApiRequestContext) {
     const result = await this.service.create({ data: body });

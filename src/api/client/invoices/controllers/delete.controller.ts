@@ -7,6 +7,9 @@ import type { ApiRequestContext } from '@/common/interfaces/controller';
 import { inject } from 'inversify';
 import { DeleteInvoiceService } from '../services/delete.service';
 import { createHttpResponse } from '@/common/utils/responder';
+import { userAudit } from '@/common/utils/user-request-audit';
+import type { DeleteInvoicePayload } from '../schema/schema';
+import { deleteInvoiceSchema } from '../schema/schema';
 
 @Controller()
 export class DeleteInvoiceController extends BaseDeleteController {
@@ -15,15 +18,16 @@ export class DeleteInvoiceController extends BaseDeleteController {
 
   @ApiControllerMethod({
     auth: true,
-    bodyBindUser: true,
-    bodyBindOrgId: true
+    bodyBindOrgId: true,
+    audit: userAudit('delete'),
+    bodySchema: deleteInvoiceSchema,
+    pathParamTransform: {
+      id: 'invoice_id'
+    }
   })
-  async delete({ req, res, user, organization_id }: ApiRequestContext) {
-    const id = Number(req.params.id);
-
+  async delete({ res, body }: ApiRequestContext<DeleteInvoicePayload>) {
     const result = await this.service.delete({
-      params: { id, organization_id: organization_id! },
-      user_id: user!.id
+      data: body!
     });
 
     return createHttpResponse(res, { ...result, statusCode: result.status });

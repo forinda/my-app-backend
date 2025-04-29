@@ -1,4 +1,4 @@
-import { OrganizationInvoice } from '@/db/schema';
+import { OrgUserInvoice } from '@/db/schema';
 import { HttpStatus } from '@/common/http';
 import { dependency } from '@/common/di';
 import { and, eq } from 'drizzle-orm';
@@ -22,13 +22,12 @@ export class UpdateInvoiceStatusService {
     const { id, organization_id } = params;
 
     // Check if invoice exists
-    const existingInvoice =
-      await transaction!.query.OrganizationInvoice.findFirst({
-        where: and(
-          eq(OrganizationInvoice.id, id),
-          eq(OrganizationInvoice.organization_id, organization_id)
-        )
-      });
+    const existingInvoice = await transaction!.query.OrgUserInvoice.findFirst({
+      where: and(
+        eq(OrgUserInvoice.id, id),
+        eq(OrgUserInvoice.organization_id, organization_id)
+      )
+    });
 
     if (!existingInvoice) {
       throw new ApiError('Invoice not found', HttpStatus.NOT_FOUND, {});
@@ -40,24 +39,25 @@ export class UpdateInvoiceStatusService {
     }
 
     // Update the invoice status
-    const [updatedInvoice] = await transaction!
-      .update(OrganizationInvoice)
+    // const [updatedInvoice] =
+    await transaction!
+      .update(OrgUserInvoice)
       .set({
-        ...data,
-        updated_at: new Date()
+        invoice_status: data.status,
+        updated_at: new Date().toISOString()
       })
-      .where(eq(OrganizationInvoice.id, id))
+      .where(eq(OrgUserInvoice.id, id))
       .returning();
 
     // Fetch the updated invoice with items
-    const refreshedInvoice =
-      await transaction!.query.OrganizationInvoice.findFirst({
-        where: eq(OrganizationInvoice.id, id),
-        with: {
-          items: true,
-          financial_year: true
-        }
-      });
+    const refreshedInvoice = await transaction!.query.OrgUserInvoice.findFirst({
+      where: eq(OrgUserInvoice.id, id),
+      with: {
+        items: true,
+        financial_year: true,
+        organization: true
+      }
+    });
 
     return {
       data: refreshedInvoice,

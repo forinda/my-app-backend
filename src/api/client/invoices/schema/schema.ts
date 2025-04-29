@@ -1,5 +1,8 @@
 import z from 'zod';
-import { INVOICE_STATUS } from '@/db/schema/org-invoices';
+import {
+  INVOICE_PAYMENT_METHOD,
+  INVOICE_STATUS
+} from '@/db/schema/org-user-invoice';
 
 export const invoiceItemSchema = z.object({
   description: z.string().min(1, { message: 'Description is required' }),
@@ -18,13 +21,10 @@ export const newInvoiceSchema = z.object({
   organization_id: z.coerce
     .number({ message: 'Organization ID is required' })
     .positive(),
-  invoice_number: z.string().optional(),
   financial_year_id: z.coerce.number().positive().optional(),
-  client_name: z.string().min(1, { message: 'Client name is required' }),
-  client_email: z.string().email({ message: 'Valid client email is required' }),
-  client_phone: z.string().optional(),
-  client_address: z.string().optional(),
-  issue_date: z.string().min(1, { message: 'Issue date is required' }),
+  financial_quarter_id: z.coerce
+    .number({ message: 'Financial quarter ID is required' })
+    .positive(),
   due_date: z.string().min(1, { message: 'Due date is required' }),
   total_amount: z.coerce
     .number({ message: 'Total amount is required' })
@@ -33,34 +33,32 @@ export const newInvoiceSchema = z.object({
   discount_amount: z.coerce.number().nonnegative().default(0),
   notes: z.string().optional(),
   terms: z.string().optional(),
-  status: z.enum(INVOICE_STATUS).default('draft'),
-  paid_date: z.string().optional(),
-  payment_method: z.string().optional(),
-  items: z.array(invoiceItemSchema).min(1, {
-    message: 'At least one invoice item is required'
-  }),
+  status: z.enum(INVOICE_STATUS).default('pending'),
+  payment_method: z.enum(INVOICE_PAYMENT_METHOD).default('bank_transfer'),
   created_by: z.coerce.number().positive().optional(),
   updated_by: z.coerce.number().positive().optional()
 });
 
 export const updateInvoiceSchema = z.object({
-  invoice_number: z.string().min(1).optional(),
+  invoice_id: z.coerce.number({ message: 'Invoice ID is required' }).positive(),
+  organization_id: z.coerce
+    .number({ message: 'Organization ID is required' })
+    .positive(),
   financial_year_id: z.coerce.number().positive().optional(),
-  client_name: z.string().min(1).optional(),
-  client_email: z.string().email().optional(),
-  client_phone: z.string().optional(),
-  client_address: z.string().optional(),
-  issue_date: z.string().optional(),
-  due_date: z.string().optional(),
-  total_amount: z.coerce.number().nonnegative().optional(),
-  tax_amount: z.coerce.number().nonnegative().optional(),
-  discount_amount: z.coerce.number().nonnegative().optional(),
+  financial_quarter_id: z.coerce
+    .number({ message: 'Financial quarter ID is required' })
+    .positive(),
+  due_date: z.string().min(1, { message: 'Due date is required' }).optional(),
+  total_amount: z.coerce
+    .number({ message: 'Total amount is required' })
+    .nonnegative({ message: 'Total amount must be non-negative' })
+    .optional(),
+  tax_amount: z.coerce.number().nonnegative().default(0).optional(),
+  discount_amount: z.coerce.number().nonnegative().default(0).optional(),
   notes: z.string().optional(),
   terms: z.string().optional(),
   status: z.enum(INVOICE_STATUS).optional(),
-  paid_date: z.string().optional(),
-  payment_method: z.string().optional(),
-  items: z.array(invoiceItemSchema).optional(),
+  payment_method: z.enum(INVOICE_PAYMENT_METHOD).optional(),
   updated_by: z.coerce.number().positive().optional()
 });
 
@@ -85,10 +83,24 @@ export const filterInvoiceSchema = z.object({
   max_amount: z.coerce.number().nonnegative().optional()
 });
 
+export const deleteInvoiceSchema = z.object({
+  invoice_id: z.coerce.number({ message: 'Invoice ID is required' }).positive(),
+  organization_id: z.coerce
+    .number({ message: 'Organization ID is required' })
+    .positive(),
+  deleted_by: z.coerce.number().positive().optional()
+});
+
 export type NewInvoicePayload = z.infer<typeof newInvoiceSchema>;
+
 export type UpdateInvoicePayload = z.infer<typeof updateInvoiceSchema>;
+
 export type UpdateInvoiceStatusPayload = z.infer<
   typeof updateInvoiceStatusSchema
 >;
+
 export type FilterInvoicePayload = z.infer<typeof filterInvoiceSchema>;
+
 export type InvoiceItemPayload = z.infer<typeof invoiceItemSchema>;
+
+export type DeleteInvoicePayload = z.infer<typeof deleteInvoiceSchema>;

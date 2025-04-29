@@ -1,4 +1,4 @@
-import { OrganizationInvoice } from '@/db/schema';
+import { OrgUserInvoice } from '@/db/schema';
 import { HttpStatus } from '@/common/http';
 import { dependency } from '@/common/di';
 import { and, eq } from 'drizzle-orm';
@@ -7,35 +7,29 @@ import {
   TransactionalService,
   type TransactionContext
 } from '@/common/decorators/service-transaction';
+import type { DeleteInvoicePayload } from '../schema/schema';
 
 @dependency()
 export class DeleteInvoiceService {
   @TransactionalService()
   async delete({
     transaction,
-    params,
-    user_id
-  }: TransactionContext<{}> & {
-    params: { id: number; organization_id: number };
-    user_id: number;
-  }) {
-    const { id, organization_id } = params;
-
+    data
+  }: TransactionContext<DeleteInvoicePayload>) {
     // Check if invoice exists
-    const existingInvoice =
-      await transaction!.query.OrganizationInvoice.findFirst({
-        where: and(
-          eq(OrganizationInvoice.id, id),
-          eq(OrganizationInvoice.organization_id, organization_id)
-        )
-      });
+    const existingInvoice = await transaction!.query.OrgUserInvoice.findFirst({
+      where: and(
+        eq(OrgUserInvoice.id, data.invoice_id),
+        eq(OrgUserInvoice.organization_id, data.organization_id)
+      )
+    });
 
     if (!existingInvoice) {
       throw new ApiError('Invoice not found', HttpStatus.NOT_FOUND, {});
     }
 
     // Check if invoice is already paid
-    if (existingInvoice.status === 'paid') {
+    if (existingInvoice.invoice_status === 'paid') {
       throw new ApiError(
         'Cannot delete a paid invoice',
         HttpStatus.CONFLICT,
@@ -45,12 +39,12 @@ export class DeleteInvoiceService {
 
     // Soft delete the invoice
     const [deletedInvoice] = await transaction!
-      .update(OrganizationInvoice)
+      .update(OrgUserInvoice)
       .set({
-        deleted_by: user_id,
-        deleted_at: new Date()
+        deleted_by: data.deleted_by!,
+        deleted_at: new Date().toISOString()
       })
-      .where(eq(OrganizationInvoice.id, id))
+      .where(eq(OrgUserInvoice.id, data.invoice_id))
       .returning();
 
     return {

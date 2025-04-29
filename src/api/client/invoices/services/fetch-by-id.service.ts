@@ -1,4 +1,4 @@
-import { OrganizationInvoice } from '@/db/schema';
+import { OrgUserInvoice } from '@/db/schema';
 import { useDrizzle } from '@/db';
 import { HttpStatus } from '@/common/http';
 import { dependency } from '@/common/di';
@@ -10,11 +10,11 @@ export class FetchInvoiceByIdService {
   async get(id: number, organization_id: number) {
     const db = useDrizzle();
 
-    const invoice = await db.query.OrganizationInvoice.findFirst({
+    const invoice = await db.query.OrgUserInvoice.findFirst({
       where: and(
-        eq(OrganizationInvoice.id, id),
-        eq(OrganizationInvoice.organization_id, organization_id),
-        isNull(OrganizationInvoice.deleted_at)
+        eq(OrgUserInvoice.id, id),
+        eq(OrgUserInvoice.organization_id, organization_id),
+        isNull(OrgUserInvoice.deleted_at)
       ),
       with: {
         items: true,
@@ -23,9 +23,9 @@ export class FetchInvoiceByIdService {
           columns: {
             id: true,
             name: true,
-            email: true,
-            phone: true,
-            address: true,
+            contact_email: true,
+            contact_phone: true,
+            contact_address: true,
             logo: true
           }
         },
