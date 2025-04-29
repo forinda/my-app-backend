@@ -7,15 +7,9 @@ import { UpdateInvoiceController } from './controllers/update.controller';
 import { UpdateInvoiceStatusController } from './controllers/update-status.controller';
 import { DeleteInvoiceController } from './controllers/delete.controller';
 import type { RouteSetupFunction } from '@/common/interfaces/controller';
-import { protect } from '@/common/middlewares/auth';
-import { restrictToSameOrganization } from '@/common/middlewares/organization';
 
 export const setupInvoiceRoutes: RouteSetupFunction = ({ app }) => {
   const router = Router({ mergeParams: true });
-
-  // Apply middlewares
-  router.use(protect);
-  router.use(restrictToSameOrganization);
 
   router
     .get('/', di.resolve(FetchInvoicesController).get)
