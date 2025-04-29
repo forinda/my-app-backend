@@ -26,7 +26,7 @@ export class CreateFinancialYearQuarterService {
     const financialYear =
       await transaction!.query.OrganizationFinancialYear.findFirst({
         where: and(
-          eq(OrganizationFinancialYear.id, data.financial_year_id),
+          eq(OrganizationFinancialYear.id, data.organization_financial_year_id),
           eq(OrganizationFinancialYear.organization_id, data.organization_id)
         )
       });
@@ -41,7 +41,7 @@ export class CreateFinancialYearQuarterService {
         where: and(
           eq(
             OrganizationFinancialYearQuarter.organization_financial_year_id,
-            data.financial_year_id
+            data.organization_financial_year_id
           ),
           eq(OrganizationFinancialYearQuarter.quarter, data.quarter)
         )
@@ -62,7 +62,7 @@ export class CreateFinancialYearQuarterService {
       and(
         eq(
           OrganizationFinancialYearQuarter.organization_financial_year_id,
-          data.financial_year_id
+          data.organization_financial_year_id
         ),
         isNull(OrganizationFinancialYearQuarter.deleted_at)
       )
@@ -81,7 +81,7 @@ export class CreateFinancialYearQuarterService {
       );
     }
     const quarterData: InsertOrganizationFinancialYearQuarterInterface = {
-      organization_financial_year_id: data.financial_year_id,
+      organization_financial_year_id: data.organization_financial_year_id,
       //   organization_id: data.organization_id,
       quarter: data.quarter,
       start_date: data.start_date,

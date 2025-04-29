@@ -2,7 +2,7 @@ import z from 'zod';
 import { FINANCIAL_YEAR_QUARTER_TYPE } from '@/db/schema/org-financial-year-quarter';
 
 export const newFinancialYearQuarterSchema = z.object({
-  financial_year_id: z.coerce
+  organization_financial_year_id: z.coerce
     .number({
       message: 'Financial year ID is required'
     })

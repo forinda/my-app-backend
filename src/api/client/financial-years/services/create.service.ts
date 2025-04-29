@@ -50,13 +50,13 @@ export class CreateFinancialYearService {
       );
     }
     // Check if start date is in the future
-    if (moment(data.start_date).isBefore(moment().startOf('day'))) {
-      throw new ApiError(
-        'Start date cannot be in the past',
-        HttpStatus.BAD_REQUEST,
-        {}
-      );
-    }
+    // if (moment(data.start_date).isBefore(moment().startOf('day'))) {
+    //   throw new ApiError(
+    //     'Start date cannot be in the past',
+    //     HttpStatus.BAD_REQUEST,
+    //     {}
+    //   );
+    // }
     // Check if financial year with the same name exists for this organization
     const existingFY =
       await transaction!.query.OrganizationFinancialYear.findFirst({
