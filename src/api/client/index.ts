@@ -15,6 +15,7 @@ import { setupTimeLogRoutes } from './time-logs';
 import { setupSubscriptionPlansRoutes } from './subscription-plans';
 import { setupFinancialYearsRoutes } from './financial-years';
 import { setupFinancialYearQuartersRoutes } from './financial-year-quarters';
+import { setupInvoiceRoutes } from './invoices';
 
 export const apiFunctions: RouteSetupFunction[] = [
   setupAuthRoutes,
@@ -32,5 +33,6 @@ export const apiFunctions: RouteSetupFunction[] = [
   setupTimeLogRoutes,
   setupSubscriptionPlansRoutes,
   setupFinancialYearsRoutes,
-  setupFinancialYearQuartersRoutes
+  setupFinancialYearQuartersRoutes,
+  setupInvoiceRoutes
 ];

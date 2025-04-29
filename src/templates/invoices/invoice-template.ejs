@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Invoice</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <style type="text/tailwindcss">
+        @theme {
+            --color-primary: #0066cc;
+            --color-secondary: #f8f8f8;
+            --color-success: #155724;
+            --color-danger: #721c24;
+            --color-warning: #856404;
+            --color-info: #0c5460;
+            --color-light: #f9f9f9;
+            --color-dark: #333;
+            --color-muted: #777;
+            --color-border: #eee;
+        }
+        
+        @media print {
+            body {
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+            .print-shadow {
+                box-shadow: none !important;
+            }
+        }
+    </style>
+</head>
+<body class="bg-gray-100 m-0 p-4">
+    <div class="max-w-4xl mx-auto p-8 bg-white rounded-lg shadow-md print-shadow">
+        <% if (data.organization && data.organization.logo) { %>
+            <img src="<%= data.organization.logo %>" alt="Company Logo" class="h-20 mb-5">
+        <% } %>
+        
+        <div class="flex justify-between items-start border-b border-gray-200 pb-5 mb-5">
+            <div>
+                <h1 class="text-2xl font-bold text-primary">INVOICE</h1>
+                <% if (data.organization) { %>
+                    <p class="font-semibold"><%= data.organization.name %></p>
+                    <p class="text-gray-600"><%= data.organization.address || 'No address provided' %></p>
+                    <% if (data.organization.email) { %>
+                        <p class="text-gray-600">Email: <%= data.organization.email %></p>
+                    <% } %>
+                    <% if (data.organization.phone) { %>
+                        <p class="text-gray-600">Phone: <%= data.organization.phone %></p>
+                    <% } %>
+                <% } %>
+            </div>
+            <div>
+                <div class="inline-block px-3 py-1 rounded-md font-bold text-xs uppercase
+                    <%= data.invoice_status === 'paid' ? 'bg-green-100 text-green-800' : 
+                       data.invoice_status === 'unpaid' ? 'bg-red-100 text-red-800' : 
+                       data.invoice_status === 'pending' ? 'bg-yellow-100 text-yellow-800' : 
+                       data.invoice_status === 'approved' ? 'bg-blue-100 text-blue-800' : 
+                       data.invoice_status === 'overdue' ? 'bg-red-100 text-red-800 font-bold' : 'bg-gray-100 text-gray-800' %>">
+                    <%= data.invoice_status ? data.invoice_status.toUpperCase() : 'DRAFT' %>
+                </div>
+            </div>
+        </div>
+
+        <div class="mb-8">
+            <div class="flex justify-between mb-2">
+                <div class="font-semibold">Invoice Number:</div>
+                <div class="text-right"><%= data.invoice_number || `INV-${Date.now().toString().substr(-8)}` %></div>
+            </div>
+            <div class="flex justify-between mb-2">
+                <div class="font-semibold">Invoice Date:</div>
+                <div class="text-right"><%= data.invoice_date ? moment(data.invoice_date).format('MMMM DD, YYYY') : moment().format('MMMM DD, YYYY') %></div>
+            </div>
+            <div class="flex justify-between mb-2">
+                <div class="font-semibold">Due Date:</div>
+                <div class="text-right"><%= data.due_date ? moment(data.due_date).format('MMMM DD, YYYY') : moment().add(30, 'days').format('MMMM DD, YYYY') %></div>
+            </div>
+            <% if (data.financial_year) { %>
+            <div class="flex justify-between mb-2">
+                <div class="font-semibold">Financial Year:</div>
+                <div class="text-right"><%= data.financial_year.name %></div>
+            </div>
+            <% } %>
+            <% if (data.quarter) { %>
+            <div class="flex justify-between mb-2">
+                <div class="font-semibold">Quarter:</div>
+                <div class="text-right"><%= data.quarter.name %></div>
+            </div>
+            <% } %>
+            <% if (data.project) { %>
+            <div class="flex justify-between mb-2">
+                <div class="font-semibold">Project:</div>
+                <div class="text-right"><%= data.project.name %></div>
+            </div>
+            <% } %>
+        </div>
+
+        <div class="flex justify-between mb-8">
+            <div class="w-1/2 pr-4">
+                <h3 class="text-gray-600 text-lg mb-2">Bill From</h3>
+                <% if (data.organization) { %>
+                    <p class="font-semibold"><%= data.organization.name %></p>
+                    <p><%= data.organization.address || 'No address provided' %></p>
+                    <% if (data.organization.tax_id) { %>
+                        <p>Tax ID: <%= data.organization.tax_id %></p>
+                    <% } %>
+                <% } else { %>
+                    <p>Organization information not available</p>
+                <% } %>
+            </div>
+            
+            <div class="w-1/2">
+                <h3 class="text-gray-600 text-lg mb-2">Bill To</h3>
+                <% if (data.client) { %>
+                    <p class="font-semibold"><%= data.client.name || `${data.client.first_name || ''} ${data.client.last_name || ''}` %></p>
+                    <% if (data.client.company_name) { %>
+                        <p><%= data.client.company_name %></p>
+                    <% } %>
+                    <% if (data.client.address) { %>
+                        <p><%= data.client.address %></p>
+                    <% } %>
+                    <% if (data.client.email) { %>
+                        <p>Email: <%= data.client.email %></p>
+                    <% } %>
+                    <% if (data.client.phone) { %>
+                        <p>Phone: <%= data.client.phone %></p>
+                    <% } %>
+                <% } else { %>
+                    <p>Client information not available</p>
+                <% } %>
+            </div>
+        </div>
+
+        <% if (data.notes) { %>
+        <div class="bg-gray-50 p-4 rounded-md mb-8">
+            <h3 class="text-lg mb-2">Notes</h3>
+            <p><%= data.notes %></p>
+        </div>
+        <% } %>
+
+        <table class="w-full border-collapse mb-8">
+            <thead>
+                <tr class="bg-gray-50">
+                    <th class="py-3 px-4 text-left border-b border-gray-200">Description</th>
+                    <th class="py-3 px-4 text-left border-b border-gray-200">Quantity</th>
+                    <th class="py-3 px-4 text-left border-b border-gray-200">Unit Price</th>
+                    <th class="py-3 px-4 text-right border-b border-gray-200">Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% 
+                let subtotal = 0;
+                if (data.items && data.items.length > 0) { 
+                    data.items.forEach(function(item) { 
+                        const itemTotal = parseFloat(item.quantity || 1) * parseFloat(item.unit_price || 0);
+                        subtotal += itemTotal;
+                %>
+                    <tr>
+                        <td class="py-3 px-4 border-b border-gray-200">
+                            <span class="font-semibold"><%= item.description || item.name || 'Item' %></span>
+                            <% if (item.details) { %>
+                                <br><span class="text-sm text-gray-600"><%= item.details %></span>
+                            <% } %>
+                        </td>
+                        <td class="py-3 px-4 border-b border-gray-200"><%= item.quantity || 1 %></td>
+                        <td class="py-3 px-4 border-b border-gray-200"><%= data.currency_symbol || '$' %> <%= parseFloat(item.unit_price || 0).toFixed(2) %></td>
+                        <td class="py-3 px-4 text-right border-b border-gray-200"><%= data.currency_symbol || '$' %> <%= itemTotal.toFixed(2) %></td>
+                    </tr>
+                <% }); 
+                } else { %>
+                    <tr>
+                        <td colspan="4" class="py-3 px-4 border-b border-gray-200">No items</td>
+                    </tr>
+                <% } %>
+                
+                <tr>
+                    <td colspan="3" class="py-3 px-4 text-right border-b border-gray-200 font-semibold">Subtotal</td>
+                    <td class="py-3 px-4 text-right border-b border-gray-200"><%= data.currency_symbol || '$' %> <%= subtotal.toFixed(2) %></td>
+                </tr>
+                
+                <% if (data.tax_rate && data.tax_rate > 0) { 
+                    const taxAmount = subtotal * (data.tax_rate / 100);
+                %>
+                <tr>
+                    <td colspan="3" class="py-3 px-4 text-right border-b border-gray-200 font-semibold">Tax (<%= data.tax_rate %>%)</td>
+                    <td class="py-3 px-4 text-right border-b border-gray-200"><%= data.currency_symbol || '$' %> <%= taxAmount.toFixed(2) %></td>
+                </tr>
+                <% } %>
+                
+                <% if (data.discount && data.discount > 0) { 
+                    const discountAmount = subtotal * (data.discount / 100);
+                %>
+                <tr>
+                    <td colspan="3" class="py-3 px-4 text-right border-b border-gray-200 font-semibold">Discount (<%= data.discount %>%)</td>
+                    <td class="py-3 px-4 text-right border-b border-gray-200">- <%= data.currency_symbol || '$' %> <%= discountAmount.toFixed(2) %></td>
+                </tr>
+                <% } %>
+                
+                <tr class="bg-gray-50">
+                    <td colspan="3" class="py-3 px-4 text-right border-b border-gray-200 font-bold">Total</td>
+                    <td class="py-3 px-4 text-right border-b border-gray-200 font-bold"><%= data.currency_symbol || '$' %> <%= (data.total_amount || data.amount || subtotal).toFixed(2) %></td>
+                </tr>
+                
+                <% if (data.paid_amount && data.paid_amount > 0) { %>
+                <tr>
+                    <td colspan="3" class="py-3 px-4 text-right border-b border-gray-200 font-semibold">Amount Paid</td>
+                    <td class="py-3 px-4 text-right border-b border-gray-200"><%= data.currency_symbol || '$' %> <%= parseFloat(data.paid_amount).toFixed(2) %></td>
+                </tr>
+                <tr class="bg-gray-50">
+                    <td colspan="3" class="py-3 px-4 text-right border-b border-gray-200 font-bold">Balance Due</td>
+                    <td class="py-3 px-4 text-right border-b border-gray-200 font-bold"><%= data.currency_symbol || '$' %> <%= (parseFloat(data.total_amount || data.amount) - parseFloat(data.paid_amount)).toFixed(2) %></td>
+                </tr>
+                <% } %>
+            </tbody>
+        </table>
+
+        <% if (data.payment_instructions) { %>
+        <div class="bg-gray-50 p-4 rounded-md mb-8">
+            <h3 class="text-lg mb-2">Payment Instructions</h3>
+            <p><%= data.payment_instructions %></p>
+        </div>
+        <% } %>
+
+        <div class="text-center text-gray-500 text-sm mt-10">
+            <% if (data.terms) { %>
+                <p><%= data.terms %></p>
+            <% } else { %>
+                <p>Thank you for your business!</p>
+            <% } %>
+            <p>Generated on <%= moment().format('MMMM DD, YYYY [at] h:mm A') %></p>
+        </div>
+    </div>
+</body>
+</html>
